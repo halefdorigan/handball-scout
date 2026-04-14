@@ -5,5 +5,5 @@ export interface Player {
   number: number;
   position: string;
   updatedAt: number;
-  deleted: boolean;
+  isDeleted: boolean;
 }

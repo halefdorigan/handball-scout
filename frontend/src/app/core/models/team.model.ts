@@ -4,5 +4,5 @@ export interface Team {
   color: string;
   tags: string[];
   updatedAt: number;
-  deleted: boolean;
+  isDeleted: boolean;
 }

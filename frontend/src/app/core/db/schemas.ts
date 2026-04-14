@@ -14,7 +14,7 @@ export const teamSchema: RxJsonSchema<any> = {
     color: { type: 'string' },
     tags: { type: 'array', items: { type: 'string' } },
     updatedAt: { type: 'number' },
-    deleted: { type: 'boolean' }
+    isDeleted: { type: 'boolean' }
   },
   required: ['_id', 'name', 'updatedAt']
 };
@@ -32,7 +32,7 @@ export const playerSchema: RxJsonSchema<any> = {
     number: { type: 'number' },
     position: { type: 'string' },
     updatedAt: { type: 'number' },
-    deleted: { type: 'boolean' }
+    isDeleted: { type: 'boolean' }
   },
   required: ['_id', 'teamId', 'name', 'updatedAt'],
   indexes: ['teamId']
@@ -67,7 +67,7 @@ export const gameSchema: RxJsonSchema<any> = {
       }
     },
     updatedAt: { type: 'number' },
-    deleted: { type: 'boolean' }
+    isDeleted: { type: 'boolean' }
   },
   required: ['_id', 'name', 'updatedAt']
 };

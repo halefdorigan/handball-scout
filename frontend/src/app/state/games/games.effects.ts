@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { from, map, mergeMap, catchError, of, switchMap, Observable } from 'rxjs';
+import { from, map, mergeMap, catchError, of, switchMap, Observable, EMPTY } from 'rxjs';
 import { DatabaseService } from '../../core/db/database.service';
 import * as GamesActions from './games.actions';
 import { v4 as uuidv4 } from 'uuid';
@@ -39,7 +39,7 @@ export class GamesEffects {
           status: 'PENDING',
           events: [],
           updatedAt: Date.now(),
-          deleted: false
+          isDeleted: false
         })),
         map(() => ({ type: 'NO_ACTION' }))
       ))
@@ -51,11 +51,13 @@ export class GamesEffects {
     this.actions$.pipe(
       ofType(GamesActions.logGameEvent),
       mergeMap(action => from(this.dbService.getDb()).pipe(
-        mergeMap(db => {
-          const gameDoc = db['games'].findOne(action.gameId);
-          return gameDoc.incrementalPatch({
-            events: (oldEvents: any) => [...(oldEvents || []), action.event]
-          });
+        mergeMap(db => from(db['games'].findOne(action.gameId).exec())),
+        mergeMap((doc: any) => {
+          if (!doc) return EMPTY;
+          return from(doc.modify((d: any) => {
+            d.events = [...(d.events || []), action.event];
+            return d;
+          }));
         }),
         map(() => GamesActions.logGameEventSuccess()),
         catchError(error => of(GamesActions.logGameEventFailure({ error })))
@@ -67,11 +69,13 @@ export class GamesEffects {
     this.actions$.pipe(
       ofType(GamesActions.undoGameEvent),
       mergeMap(action => from(this.dbService.getDb()).pipe(
-        mergeMap(db => {
-          const gameDoc = db['games'].findOne(action.gameId);
-          return gameDoc.incrementalPatch({
-            events: (oldEvents: any) => (oldEvents || []).slice(0, -1)
-          });
+        mergeMap(db => from(db['games'].findOne(action.gameId).exec())),
+        mergeMap((doc: any) => {
+          if (!doc) return EMPTY;
+          return from(doc.modify((d: any) => {
+            d.events = (d.events || []).slice(0, -1);
+            return d;
+          }));
         }),
         map(() => GamesActions.undoGameEventSuccess()),
         catchError(error => of(GamesActions.undoGameEventFailure({ error })))

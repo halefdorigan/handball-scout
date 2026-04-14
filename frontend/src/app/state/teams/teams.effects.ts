@@ -34,7 +34,7 @@ export class TeamsEffects {
           color: action.team.color || '#007bff',
           tags: action.team.tags || [],
           updatedAt: Date.now(),
-          deleted: false
+          isDeleted: false
         })),
         map(() => ({ type: 'NO_ACTION' }))
       ))

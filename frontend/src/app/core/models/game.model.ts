@@ -8,7 +8,7 @@ export interface Game {
   status: 'PENDING' | 'RUNNING' | 'FINISHED';
   events: GameEvent[];
   updatedAt: number;
-  deleted: boolean;
+  isDeleted: boolean;
 }
 
 export interface GameEvent {

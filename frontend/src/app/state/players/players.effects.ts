@@ -35,7 +35,7 @@ export class PlayersEffects {
           number: action.player.number,
           position: action.player.position,
           updatedAt: Date.now(),
-          deleted: false
+          isDeleted: false
         })),
         map(() => ({ type: 'NO_ACTION' }))
       ))

@@ -6,6 +6,8 @@ import { createRxDatabase, RxDatabase, addRxPlugin } from 'rxdb';
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 // @ts-ignore
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
+// @ts-ignore
+import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
 import { teamSchema, playerSchema, gameSchema } from './schemas';
 
 @Injectable({
@@ -26,9 +28,13 @@ export class DatabaseService {
     if (this.dbPromise) return this.dbPromise;
 
     this.dbPromise = (async () => {
+      const storage = isDevMode()
+        ? wrappedValidateAjvStorage({ storage: getRxStorageDexie() })
+        : getRxStorageDexie();
+
       const db = await createRxDatabase({
         name: 'handball_scout_db',
-        storage: getRxStorageDexie(),
+        storage,
         ignoreDuplicate: true
       });
 
