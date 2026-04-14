@@ -1,0 +1,28 @@
+<div class="game-list container">
+  <header class="page-header">
+    <h1>Meus Jogos</h1>
+    <button class="btn btn--primary" routerLink="new">+ Novo Jogo</button>
+  </header>
+
+  <div class="games-grid">
+    <div *ngFor="let game of games$ | async" class="game-card" [routerLink]="[game._id]">
+      <div class="game-card__header">
+        <span class="game-card__status" [ngClass]="getStatusClass(game.status)">
+          {{ game.status }}
+        </span>
+        <div class="game-card__actions">
+          <button class="btn-icon" [routerLink]="[game._id, 'scout']" (click)="$event.stopPropagation()">⏱️</button>
+          <button class="btn-icon" [routerLink]="[game._id]" (click)="$event.stopPropagation()">✏️</button>
+        </div>
+      </div>
+      <h3 class="game-card__title">{{ game.name }}</h3>
+      <div class="game-card__tags">
+        <span *ngFor="let tag of game.tags" class="tag">{{ tag }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="(games$ | async)?.length === 0" class="empty-state">
+    <p>Nenhum jogo encontrado. Comece criando um novo!</p>
+  </div>
+</div>

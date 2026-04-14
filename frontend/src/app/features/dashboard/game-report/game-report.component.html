@@ -1,0 +1,48 @@
+<div class="report container" *ngIf="game$ | async as game">
+  <header class="page-header">
+    <button class="btn-back" routerLink="/dashboard">BACK</button>
+    <h1>Relatórios: {{ game.name }}</h1>
+  </header>
+
+  <div class="score-summary card">
+    <div class="team-score">
+      <span class="team-name">{{ (teamA$ | async)?.name }}</span>
+      <span class="score-value">{{ getStats(game.teamAId, 'GOAL', game.events) }}</span>
+    </div>
+    <div class="score-divider">-</div>
+    <div class="team-score">
+      <span class="score-value">{{ getStats(game.teamBId, 'GOAL', game.events) }}</span>
+      <span class="team-name">{{ (teamB$ | async)?.name }}</span>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stats-column card">
+      <h3>Estatísticas Gerais</h3>
+      <div class="stat-row">
+        <span>Defesas</span>
+        <span>{{ getStats(game.teamAId, 'GK_SAVE', game.events) }} vs {{ getStats(game.teamBId, 'GK_SAVE', game.events) }}</span>
+      </div>
+      <div class="stat-row">
+        <span>Arremessos Fora</span>
+        <span>{{ getStats(game.teamAId, 'MISS', game.events) }} vs {{ getStats(game.teamBId, 'MISS', game.events) }}</span>
+      </div>
+      <div class="stat-row">
+        <span>2 Minutos</span>
+        <span>{{ getStats(game.teamAId, 'SUSPENSION', game.events) }} vs {{ getStats(game.teamBId, 'SUSPENSION', game.events) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="player-stats card">
+    <h3>Gols por Jogador</h3>
+    <div class="player-grid">
+      <div class="player-stat-item" *ngFor="let player of players$ | async">
+        <ng-container *ngIf="player.teamId === game.teamAId || player.teamId === game.teamBId">
+           <span class="player-name">#{{ player.number }} {{ player.name }}</span>
+           <span class="player-goals">{{ getPlayerGoals(player._id, game.events) }} Gols</span>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

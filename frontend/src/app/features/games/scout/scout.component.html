@@ -1,0 +1,72 @@
+<div class="scout-container" *ngIf="game$ | async as game">
+  <header class="scout-header">
+    <div class="scout-score">
+      <div class="score-team">
+        <span class="score-team__name">{{ (teamA$ | async)?.name }}</span>
+        <span class="score-value">{{ getScore(game.teamAId, game.events) }}</span>
+      </div>
+      <div class="score-timer" (click)="toggleTimer()">
+        <span class="timer-value" [class.running]="isTimerRunning">{{ formatTime(timerSeconds) }}</span>
+        <span class="timer-status">{{ isTimerRunning ? 'PAUSAR' : 'INICIAR' }}</span>
+      </div>
+      <div class="score-team">
+        <span class="score-value">{{ getScore(game.teamBId, game.events) }}</span>
+        <span class="score-team__name">{{ (teamB$ | async)?.name }}</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="scout-actions">
+    <!-- Team A Actions -->
+    <div class="team-actions team-a">
+      <button class="action-btn goal" (click)="onAction('GOAL', game.teamAId)">GOL</button>
+      <div class="sub-actions">
+        <button class="action-btn miss" (click)="onAction('MISS', game.teamAId)">FORA</button>
+        <button class="action-btn save" (click)="onAction('SAVE', game.teamBId)">DEFESA B</button>
+        <button class="action-btn card-y" (click)="onAction('YELLOW', game.teamAId)">🟨</button>
+        <button class="action-btn min-2" (click)="onAction('MIN2', game.teamAId)">2'</button>
+      </div>
+    </div>
+
+    <div class="scout-divider">VS</div>
+
+    <!-- Team B Actions -->
+    <div class="team-actions team-b">
+      <button class="action-btn goal" (click)="onAction('GOAL', game.teamBId)">GOL</button>
+      <div class="sub-actions">
+        <button class="action-btn miss" (click)="onAction('MISS', game.teamBId)">FORA</button>
+        <button class="action-btn save" (click)="onAction('SAVE', game.teamAId)">DEFESA A</button>
+        <button class="action-btn card-y" (click)="onAction('YELLOW', game.teamBId)">🟨</button>
+        <button class="action-btn min-2" (click)="onAction('MIN2', game.teamBId)">2'</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Player Selection Overlay -->
+  <div class="player-overlay" *ngIf="showPlayerSelection">
+    <div class="player-modal card">
+      <h3>Quem realizou: {{ pendingAction }}?</h3>
+      <div class="players-grid">
+        <button class="player-btn" (click)="logEvent()">COLETIVO</button>
+        <button *ngFor="let player of (selectedTeamId === game.teamAId ? playersA$ : playersB$) | async" 
+                class="player-btn" (click)="logEvent(player._id)">
+          <span class="player-number">{{ player.number }}</span>
+          <span class="player-name">{{ player.name }}</span>
+        </button>
+      </div>
+      <button class="btn btn--secondary" (click)="showPlayerSelection = false">CANCELAR</button>
+    </div>
+  </div>
+
+  <div class="recent-events card">
+    <div class="events-header">
+      <h4>Últimos Eventos</h4>
+      <button class="btn-undo" (click)="undo()" [disabled]="!game.events.length">DESFAZER</button>
+    </div>
+    <div class="event-item" *ngFor="let event of game.events?.slice()?.reverse()?.slice(0, 5)">
+      <span class="event-time">{{ formatTime(event.gameTime) }}</span>
+      <span class="event-type">{{ event.type }}</span>
+      <span class="event-player" *ngIf="event.playerId">Jogador {{ event.playerId }}</span>
+    </div>
+  </div>
+</div>

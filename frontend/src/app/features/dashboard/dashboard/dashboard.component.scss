@@ -1,0 +1,72 @@
+@import '../../../../styles.scss';
+
+.dashboard {
+  padding: 2rem 1rem;
+}
+
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+
+  &__icon {
+    font-size: 2rem;
+    background: #f0f2f5;
+    padding: 0.5rem;
+    border-radius: 10px;
+  }
+
+  &__label {
+    display: block;
+    font-size: 0.75rem;
+    color: #666;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  &__value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $primary-color;
+  }
+}
+
+.recent-games {
+  margin-top: 3rem;
+  h2 { font-size: 1.25rem; margin-bottom: 1.5rem; }
+}
+
+.game-item {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  cursor: pointer;
+  transition: transform 0.1s;
+
+  &:active { transform: scale(0.98); }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name { font-weight: bold; color: #333; }
+  &__date { font-size: 0.8rem; color: #888; }
+  &__score { font-size: 0.875rem; color: $primary-color; font-weight: 600; }
+}

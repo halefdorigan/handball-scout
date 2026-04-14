@@ -1,0 +1,21 @@
+<div class="team-list">
+  <header class="page-header">
+    <h1>Meus Times</h1>
+    <div class="header-actions">
+      <button class="btn btn--secondary" (click)="sync()">🔄 Sincronizar</button>
+      <button class="btn btn--primary" routerLink="new">+ Novo Time</button>
+    </div>
+  </header>
+
+  <div class="team-list__content">
+    <div *ngFor="let team of teams$ | async" class="team-card" [routerLink]="[team._id]">
+      <div class="team-card__color" [style.background-color]="team.color"></div>
+      <div class="team-card__info">
+        <span class="team-card__name">{{ team.name }}</span>
+        <div class="team-card__tags">
+          <span *ngFor="let tag of team.tags" class="tag">{{ tag }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

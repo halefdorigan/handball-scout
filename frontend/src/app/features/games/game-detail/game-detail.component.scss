@@ -1,0 +1,76 @@
+@import '../../../../styles.scss';
+
+.game-detail {
+  padding: 2rem 1rem;
+}
+
+.game-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: var(--hb-surface);
+  border-radius: var(--hb-radius);
+  box-shadow: var(--hb-shadow);
+  padding: 2rem;
+
+  .form-group {
+    margin-bottom: 1.5rem;
+    
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--hb-text);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--hb-border);
+      border-radius: 8px;
+      font-size: 1rem;
+
+      &:focus {
+        border-color: var(--hb-primary);
+        outline: none;
+      }
+    }
+  }
+}
+
+.teams-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.tags-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.tag {
+  background: var(--hb-primary);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+  }
+}

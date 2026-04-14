@@ -1,0 +1,144 @@
+/* Design System Tokens */
+:root {
+  --hb-primary: #2563eb;
+  --hb-primary-hover: #1d4ed8;
+  --hb-secondary: #64748b;
+  --hb-success: #22c55e;
+  --hb-danger: #ef4444;
+  --hb-warning: #f59e0b;
+  --hb-background: #f8fafc;
+  --hb-surface: #ffffff;
+  --hb-text: #0f172a;
+  --hb-text-muted: #64748b;
+  --hb-border: #e2e8f0;
+  --hb-radius: 12px;
+  --hb-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+$primary-color: #2563eb;
+$primary-color-hover: #1d4ed8;
+$secondary-color: #64748b;
+$background-color: #f8fafc;
+$text-color: #0f172a;
+$border-radius: 12px;
+$card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+/* Base Styles */
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--hb-background);
+  color: var(--hb-text);
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3, h4 {
+  margin-top: 0;
+  color: var(--hb-text);
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* BEM: App Core */
+.app {
+  &__main {
+    padding-bottom: 5rem; /* Space for bottom nav */
+  }
+
+  &__bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4.5rem;
+    background: var(--hb-surface);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid var(--hb-border);
+    padding: 0 1rem;
+    z-index: 1000;
+  }
+}
+
+.nav-item {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--hb-text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &--active {
+    color: var(--hb-primary);
+    .nav-item__icon {
+      background: #eff6ff;
+      color: var(--hb-primary);
+    }
+  }
+
+  &__icon {
+    font-size: 1.25rem;
+    padding: 0.5rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* BEM Component: Button */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--hb-radius);
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+
+  &--primary {
+    background: var(--hb-primary);
+    color: white;
+    &:hover { background: var(--hb-primary-hover); }
+  }
+
+  &--secondary {
+    background: var(--hb-surface);
+    color: var(--hb-text);
+    border: 1px solid var(--hb-border);
+    &:hover { background: var(--hb-background); }
+  }
+
+  &--full { width: 100%; }
+}
+
+/* BEM Component: Card */
+.card {
+  background: var(--hb-surface);
+  border-radius: var(--hb-radius);
+  box-shadow: var(--hb-shadow);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+/* Global Page Header Utility */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  h1 { font-size: 1.5rem; font-weight: 800; margin: 0; }
+}

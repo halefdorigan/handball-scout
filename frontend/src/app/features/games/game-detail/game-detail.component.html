@@ -1,0 +1,50 @@
+<div class="game-detail container">
+  <header class="page-header">
+    <h1>{{ isNew ? 'Novo Jogo' : 'Editar Jogo' }}</h1>
+    <div class="header-actions">
+      <button class="btn btn--secondary" routerLink="/games">Cancelar</button>
+      <button class="btn btn--primary" (click)="save()" [disabled]="gameForm.invalid">Salvar</button>
+    </div>
+  </header>
+
+  <form [formGroup]="gameForm" class="game-form card">
+    <div class="form-group">
+      <label>Nome do Jogo/Evento</label>
+      <input type="text" formControlName="name" placeholder="Ex: Final Regional Sub-17">
+    </div>
+
+    <div class="form-group">
+      <label>Data e Hora</label>
+      <input type="datetime-local" formControlName="dateTime">
+    </div>
+
+    <div class="teams-selection">
+      <div class="form-group">
+        <label>Time A (Casa)</label>
+        <select formControlName="teamAId">
+          <option value="">Selecione um time</option>
+          <option *ngFor="let team of teams$ | async" [value]="team._id">{{ team.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Time B (Visitante)</label>
+        <select formControlName="teamBId">
+          <option value="">Selecione um time</option>
+          <option *ngFor="let team of teams$ | async" [value]="team._id">{{ team.name }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Tags (Pressione Enter para adicionar)</label>
+      <input type="text" (keydown)="addTag($event)" placeholder="Ex: campeonato, sub-15, final">
+      <div class="tags-display">
+        <span *ngFor="let tag of gameForm.get('tags')?.value" class="tag">
+          {{ tag }}
+          <button type="button" (click)="removeTag(tag)">&times;</button>
+        </span>
+      </div>
+    </div>
+  </form>
+</div>
