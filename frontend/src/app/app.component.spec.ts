@@ -20,16 +20,17 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'frontend'`, () => {
+  it(`should have as title 'Scout Court'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('frontend');
+    expect(app.title).toEqual('Scout Court');
   });
 
-  it('should render title', () => {
+  it('should render the primary navigation', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('frontend app is running!');
+    expect(compiled.querySelector('.brand-mark__name')?.textContent).toContain('SCOUT');
+    expect(compiled.querySelectorAll('.nav-item').length).toBe(6);
   });
 });

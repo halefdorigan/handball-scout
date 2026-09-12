@@ -35,7 +35,7 @@ export class TeamDetailComponent implements OnInit {
   ) {
     this.teamForm = this.fb.group({
       name: ['', Validators.required],
-      color: ['#007bff'],
+      color: ['#0a7281'],
       tags: [[]]
     });
 

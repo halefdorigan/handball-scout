@@ -1,36 +1,62 @@
 <div class="dashboard container">
-  <header class="page-header">
-    <h1>Dashboard</h1>
+  <header class="page-header dashboard__header">
+    <div>
+      <p class="eyebrow">Centro de comando / 2024—25</p>
+      <h1>Leia o jogo.</h1>
+    </div>
+    <a class="btn btn--primary" routerLink="/games">Abrir jogos <span aria-hidden="true">↗</span></a>
   </header>
 
-  <div class="stats-cards">
-    <div class="stat-card">
-      <span class="stat-card__icon">🤾</span>
-      <div class="stat-card__data">
-        <span class="stat-card__label">Total de Jogos</span>
-        <span class="stat-card__value">{{ totalGames$ | async }}</span>
+  <section class="dashboard-hero" aria-labelledby="dashboard-hero-title">
+    <div class="dashboard-hero__copy">
+      <span class="dashboard-hero__mark" aria-hidden="true">01</span>
+      <div>
+        <p class="eyebrow">Handball scouting, sem ruído</p>
+        <h2 id="dashboard-hero-title">Decisões rápidas<br><em>começam aqui.</em></h2>
+        <p class="dashboard-hero__intro">Acompanhe os seus jogos, times e padrões de desempenho em um só lugar.</p>
       </div>
     </div>
-    <div class="stat-card">
-      <span class="stat-card__icon">⚽</span>
-      <div class="stat-card__data">
-        <span class="stat-card__label">Total de Gols</span>
-        <span class="stat-card__value">{{ totalGoals$ | async }}</span>
-      </div>
+    <div class="dashboard-hero__aside">
+      <span class="dashboard-hero__aside-label">Última sincronização</span>
+      <strong>LOCAL / AO VIVO</strong>
+      <span class="dashboard-hero__aside-dot" aria-hidden="true"></span>
     </div>
-  </div>
+  </section>
 
-  <section class="recent-games">
-    <h2>Jogos Recentes</h2>
-    <div class="games-list">
-      <div *ngFor="let game of games$ | async" class="game-item" [routerLink]="['report', game._id]">
-        <div class="game-item__info">
-          <span class="game-item__name">{{ game.name }}</span>
-          <span class="game-item__date">{{ game.dateTime | date:'dd/MM/yyyy' }}</span>
-        </div>
-        <div class="game-item__score">
-          Ver Relatório ➡️
-        </div>
+  <section class="stats-strip" aria-label="Resumo da temporada">
+    <div class="stat-block">
+      <span class="stat-block__label">Jogos catalogados</span>
+      <strong class="stat-block__value">{{ totalGames$ | async }}</strong>
+      <span class="stat-block__note">temporada atual</span>
+    </div>
+    <div class="stat-block stat-block--accent">
+      <span class="stat-block__label">Gols registrados</span>
+      <strong class="stat-block__value">{{ totalGoals$ | async }}</strong>
+      <span class="stat-block__note">em todos os jogos</span>
+    </div>
+    <div class="stats-strip__caption">DADOS QUE<br>VIRAM JOGO.</div>
+  </section>
+
+  <section class="recent-games" aria-labelledby="recent-games-title">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Arquivo de partidas</p>
+        <h2 id="recent-games-title">Jogos recentes</h2>
+      </div>
+      <a routerLink="/games" class="text-link">Ver todos <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="games-list" *ngIf="games$ | async as games">
+      <a *ngFor="let game of games | slice:0:5" class="game-item" [routerLink]="['report', game._id]">
+        <span class="game-item__index">{{ (games.indexOf(game) + 1).toString().padStart(2, '0') }}</span>
+        <span class="game-item__info">
+          <strong class="game-item__name">{{ game.name }}</strong>
+          <span class="game-item__date">{{ game.dateTime | date:'dd MMM yyyy' }}</span>
+        </span>
+        <span class="game-item__status">{{ game.status }} <span aria-hidden="true">↗</span></span>
+      </a>
+      <div *ngIf="games.length === 0" class="empty-state">
+        <p>Seu arquivo ainda está vazio.</p>
+        <a routerLink="/games/new" class="text-link">Cadastrar primeiro jogo →</a>
       </div>
     </div>
   </section>

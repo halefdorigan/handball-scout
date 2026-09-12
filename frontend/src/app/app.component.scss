@@ -1,0 +1,129 @@
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-rail {
+  background: var(--hb-ink);
+  box-sizing: border-box;
+  color: var(--hb-on-primary);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+  left: 0;
+  padding: 30px 24px 24px;
+  position: fixed;
+  top: 0;
+  width: 220px;
+  z-index: 10;
+}
+
+.brand-mark {
+  align-items: flex-start;
+  color: inherit;
+  display: flex;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.brand-mark__slash {
+  color: var(--hb-accent-pink);
+  font-size: 40px;
+  font-weight: 500;
+  line-height: .7;
+}
+
+.brand-mark__name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.1;
+}
+
+.app-nav {
+  display: grid;
+  gap: 8px;
+  margin-top: auto;
+  padding-bottom: 32vh;
+}
+
+.nav-item {
+  align-items: baseline;
+  color: var(--hb-stone);
+  display: flex;
+  gap: 14px;
+  padding: 9px 0;
+  text-decoration: none;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.nav-item:hover,
+.nav-item--active {
+  color: var(--hb-on-primary);
+  transform: translateX(4px);
+}
+
+.nav-item--active .nav-item__index {
+  color: var(--hb-accent-pink);
+}
+
+.nav-item__index {
+  color: var(--hb-mute);
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+.nav-item__label {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.rail-footnote {
+  color: var(--hb-stone);
+  font-size: 9px;
+  letter-spacing: .14em;
+  line-height: 1.75;
+}
+
+.rail-footnote span { color: var(--hb-mute); }
+
+.app-main {
+  margin-left: 220px;
+  min-height: 100vh;
+}
+
+.app-bottom-nav { display: none; }
+
+@media (max-width: 720px) {
+  .app-rail { display: none; }
+
+  .app-main {
+    margin-left: 0;
+    padding-bottom: 74px;
+  }
+
+  .app-bottom-nav {
+    align-items: center;
+    background: var(--hb-ink);
+    bottom: 0;
+    display: flex;
+    height: 64px;
+    justify-content: space-around;
+    left: 0;
+    padding: 0 12px;
+    position: fixed;
+    right: 0;
+    z-index: 10;
+  }
+
+  .app-bottom-nav .nav-item {
+    align-items: center;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px 12px;
+    transform: none;
+  }
+
+  .app-bottom-nav .nav-item__label { font-size: 11px; }
+  .app-bottom-nav .nav-item__index { font-size: 9px; }
+}

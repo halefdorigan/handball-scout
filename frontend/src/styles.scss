@@ -1,98 +1,69 @@
-/* Design System Tokens */
 :root {
-  --hb-primary: #2563eb;
-  --hb-primary-hover: #1d4ed8;
-  --hb-secondary: #64748b;
-  --hb-success: #22c55e;
-  --hb-danger: #ef4444;
-  --hb-warning: #f59e0b;
-  --hb-background: #f8fafc;
-  --hb-surface: #ffffff;
-  --hb-text: #0f172a;
-  --hb-text-muted: #64748b;
-  --hb-border: #e2e8f0;
-  --hb-radius: 12px;
-  --hb-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --hb-primary: #111111;
+  --hb-primary-hover: #39393b;
+  --hb-on-primary: #ffffff;
+  --hb-canvas: #ffffff;
+  --hb-background: #ffffff;
+  --hb-surface: #f5f5f5;
+  --hb-soft-cloud: #f5f5f5;
+  --hb-ink: #111111;
+  --hb-text: #111111;
+  --hb-charcoal: #39393b;
+  --hb-ash: #4b4b4d;
+  --hb-mute: #707072;
+  --hb-stone: #9e9ea0;
+  --hb-border: #cacacb;
+  --hb-hairline-soft: #e5e5e5;
+  --hb-sale: #d30005;
+  --hb-sale-deep: #780700;
+  --hb-success: #007d48;
+  --hb-success-bright: #1eaa52;
+  --hb-info: #1151ff;
+  --hb-accent-pink: #ed1aa0;
+  --hb-accent-pink-soft: #ffb0dd;
+  --hb-accent-purple-soft: #beaffd;
+  --hb-accent-teal: #0a7281;
+  --hb-accent-pink-deep: #4c012d;
+  --hb-radius: 0px;
+  --hb-radius-sm: 18px;
+  --hb-radius-md: 24px;
+  --hb-radius-lg: 30px;
 }
 
-$primary-color: #2563eb;
-$primary-color-hover: #1d4ed8;
-$secondary-color: #64748b;
-$background-color: #f8fafc;
-$text-color: #0f172a;
-$border-radius: 12px;
-$card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+*, *::before, *::after { box-sizing: border-box; }
+
+$primary-color: #111111;
+$primary-color-hover: #39393b;
+$secondary-color: #707072;
+$background-color: #ffffff;
+$text-color: #111111;
+$border-radius: 0;
+$card-shadow: none;
 
 /* Base Styles */
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--hb-background);
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: var(--hb-canvas);
   color: var(--hb-text);
   line-height: 1.5;
   -webkit-tap-highlight-color: transparent;
 }
 
-h1, h2, h3, h4 {
+h1, h2, h3, h4, p {
   margin-top: 0;
   color: var(--hb-text);
 }
 
+h1, h2, h3, h4 { font-family: 'Helvetica Now Display', 'Arial Narrow', Helvetica, Arial, sans-serif; }
+
+button, input, select { font: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--hb-accent-pink); outline-offset: 3px; }
+
 .container {
-  max-width: 600px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 1rem;
-}
-
-/* BEM: App Core */
-.app {
-  &__main {
-    padding-bottom: 5rem; /* Space for bottom nav */
-  }
-
-  &__bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 4.5rem;
-    background: var(--hb-surface);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-top: 1px solid var(--hb-border);
-    padding: 0 1rem;
-    z-index: 1000;
-  }
-}
-
-.nav-item {
-  text-decoration: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  color: var(--hb-text-muted);
-  font-size: 0.75rem;
-  font-weight: 500;
-  transition: all 0.2s;
-
-  &--active {
-    color: var(--hb-primary);
-    .nav-item__icon {
-      background: #eff6ff;
-      color: var(--hb-primary);
-    }
-  }
-
-  &__icon {
-    font-size: 1.25rem;
-    padding: 0.5rem;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  padding: clamp(24px, 5vw, 64px) clamp(20px, 5vw, 72px);
 }
 
 /* BEM Component: Button */
@@ -100,26 +71,27 @@ h1, h2, h3, h4 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--hb-radius);
-  font-weight: 600;
+  min-height: 48px;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 500;
   font-size: 0.875rem;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
   user-select: none;
 
   &--primary {
-    background: var(--hb-primary);
-    color: white;
-    &:hover { background: var(--hb-primary-hover); }
+    background: var(--hb-ink);
+    color: var(--hb-on-primary);
+    &:hover { background: var(--hb-charcoal); }
   }
 
   &--secondary {
-    background: var(--hb-surface);
+    background: var(--hb-soft-cloud);
     color: var(--hb-text);
-    border: 1px solid var(--hb-border);
-    &:hover { background: var(--hb-background); }
+    border-color: var(--hb-border);
+    &:hover { background: var(--hb-soft-cloud); }
   }
 
   &--full { width: 100%; }
@@ -129,8 +101,7 @@ h1, h2, h3, h4 {
 .card {
   background: var(--hb-surface);
   border-radius: var(--hb-radius);
-  box-shadow: var(--hb-shadow);
-  padding: 1.25rem;
+  padding: 1.5rem;
   margin-bottom: 1rem;
 }
 
@@ -139,6 +110,39 @@ h1, h2, h3, h4 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  h1 { font-size: 1.5rem; font-weight: 800; margin: 0; }
+  gap: 20px;
+  margin-bottom: clamp(28px, 5vw, 52px);
+  h1 { font-size: clamp(2rem, 4vw, 3.25rem); font-weight: 500; letter-spacing: -.04em; margin: 0; }
+}
+
+.header-actions { align-items: center; display: flex; flex-wrap: wrap; gap: 8px; }
+.btn:disabled { cursor: not-allowed; opacity: .45; }
+
+.eyebrow {
+  color: var(--hb-mute);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.tag {
+  background: var(--hb-on-primary);
+  border: 1px solid var(--hb-hairline-soft);
+  border-radius: var(--hb-radius-sm);
+  color: var(--hb-ash);
+  display: inline-block;
+  font-size: 12px;
+  padding: 3px 10px;
+}
+
+@media (max-width: 560px) {
+  .page-header { align-items: flex-start; flex-direction: column; }
+  .header-actions { width: 100%; }
+  .header-actions .btn { flex: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }

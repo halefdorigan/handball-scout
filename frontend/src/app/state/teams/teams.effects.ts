@@ -31,7 +31,7 @@ export class TeamsEffects {
         mergeMap(db => db['teams'].insert({
           _id: uuidv4(),
           name: action.team.name,
-          color: action.team.color || '#007bff',
+          color: action.team.color || '#0a7281',
           tags: action.team.tags || [],
           updatedAt: Date.now(),
           isDeleted: false

@@ -1,40 +1,50 @@
-<div class="team-detail">
-  <div class="team-detail__header">
-    <button (click)="save()" class="btn btn--primary">Salvar</button>
-  </div>
+<div class="team-detail container">
+  <header class="page-header">
+    <div>
+      <a class="back-link" routerLink="/teams">← Times</a>
+      <p class="eyebrow">{{ isNew ? 'Novo registro' : 'Editar registro' }} / 02</p>
+      <h1>{{ isNew ? 'Novo time' : 'Editar time' }}</h1>
+    </div>
+    <div class="header-actions">
+      <a class="btn btn--secondary" routerLink="/teams">Cancelar</a>
+      <button (click)="save()" class="btn btn--primary" [disabled]="teamForm.invalid">Salvar <span aria-hidden="true">↗</span></button>
+    </div>
+  </header>
 
   <form [formGroup]="teamForm" class="team-form">
-    <div class="form-group">
-      <label>Nome do Time</label>
-      <input type="text" formControlName="name" placeholder="Ex: Handebol Clube">
+    <div class="form-intro">
+      <span class="form-intro__number">01</span>
+      <p>Identidade do elenco</p>
     </div>
-
     <div class="form-group">
-      <label>Cor do Time</label>
-      <input type="color" formControlName="color">
+      <label for="team-name">Nome do time</label>
+      <input id="team-name" type="text" formControlName="name" placeholder="Ex: Handebol Clube">
+    </div>
+    <div class="form-group color-field">
+      <div><label for="team-color">Cor de identificação</label><span>Usada nos relatórios e na lista.</span></div>
+      <input id="team-color" type="color" formControlName="color">
     </div>
   </form>
 
-  <div class="players-section" *ngIf="!isNew">
-    <h3>Jogadores</h3>
+  <section class="players-section" *ngIf="!isNew" aria-labelledby="players-title">
+    <div class="section-heading">
+      <div><p class="eyebrow">Roster / 03</p><h2 id="players-title">Jogadores</h2></div>
+      <span class="section-heading__note">Adicione atletas ao elenco</span>
+    </div>
     <form [formGroup]="playerForm" (ngSubmit)="addPlayer()" class="player-form">
-      <input type="number" formControlName="number" placeholder="Nº">
-      <input type="text" formControlName="name" placeholder="Nome do Jogador">
-      <select formControlName="position">
-        <option value="Goleiro">Goleiro</option>
-        <option value="Ponta">Ponta</option>
-        <option value="Armador">Armador</option>
-        <option value="Pivô">Pivô</option>
+      <input type="number" formControlName="number" placeholder="Nº" aria-label="Número da camisa">
+      <input type="text" formControlName="name" placeholder="Nome do jogador" aria-label="Nome do jogador">
+      <select formControlName="position" aria-label="Posição">
+        <option value="Goleiro">Goleiro</option><option value="Ponta">Ponta</option><option value="Armador">Armador</option><option value="Pivô">Pivô</option>
       </select>
-      <button type="submit">+</button>
+      <button type="submit" class="btn btn--primary" [disabled]="playerForm.invalid">Adicionar <span aria-hidden="true">＋</span></button>
     </form>
-
     <div class="players-list">
       <div *ngFor="let player of players$ | async" class="player-item">
         <span class="player-item__number">{{ player.number }}</span>
-        <span class="player-item__name">{{ player.name }}</span>
+        <strong class="player-item__name">{{ player.name }}</strong>
         <span class="player-item__pos">{{ player.position }}</span>
       </div>
     </div>
-  </div>
+  </section>
 </div>

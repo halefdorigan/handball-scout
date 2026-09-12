@@ -1,8 +1,8 @@
 {
-  "name": "Handball Scout",
-  "short_name": "HB Scout",
-  "theme_color": "#2563eb",
-  "background_color": "#fafafa",
+  "name": "Scout Court",
+  "short_name": "Scout Court",
+  "theme_color": "#111111",
+  "background_color": "#ffffff",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",

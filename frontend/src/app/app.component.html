@@ -1,20 +1,41 @@
-<div class="app">
-  <main class="app__main">
+<div class="app-shell">
+  <aside class="app-rail" aria-label="Navegação principal">
+    <a class="brand-mark" routerLink="/dashboard" aria-label="Scout home">
+      <span class="brand-mark__slash">/</span>
+      <span class="brand-mark__name">SCOUT<br>COURT</span>
+    </a>
+
+    <nav class="app-nav">
+      <a routerLink="/dashboard" routerLinkActive="nav-item--active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        <span class="nav-item__index">01</span>
+        <span class="nav-item__label">Visão geral</span>
+      </a>
+      <a routerLink="/teams" routerLinkActive="nav-item--active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        <span class="nav-item__index">02</span>
+        <span class="nav-item__label">Times</span>
+      </a>
+      <a routerLink="/games" routerLinkActive="nav-item--active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        <span class="nav-item__index">03</span>
+        <span class="nav-item__label">Jogos</span>
+      </a>
+    </nav>
+
+    <div class="rail-footnote">HANDBALL<br>SCOUTING<br><span>v.0.1 / LOCAL</span></div>
+  </aside>
+
+  <main class="app-main">
     <router-outlet></router-outlet>
   </main>
 
-  <nav class="app__bottom-nav">
-    <a routerLink="/dashboard" routerLinkActive="nav-item--active" class="nav-item">
-      <div class="nav-item__icon">📊</div>
-      <div class="nav-item__label">Dashboard</div>
+  <nav class="app-bottom-nav" aria-label="Navegação mobile">
+    <a routerLink="/dashboard" routerLinkActive="nav-item--active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+      <span class="nav-item__index">01</span><span class="nav-item__label">Início</span>
     </a>
     <a routerLink="/teams" routerLinkActive="nav-item--active" class="nav-item">
-      <div class="nav-item__icon">🛡️</div>
-      <div class="nav-item__label">Times</div>
+      <span class="nav-item__index">02</span><span class="nav-item__label">Times</span>
     </a>
     <a routerLink="/games" routerLinkActive="nav-item--active" class="nav-item">
-      <div class="nav-item__icon">⏱️</div>
-      <div class="nav-item__label">Jogos</div>
+      <span class="nav-item__index">03</span><span class="nav-item__label">Jogos</span>
     </a>
   </nav>
 </div>

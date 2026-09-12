@@ -1,48 +1,33 @@
 <div class="report container" *ngIf="game$ | async as game">
   <header class="page-header">
-    <button class="btn-back" routerLink="/dashboard">BACK</button>
-    <h1>Relatórios: {{ game.name }}</h1>
+    <div><a class="back-link" routerLink="/dashboard">← Visão geral</a><p class="eyebrow">Relatório de partida / arquivo</p><h1>{{ game.name }}</h1></div>
+    <a class="btn btn--primary" [routerLink]="['/games', game._id, 'scout']">Abrir scout <span aria-hidden="true">↗</span></a>
   </header>
 
-  <div class="score-summary card">
-    <div class="team-score">
-      <span class="team-name">{{ (teamA$ | async)?.name }}</span>
-      <span class="score-value">{{ getStats(game.teamAId, 'GOAL', game.events) }}</span>
-    </div>
-    <div class="score-divider">-</div>
-    <div class="team-score">
-      <span class="score-value">{{ getStats(game.teamBId, 'GOAL', game.events) }}</span>
-      <span class="team-name">{{ (teamB$ | async)?.name }}</span>
-    </div>
-  </div>
+  <section class="score-summary" aria-label="Placar final">
+    <div class="team-score"><span class="team-score__label">Casa</span><strong class="team-name">{{ (teamA$ | async)?.name || 'Time A' }}</strong><span class="score-value">{{ getStats(game.teamAId, 'GOAL', game.events) }}</span></div>
+    <div class="score-divider">—</div>
+    <div class="team-score team-score--away"><span class="team-score__label">Visitante</span><strong class="team-name">{{ (teamB$ | async)?.name || 'Time B' }}</strong><span class="score-value">{{ getStats(game.teamBId, 'GOAL', game.events) }}</span></div>
+  </section>
 
-  <div class="stats-grid">
-    <div class="stats-column card">
-      <h3>Estatísticas Gerais</h3>
-      <div class="stat-row">
-        <span>Defesas</span>
-        <span>{{ getStats(game.teamAId, 'GK_SAVE', game.events) }} vs {{ getStats(game.teamBId, 'GK_SAVE', game.events) }}</span>
-      </div>
-      <div class="stat-row">
-        <span>Arremessos Fora</span>
-        <span>{{ getStats(game.teamAId, 'MISS', game.events) }} vs {{ getStats(game.teamBId, 'MISS', game.events) }}</span>
-      </div>
-      <div class="stat-row">
-        <span>2 Minutos</span>
-        <span>{{ getStats(game.teamAId, 'SUSPENSION', game.events) }} vs {{ getStats(game.teamBId, 'SUSPENSION', game.events) }}</span>
-      </div>
+  <section class="stats-grid" aria-labelledby="stats-title">
+    <div class="section-heading"><div><p class="eyebrow">Leitura da partida / 01</p><h2 id="stats-title">Estatísticas gerais</h2></div><span class="section-heading__note">{{ game.events.length || 0 }} eventos</span></div>
+    <div class="stats-table">
+      <div class="stat-row stat-row--head"><span>Indicador</span><span>Casa / Visitante</span></div>
+      <div class="stat-row"><span>Defesas</span><strong>{{ getStats(game.teamAId, 'GK_SAVE', game.events) }} <i>vs</i> {{ getStats(game.teamBId, 'GK_SAVE', game.events) }}</strong></div>
+      <div class="stat-row"><span>Arremessos fora</span><strong>{{ getStats(game.teamAId, 'MISS', game.events) }} <i>vs</i> {{ getStats(game.teamBId, 'MISS', game.events) }}</strong></div>
+      <div class="stat-row"><span>2 minutos</span><strong>{{ getStats(game.teamAId, 'SUSPENSION', game.events) }} <i>vs</i> {{ getStats(game.teamBId, 'SUSPENSION', game.events) }}</strong></div>
     </div>
-  </div>
+  </section>
 
-  <div class="player-stats card">
-    <h3>Gols por Jogador</h3>
+  <section class="player-stats" aria-labelledby="player-stats-title">
+    <div class="section-heading"><div><p class="eyebrow">Desempenho individual / 02</p><h2 id="player-stats-title">Gols por jogador</h2></div></div>
     <div class="player-grid">
       <div class="player-stat-item" *ngFor="let player of players$ | async">
         <ng-container *ngIf="player.teamId === game.teamAId || player.teamId === game.teamBId">
-           <span class="player-name">#{{ player.number }} {{ player.name }}</span>
-           <span class="player-goals">{{ getPlayerGoals(player._id, game.events) }} Gols</span>
+          <span class="player-number">#{{ player.number }}</span><strong class="player-name">{{ player.name }}</strong><span class="player-team">{{ player.teamId === game.teamAId ? 'CASA' : 'VISITANTE' }}</span><strong class="player-goals">{{ getPlayerGoals(player._id, game.events) }}</strong>
         </ng-container>
       </div>
     </div>
-  </div>
+  </section>
 </div>
