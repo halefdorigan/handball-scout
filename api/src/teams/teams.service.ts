@@ -16,7 +16,14 @@ export class TeamsService {
   }
 
   async upsert(teamData: any): Promise<TeamDocument> {
-    const { _id, ...updateData } = teamData;
+    const { _id, isDeleted, deleted, ...updateData } = teamData;
+
+    if (typeof isDeleted === 'boolean') {
+      updateData.deleted = isDeleted;
+    } else if (typeof deleted === 'boolean') {
+      updateData.deleted = deleted;
+    }
+
     return this.teamModel.findByIdAndUpdate(_id, updateData, {
       upsert: true,
       new: true

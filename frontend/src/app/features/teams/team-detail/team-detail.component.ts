@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store, createFeatureSelector, createSelector } from '@ngrx/store';
@@ -25,6 +25,7 @@ export class TeamDetailComponent implements OnInit {
   playerForm: FormGroup;
   isNew = true;
   teamId: string | null = null;
+  showDeleteModal = false;
   players$: Observable<Player[]>;
 
   constructor(
@@ -87,6 +88,29 @@ export class TeamDetailComponent implements OnInit {
       };
       this.store.dispatch(PlayersActions.addPlayer({ player }));
       this.playerForm.reset({ position: 'Goleiro' });
+    }
+  }
+
+  openDeleteModal() {
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+  }
+
+  confirmDelete() {
+    if (!this.teamId) return;
+
+    this.store.dispatch(TeamsActions.deleteTeam({ id: this.teamId }));
+    this.closeDeleteModal();
+    this.router.navigate(['/teams']);
+  }
+
+  @HostListener('document:keydown.escape')
+  handleEscapeKey() {
+    if (this.showDeleteModal) {
+      this.closeDeleteModal();
     }
   }
 }

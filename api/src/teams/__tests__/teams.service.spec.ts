@@ -75,6 +75,25 @@ describe('TeamsService', () => {
       expect(exec).toHaveBeenCalledTimes(1);
       expect(result).toEqual(savedTeam);
     });
+
+    it('should persist the local deletion flag as deleted', async () => {
+      // Arrange
+      const team = { _id: 'team-id', name: 'Team A', isDeleted: true };
+      const savedTeam = { ...team, deleted: true };
+      const exec = jest.fn().mockResolvedValue(savedTeam);
+      teamModel.findByIdAndUpdate.mockReturnValue({ exec });
+
+      // Act
+      const result = await teamsService.upsert(team);
+
+      // Assert
+      expect(teamModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        team._id,
+        { name: team.name, deleted: true },
+        { upsert: true, new: true },
+      );
+      expect(result).toEqual(savedTeam);
+    });
   });
 
   describe('sync', () => {

@@ -22,6 +22,7 @@ export const teamsReducer = createReducer(
   on(TeamsActions.loadTeams, (state) => ({ ...state, loading: true })),
   on(TeamsActions.loadTeamsSuccess, (state, { teams }) => adapter.setAll(teams, { ...state, loading: false })),
   on(TeamsActions.loadTeamsFailure, (state, { error }) => ({ ...state, loading: false, error })),
+  on(TeamsActions.deleteTeam, (state, { id }) => adapter.removeOne(id, state)),
   on(TeamsActions.upsertTeamFromDb, (state, { team }) => adapter.upsertOne(team, state))
 );
 

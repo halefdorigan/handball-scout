@@ -23,14 +23,21 @@ export class SyncService {
   private async syncTeams() {
     const db = await this.dbService.getDb();
     const localTeams = await db['teams'].find().exec();
-    const teamsData = localTeams.map((t: any) => t.toJSON());
+    const teamsData = localTeams.map((t: any) => {
+      const { isDeleted, ...team } = t.toJSON();
+      return { ...team, deleted: isDeleted ?? false };
+    });
 
     // Push
     const remoteTeams = await lastValueFrom(this.http.post<any[]>(`${this.apiUrl}/teams/sync`, teamsData));
 
     // Pull (upsert back to local)
     for (const team of remoteTeams) {
-      await db['teams'].upsert(team);
+      const { deleted, ...localTeam } = team;
+      await db['teams'].upsert({
+        ...localTeam,
+        isDeleted: team.isDeleted ?? deleted ?? false
+      });
     }
   }
 
