@@ -65,3 +65,6 @@ frontend/.angular/cache
 
 # SDD
 tasks
+.playwright-cli
+
+
