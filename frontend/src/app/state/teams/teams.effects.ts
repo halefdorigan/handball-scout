@@ -41,4 +41,22 @@ export class TeamsEffects {
     ),
     { dispatch: false }
   );
+
+  updateTeam$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(TeamsActions.updateTeam),
+      mergeMap(action => from(this.dbService.getDb()).pipe(
+        mergeMap(db => db['teams'].upsert({
+          _id: action.team._id,
+          name: action.team.name,
+          color: action.team.color || '#0a7281',
+          tags: action.team.tags || [],
+          updatedAt: Date.now(),
+          isDeleted: action.team.isDeleted ?? false
+        })),
+        map(() => ({ type: 'NO_ACTION' }))
+      ))
+    ),
+    { dispatch: false }
+  );
 }

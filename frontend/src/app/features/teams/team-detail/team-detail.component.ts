@@ -63,7 +63,18 @@ export class TeamDetailComponent implements OnInit {
 
   save() {
     if (this.teamForm.valid) {
-      this.store.dispatch(TeamsActions.addTeam({ team: this.teamForm.value }));
+      if (this.isNew) {
+        this.store.dispatch(TeamsActions.addTeam({ team: this.teamForm.value }));
+      } else if (this.teamId) {
+        this.store.dispatch(TeamsActions.updateTeam({
+          team: {
+            _id: this.teamId,
+            ...this.teamForm.value,
+            updatedAt: Date.now(),
+            isDeleted: false
+          }
+        }));
+      }
       this.router.navigate(['/teams']);
     }
   }
