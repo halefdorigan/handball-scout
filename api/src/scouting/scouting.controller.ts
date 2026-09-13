@@ -6,6 +6,10 @@ import { ScoutingService, ScoutingSessionSyncData } from './scouting.service';
 @UseGuards(JwtAuthGuard)
 export class ScoutingController {
   constructor(private readonly scouting: ScoutingService) {}
-  @Get() findAll() { return this.scouting.findAll(); }
-  @Post('sync') sync(@Body() data: ScoutingSessionSyncData[]) { return this.scouting.sync(data); }
+  @Get() findAll() {
+    return this.scouting.findAll();
+  }
+  @Post('sync') sync(@Body() data: ScoutingSessionSyncData[]) {
+    return this.scouting.sync(data);
+  }
 }

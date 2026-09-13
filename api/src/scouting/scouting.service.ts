@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { ScoutingSession, ScoutingSessionDocument } from './schemas/scouting-session.schema';
+import { ScoutingSessionRepository } from './repositories/scouting-session.repository';
 
 export interface ScoutingSessionSyncData {
   _id: string;
@@ -14,13 +13,17 @@ export interface ScoutingSessionSyncData {
 
 @Injectable()
 export class ScoutingService {
-  constructor(@InjectModel(ScoutingSession.name) private readonly sessions: Model<ScoutingSessionDocument>) {}
+  constructor(private readonly sessions: ScoutingSessionRepository) {}
 
-  findAll(): Promise<ScoutingSessionDocument[]> { return this.sessions.find({ deleted: false }).exec(); }
+  findAll(): Promise<ScoutingSessionDocument[]> {
+    return this.sessions.findActive();
+  }
 
   async sync(data: ScoutingSessionSyncData[]): Promise<ScoutingSessionDocument[]> {
-    return Promise.all(data.map(({ _id, isDeleted, deleted, ...session }) =>
-      this.sessions.findByIdAndUpdate(_id, { ...session, deleted: isDeleted ?? deleted ?? false }, { upsert: true, new: true }).exec() as Promise<ScoutingSessionDocument>
-    ));
+    return Promise.all(
+      data.map(({ _id, isDeleted, deleted, ...session }) =>
+        this.sessions.upsert(_id, { ...session, deleted: isDeleted ?? deleted ?? false }),
+      ),
+    );
   }
 }

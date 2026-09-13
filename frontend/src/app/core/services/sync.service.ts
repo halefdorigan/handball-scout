@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DatabaseService } from '../db/database.service';
 import { lastValueFrom } from 'rxjs';
+import { TeamRepository } from '../repositories/team.repository';
+import { PlayerRepository } from '../repositories/player.repository';
+import { PlayerMembershipRepository } from '../repositories/player-membership.repository';
+import { MatchRepository } from '../repositories/match.repository';
+import { ScoutingSessionRepository } from '../repositories/scouting-session.repository';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +15,11 @@ export class SyncService {
 
   constructor(
     private http: HttpClient,
-    private dbService: DatabaseService
+    private teams: TeamRepository,
+    private players: PlayerRepository,
+    private memberships: PlayerMembershipRepository,
+    private matches: MatchRepository,
+    private sessions: ScoutingSessionRepository,
   ) {}
 
   async syncAll() {
@@ -23,8 +31,7 @@ export class SyncService {
   }
 
   private async syncTeams() {
-    const db = await this.dbService.getDb();
-    const localTeams = await db['teams'].find().exec();
+    const localTeams = await this.teams.all();
     const teamsData = localTeams.map((t: any) => {
       const { isDeleted, ...team } = t.toJSON();
       return { ...team, deleted: isDeleted ?? false };
@@ -35,25 +42,23 @@ export class SyncService {
 
     // Pull (upsert back to local)
     for (const team of remoteTeams) {
-      await db['teams'].upsert(this.normalizeTeam(team));
+      await this.teams.upsert(this.normalizeTeam(team));
     }
   }
 
   private async syncPlayers() {
-    const db = await this.dbService.getDb();
-    const localPlayers = await db['players'].find().exec();
+    const localPlayers = await this.players.all();
     const playersData = localPlayers.map((p: any) => p.toJSON());
 
     const remotePlayers = await lastValueFrom(this.http.post<any[]>(`${this.apiUrl}/players/sync`, playersData));
 
     for (const player of remotePlayers) {
-      await db['players'].upsert(this.normalizePlayer(player));
+      await this.players.upsert(this.normalizePlayer(player));
     }
   }
 
   private async syncMemberships() {
-    const db = await this.dbService.getDb();
-    const localMemberships = await db['playerMemberships'].find().exec();
+    const localMemberships = await this.memberships.all();
     const membershipsData = localMemberships.map((membership: any) => membership.toJSON());
 
     const remoteMemberships = await lastValueFrom(
@@ -61,7 +66,7 @@ export class SyncService {
     );
 
     for (const membership of remoteMemberships) {
-      await db['playerMemberships'].upsert(this.normalizeMembership(membership));
+      await this.memberships.upsert(this.normalizeMembership(membership));
     }
   }
 
@@ -100,8 +105,7 @@ export class SyncService {
   }
 
   private async syncMatches() {
-    const db = await this.dbService.getDb();
-    const localMatches = await db['matches'].find().exec();
+    const localMatches = await this.matches.all();
     const matchesData = localMatches.map((match: any) => {
       const data = match.toJSON();
       return { ...data, deleted: data.isDeleted ?? false };
@@ -110,20 +114,19 @@ export class SyncService {
     const remoteMatches = await lastValueFrom(this.http.post<any[]>(`${this.apiUrl}/matches/sync`, matchesData));
 
     for (const match of remoteMatches) {
-      await db['matches'].upsert(this.normalizeMatch(match));
+      await this.matches.upsert(this.normalizeMatch(match));
     }
   }
 
   private async syncScoutingSessions() {
-    const db = await this.dbService.getDb();
-    const sessions = await db['scoutingSessions'].find().exec();
+    const sessions = await this.sessions.all();
     const payload = sessions.map((session: any) => {
       const data = session.toJSON();
       return { ...data, deleted: data.isDeleted ?? false };
     });
     const remote = await lastValueFrom(this.http.post<any[]>(`${this.apiUrl}/scouting-sessions/sync`, payload));
     for (const session of remote) {
-      await db['scoutingSessions'].upsert({
+      await this.sessions.upsert({
         _id: session._id, matchId: session.matchId, elapsedSeconds: session.elapsedSeconds || 0,
         events: session.events || [], updatedAt: this.normalizeUpdatedAt(session.updatedAt),
         isDeleted: session.isDeleted ?? session.deleted ?? false

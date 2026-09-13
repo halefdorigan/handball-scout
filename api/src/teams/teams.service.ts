@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { Team, TeamDocument } from './schemas/team.schema';
+import { TeamRepository } from './repositories/team.repository';
 
 @Injectable()
 export class TeamsService {
-  constructor(@InjectModel(Team.name) private teamModel: Model<TeamDocument>) {}
+  constructor(private readonly teams: TeamRepository) {}
 
   async findAll(): Promise<TeamDocument[]> {
-    return this.teamModel.find({ deleted: false }).exec();
+    return this.teams.findActive();
   }
 
   async findOne(id: string): Promise<TeamDocument | null> {
-    return this.teamModel.findById(id).exec();
+    return this.teams.findById(id);
   }
 
   async upsert(teamData: any): Promise<TeamDocument> {
@@ -24,12 +23,7 @@ export class TeamsService {
       updateData.deleted = deleted;
     }
 
-    return this.teamModel
-      .findByIdAndUpdate(_id, updateData, {
-        upsert: true,
-        new: true,
-      })
-      .exec() as Promise<TeamDocument>;
+    return this.teams.upsert(_id, updateData);
   }
 
   async sync(teams: any[]): Promise<any> {

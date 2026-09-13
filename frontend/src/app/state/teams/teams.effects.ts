@@ -1,27 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { EMPTY, from, map, mergeMap, catchError, of, switchMap, Observable } from 'rxjs';
-import { DatabaseService } from '../../core/db/database.service';
+import { EMPTY, from, map, mergeMap, catchError, of, switchMap } from 'rxjs';
+import { TeamRepository } from '../../core/repositories/team.repository';
 import * as TeamsActions from './teams.actions';
-import { v4 as uuidv4 } from 'uuid';
 import { Action } from '@ngrx/store';
 
 @Injectable()
 export class TeamsEffects {
   constructor(
     private actions$: Actions,
-    private dbService: DatabaseService
+    private teams: TeamRepository
   ) {}
 
   loadTeams$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TeamsActions.loadTeams),
-      switchMap(() => from(this.dbService.getDb())),
-      switchMap(db => (db['teams'].find().$ as Observable<any[]>).pipe(
-        map(teams => teams
-          .map((t: any) => t.toJSON())
-          .filter((team: any) => !team.isDeleted)
-        ),
+      switchMap(() => this.teams.observeActive().pipe(
         map(teams => TeamsActions.loadTeamsSuccess({ teams })),
         catchError(error => of(TeamsActions.loadTeamsFailure({ error })))
       ))
@@ -31,15 +25,7 @@ export class TeamsEffects {
   addTeam$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TeamsActions.addTeam),
-      mergeMap(action => from(this.dbService.getDb()).pipe(
-        mergeMap(db => db['teams'].insert({
-          _id: uuidv4(),
-          name: action.team.name,
-          color: action.team.color || '#0a7281',
-          tags: action.team.tags || [],
-          updatedAt: Date.now(),
-          isDeleted: false
-        })),
+      mergeMap(action => from(this.teams.create(action.team)).pipe(
         map(() => ({ type: 'NO_ACTION' }))
       ))
     ),
@@ -49,15 +35,7 @@ export class TeamsEffects {
   updateTeam$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TeamsActions.updateTeam),
-      mergeMap(action => from(this.dbService.getDb()).pipe(
-        mergeMap(db => db['teams'].upsert({
-          _id: action.team._id,
-          name: action.team.name,
-          color: action.team.color || '#0a7281',
-          tags: action.team.tags || [],
-          updatedAt: Date.now(),
-          isDeleted: action.team.isDeleted ?? false
-        })),
+      mergeMap(action => from(this.teams.update(action.team)).pipe(
         map(() => ({ type: 'NO_ACTION' }))
       ))
     ),
@@ -67,17 +45,8 @@ export class TeamsEffects {
   deleteTeam$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TeamsActions.deleteTeam),
-      mergeMap(action => from(this.dbService.getDb()).pipe(
-        mergeMap(db => from(db['teams'].findOne(action.id).exec())),
-        mergeMap((doc: any) => {
-          if (!doc) return EMPTY;
-
-          return from(doc.modify((team: any) => {
-            team.isDeleted = true;
-            team.updatedAt = Date.now();
-            return team;
-          }));
-        }),
+      mergeMap(action => from(this.teams.archive(action.id)).pipe(
+        mergeMap(doc => doc ? of(doc) : EMPTY),
         catchError(() => EMPTY)
       ))
     ),

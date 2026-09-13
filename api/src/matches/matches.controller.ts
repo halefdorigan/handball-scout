@@ -8,8 +8,12 @@ export class MatchesController {
   constructor(private readonly matches: MatchesService) {}
 
   @Get()
-  findAll() { return this.matches.findAll(); }
+  findAll() {
+    return this.matches.findAll();
+  }
 
   @Post('sync')
-  sync(@Body() data: MatchSyncData[]) { return this.matches.sync(data); }
+  sync(@Body() data: MatchSyncData[]) {
+    return this.matches.sync(data);
+  }
 }

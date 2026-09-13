@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { Match, MatchDocument } from './schemas/match.schema';
+import { MatchRepository } from './repositories/match.repository';
 
 export interface MatchSyncData {
   _id: string;
@@ -17,10 +16,10 @@ export interface MatchSyncData {
 
 @Injectable()
 export class MatchesService {
-  constructor(@InjectModel(Match.name) private readonly matchModel: Model<MatchDocument>) {}
+  constructor(private readonly matches: MatchRepository) {}
 
   findAll(): Promise<MatchDocument[]> {
-    return this.matchModel.find({ deleted: false }).exec();
+    return this.matches.findActive();
   }
 
   async upsert(data: MatchSyncData): Promise<MatchDocument> {
@@ -28,11 +27,7 @@ export class MatchesService {
       throw new BadRequestException('Uma partida exige dois times distintos');
     }
     const { _id, isDeleted, deleted, ...match } = data;
-    return this.matchModel.findByIdAndUpdate(
-      _id,
-      { ...match, deleted: isDeleted ?? deleted ?? false },
-      { upsert: true, new: true },
-    ).exec() as Promise<MatchDocument>;
+    return this.matches.upsert(_id, { ...match, deleted: isDeleted ?? deleted ?? false });
   }
 
   async sync(matches: MatchSyncData[]): Promise<MatchDocument[]> {
