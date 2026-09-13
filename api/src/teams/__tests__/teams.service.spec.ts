@@ -16,9 +16,7 @@ describe('TeamsService', () => {
       findById: jest.fn(),
       findByIdAndUpdate: jest.fn(),
     };
-    teamsService = new TeamsService(
-      teamModel as unknown as Model<TeamDocument>,
-    );
+    teamsService = new TeamsService(teamModel as unknown as Model<TeamDocument>);
   });
 
   describe('findAll', () => {
@@ -109,10 +107,7 @@ describe('TeamsService', () => {
         .mockResolvedValueOnce(secondResult as TeamDocument);
 
       // Act
-      const result = (await teamsService.sync([
-        firstTeam,
-        secondTeam,
-      ])) as unknown;
+      const result = (await teamsService.sync([firstTeam, secondTeam])) as unknown;
 
       // Assert
       expect(upsert).toHaveBeenNthCalledWith(1, firstTeam);

@@ -29,23 +29,31 @@
 
   <section class="players-section" *ngIf="!isNew" aria-labelledby="players-title">
     <div class="section-heading">
-      <div><p class="eyebrow">Roster / 03</p><h2 id="players-title">Jogadores</h2></div>
-      <span class="section-heading__note">Adicione atletas ao elenco</span>
+      <div><p class="eyebrow">Vínculos / 03</p><h2 id="players-title">Jogadores do time</h2></div>
+      <span class="section-heading__note">O número e a posição pertencem ao vínculo</span>
     </div>
     <form [formGroup]="playerForm" (ngSubmit)="addPlayer()" class="player-form">
-      <input type="number" formControlName="number" placeholder="Nº" aria-label="Número da camisa">
-      <input type="text" formControlName="name" placeholder="Nome do jogador" aria-label="Nome do jogador">
-      <select formControlName="position" aria-label="Posição">
-        <option value="Goleiro">Goleiro</option><option value="Ponta">Ponta</option><option value="Armador">Armador</option><option value="Pivô">Pivô</option>
+      <select formControlName="playerId" aria-label="Jogador">
+        <option value="">Selecione um jogador existente</option>
+        <option *ngFor="let player of availablePlayers$ | async" [value]="player._id">{{ player.name }}</option>
       </select>
-      <button type="submit" class="btn btn--primary" [disabled]="playerForm.invalid">Adicionar <span aria-hidden="true">＋</span></button>
+      <input type="number" formControlName="number" placeholder="Nº" aria-label="Número da camisa" min="0" max="99">
+      <select formControlName="position" aria-label="Posição">
+        <option value="">Não informada</option><option value="Goleiro">Goleiro</option><option value="Ponta">Ponta</option><option value="Armador">Armador</option><option value="Pivô">Pivô</option>
+      </select>
+      <button type="submit" class="btn btn--primary" [disabled]="playerForm.invalid">Vincular <span aria-hidden="true">＋</span></button>
     </form>
-    <div class="players-list">
-      <div *ngFor="let player of players$ | async" class="player-item">
-        <span class="player-item__number">{{ player.number }}</span>
-        <strong class="player-item__name">{{ player.name }}</strong>
-        <span class="player-item__pos">{{ player.position }}</span>
+    <p class="player-link-hint">Não encontrou o jogador? <a routerLink="/players/new">Cadastre um novo perfil global.</a></p>
+    <div class="players-list" *ngIf="players$ | async as players">
+      <div *ngFor="let item of players" class="player-item" [class.player-item--inactive]="item.membership.status !== 'ACTIVE' || item.player.isDeleted">
+        <span class="player-item__number">{{ item.membership.number ?? '—' }}</span>
+        <strong class="player-item__name">{{ item.player.name }}</strong>
+        <span class="player-item__pos">{{ item.membership.position || 'Posição não informada' }}</span>
+        <span class="player-item__status">{{ item.player.isDeleted ? 'Arquivado' : (item.membership.status === 'ACTIVE' ? 'Ativo' : 'Inativo') }}</span>
+        <button type="button" class="player-item__action" (click)="toggleMembership(item.membership)">{{ item.membership.status === 'ACTIVE' ? 'Inativar' : 'Ativar' }}</button>
+        <button type="button" class="player-item__action player-item__action--danger" (click)="removeMembership(item.membership)">Remover</button>
       </div>
+      <p *ngIf="players.length === 0" class="players-empty">Nenhum vínculo cadastrado para este time.</p>
     </div>
   </section>
 

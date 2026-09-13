@@ -1,37 +1,38 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store, createFeatureSelector } from '@ngrx/store';
-import { Subject, Observable, filter, map, switchMap, takeUntil } from 'rxjs';
+import { Observable, combineLatest, filter, map, switchMap } from 'rxjs';
 import { Game } from '../../../core/models/game.model';
 import { Team } from '../../../core/models/team.model';
-import { Player } from '../../../core/models/player.model';
+import { Player, PlayerMembership } from '../../../core/models/player.model';
 import * as GamesActions from '../../../state/games/games.actions';
 import * as TeamsActions from '../../../state/teams/teams.actions';
 import * as PlayersActions from '../../../state/players/players.actions';
+import * as MembershipsActions from '../../../state/memberships/memberships.actions';
 import { adapter as gamesAdapter } from '../../../state/games/games.reducer';
-import { adapter as teamsAdapter } from '../../../state/teams/teams.reducer';
-import { adapter as playersAdapter } from '../../../state/players/players.reducer';
+import { selectAllPlayers } from '../../../state/players/players.selectors';
+import { selectAllMemberships } from '../../../state/memberships/memberships.selectors';
+import { selectTeamEntities } from '../../../state/teams/teams.selectors';
 
 const selectGamesState = createFeatureSelector<any>('games');
 const { selectEntities: selectGameEntities } = gamesAdapter.getSelectors(selectGamesState);
 
-const selectTeamsState = createFeatureSelector<any>('teams');
-const { selectEntities: selectTeamEntities } = teamsAdapter.getSelectors(selectTeamsState);
-
-const selectPlayersState = createFeatureSelector<any>('players');
-const { selectAll: selectAllPlayers } = playersAdapter.getSelectors(selectPlayersState);
+interface PlayerReportEntry {
+  player: Player;
+  membership: PlayerMembership;
+  teamLabel: string;
+}
 
 @Component({
   selector: 'app-game-report',
   templateUrl: './game-report.component.html',
   styleUrls: ['./game-report.component.scss']
 })
-export class GameReportComponent implements OnInit, OnDestroy {
-  private readonly _destroy$ = new Subject<void>();
+export class GameReportComponent implements OnInit {
   game$: Observable<Game | undefined>;
   teamA$: Observable<Team | undefined>;
   teamB$: Observable<Team | undefined>;
-  players$: Observable<Player[]>;
+  players$: Observable<PlayerReportEntry[]>;
 
   constructor(private route: ActivatedRoute, private store: Store) {
     const gameId$ = this.route.params.pipe(map((p: any) => p['id']));
@@ -50,26 +51,36 @@ export class GameReportComponent implements OnInit, OnDestroy {
       switchMap(g => this.store.select(selectTeamEntities).pipe(map((entities: any) => entities[g!.teamBId])))
     );
 
-    this.players$ = this.store.select(selectAllPlayers);
+    this.players$ = this.game$.pipe(
+      filter((game): game is Game => Boolean(game)),
+      switchMap(game => combineLatest([
+        this.store.select(selectAllPlayers),
+        this.store.select(selectAllMemberships)
+      ]).pipe(
+        map(([players, memberships]) => players
+          .map(player => {
+            const membership = memberships.find(item =>
+              item.playerId === player._id &&
+              (item.teamId === game.teamAId || item.teamId === game.teamBId)
+            );
+            if (!membership) return undefined;
+
+            return {
+              player,
+              membership,
+              teamLabel: membership.teamId === game.teamAId ? 'CASA' : 'VISITANTE'
+            };
+          })
+          .filter((item): item is PlayerReportEntry => Boolean(item)))
+      ))
+    );
   }
 
   ngOnInit(): void {
     this.store.dispatch(GamesActions.loadGames());
     this.store.dispatch(TeamsActions.loadTeams());
-    
-    this.game$.pipe(
-      takeUntil(this._destroy$),
-      filter(g => !!g),
-      map(g => {
-        this.store.dispatch(PlayersActions.loadPlayers({ teamId: (g as any).teamAId }));
-        this.store.dispatch(PlayersActions.loadPlayers({ teamId: (g as any).teamBId }));
-      })
-    ).subscribe();
-  }
-
-  ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
+    this.store.dispatch(PlayersActions.loadPlayers());
+    this.store.dispatch(MembershipsActions.loadMemberships());
   }
 
   getStats(teamId: string, type: string, events: any[] | undefined): number {

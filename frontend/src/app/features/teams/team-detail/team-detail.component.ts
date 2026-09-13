@@ -3,17 +3,21 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store, createFeatureSelector, createSelector } from '@ngrx/store';
 import * as TeamsActions from '../../../state/teams/teams.actions';
+import * as MembershipsActions from '../../../state/memberships/memberships.actions';
 import * as PlayersActions from '../../../state/players/players.actions';
-import { Player } from '../../../core/models/player.model';
+import { Player, PlayerMembership } from '../../../core/models/player.model';
 import { Observable, combineLatest, map } from 'rxjs';
 import { adapter as teamsAdapter } from '../../../state/teams/teams.reducer';
-import { adapter as playersAdapter } from '../../../state/players/players.reducer';
+import { selectAllPlayers } from '../../../state/players/players.selectors';
+import { selectAllMemberships } from '../../../state/memberships/memberships.selectors';
 
 const selectTeamsState = createFeatureSelector<any>('teams');
-const selectPlayersState = createFeatureSelector<any>('players');
-
 const { selectEntities: selectTeamEntities } = teamsAdapter.getSelectors(selectTeamsState);
-const { selectAll: selectAllPlayers } = playersAdapter.getSelectors(selectPlayersState);
+
+interface TeamPlayer {
+  player: Player;
+  membership: PlayerMembership;
+}
 
 @Component({
   selector: 'app-team-detail',
@@ -26,7 +30,8 @@ export class TeamDetailComponent implements OnInit {
   isNew = true;
   teamId: string | null = null;
   showDeleteModal = false;
-  players$: Observable<Player[]>;
+  players$: Observable<TeamPlayer[]> = new Observable<TeamPlayer[]>();
+  availablePlayers$: Observable<Player[]> = new Observable<Player[]>();
 
   constructor(
     private fb: FormBuilder,
@@ -41,16 +46,15 @@ export class TeamDetailComponent implements OnInit {
     });
 
     this.playerForm = this.fb.group({
-      name: ['', Validators.required],
-      number: ['', Validators.required],
+      playerId: ['', Validators.required],
+      number: ['', [Validators.min(0), Validators.max(99)]],
       position: ['Goleiro']
     });
-
-    this.players$ = this.store.select(selectAllPlayers);
   }
 
   ngOnInit(): void {
     this.teamId = this.route.snapshot.paramMap.get('id');
+    this.store.dispatch(TeamsActions.loadTeams());
     if (this.teamId && this.teamId !== 'new') {
       this.isNew = false;
       this.store.select(selectTeamEntities).pipe(
@@ -58,7 +62,32 @@ export class TeamDetailComponent implements OnInit {
       ).subscribe(team => {
         if (team) this.teamForm.patchValue(team);
       });
-      this.store.dispatch(PlayersActions.loadPlayers({ teamId: this.teamId }));
+      this.store.dispatch(MembershipsActions.loadMemberships());
+      this.store.dispatch(PlayersActions.loadPlayers());
+      this.players$ = combineLatest([
+        this.store.select(selectAllPlayers),
+        this.store.select(selectAllMemberships)
+      ]).pipe(
+        map(([players, memberships]) => memberships
+          .filter(membership => membership.teamId === this.teamId && !membership.isDeleted)
+          .map(membership => {
+            const player = players.find(item => item._id === membership.playerId);
+            return player ? { player, membership } : undefined;
+          })
+          .filter((item): item is TeamPlayer => Boolean(item)))
+      );
+      this.availablePlayers$ = combineLatest([
+        this.store.select(selectAllPlayers),
+        this.store.select(selectAllMemberships)
+      ]).pipe(
+        map(([players, memberships]) => players.filter(player =>
+          !player.isDeleted && !memberships.some(membership =>
+            membership.playerId === player._id && membership.teamId === this.teamId && !membership.isDeleted
+          )
+        ))
+      );
+    } else {
+      this.players$ = new Observable<TeamPlayer[]>();
     }
   }
 
@@ -82,13 +111,32 @@ export class TeamDetailComponent implements OnInit {
 
   addPlayer() {
     if (this.playerForm.valid && this.teamId) {
-      const player: Partial<Player> = {
-        ...this.playerForm.value,
-        teamId: this.teamId
-      };
-      this.store.dispatch(PlayersActions.addPlayer({ player }));
-      this.playerForm.reset({ position: 'Goleiro' });
+      this.store.dispatch(MembershipsActions.addMembership({
+        membership: {
+          playerId: this.playerForm.value.playerId,
+          teamId: this.teamId,
+          ...(this.playerForm.value.number !== '' && this.playerForm.value.number !== null ? { number: Number(this.playerForm.value.number) } : {}),
+          ...(this.playerForm.value.position ? { position: this.playerForm.value.position } : {}),
+          status: 'ACTIVE',
+          isDeleted: false
+        }
+      }));
+      this.playerForm.reset({ playerId: '', number: '', position: 'Goleiro' });
     }
+  }
+
+  toggleMembership(membership: PlayerMembership) {
+    this.store.dispatch(MembershipsActions.updateMembership({
+      membership: {
+        ...membership,
+        status: membership.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
+        updatedAt: Date.now()
+      }
+    }));
+  }
+
+  removeMembership(membership: PlayerMembership) {
+    this.store.dispatch(MembershipsActions.archiveMembership({ id: membership._id }));
   }
 
   openDeleteModal() {

@@ -14,9 +14,7 @@ describe('PlayersService', () => {
       find: jest.fn(),
       findByIdAndUpdate: jest.fn(),
     };
-    playersService = new PlayersService(
-      playerModel as unknown as Model<PlayerDocument>,
-    );
+    playersService = new PlayersService(playerModel as unknown as Model<PlayerDocument>);
   });
 
   describe('findAll', () => {
@@ -37,12 +35,18 @@ describe('PlayersService', () => {
   });
 
   describe('upsert', () => {
-    it('should update a player without forwarding the id as update data', async () => {
+    it('should update a player without forwarding the id or legacy team fields', async () => {
       // Arrange
       const player = {
         _id: 'player-id',
-        teamId: 'team-id',
         name: 'Player A',
+        birthDate: '2000-01-01',
+        heightCm: 180,
+        weightKg: 75,
+        dominantHand: 'RIGHT' as const,
+        teamId: 'legacy-team-id',
+        number: 7,
+        position: 'Ponta',
       };
       const savedPlayer = { ...player };
       const exec = jest.fn().mockResolvedValue(savedPlayer);
@@ -54,11 +58,59 @@ describe('PlayersService', () => {
       // Assert
       expect(playerModel.findByIdAndUpdate).toHaveBeenCalledWith(
         player._id,
-        { teamId: player.teamId, name: player.name },
+        {
+          name: player.name,
+          birthDate: player.birthDate,
+          heightCm: player.heightCm,
+          weightKg: player.weightKg,
+          dominantHand: player.dominantHand,
+        },
         { upsert: true, new: true },
       );
       expect(exec).toHaveBeenCalledTimes(1);
       expect(result).toEqual(savedPlayer);
+    });
+
+    it('should map the local deletion flag to the API field', async () => {
+      // Arrange
+      const player = {
+        _id: 'player-id',
+        name: 'Player A',
+        isDeleted: true,
+      };
+      const exec = jest.fn().mockResolvedValue(player);
+      playerModel.findByIdAndUpdate.mockReturnValue({ exec });
+
+      // Act
+      await playersService.upsert(player);
+
+      // Assert
+      expect(playerModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        player._id,
+        { name: player.name, deleted: true },
+        { upsert: true, new: true },
+      );
+    });
+
+    it('should preserve the API deletion flag when syncing remote data', async () => {
+      // Arrange
+      const player = {
+        _id: 'player-id',
+        name: 'Player A',
+        deleted: true,
+      };
+      const exec = jest.fn().mockResolvedValue(player);
+      playerModel.findByIdAndUpdate.mockReturnValue({ exec });
+
+      // Act
+      await playersService.upsert(player);
+
+      // Assert
+      expect(playerModel.findByIdAndUpdate).toHaveBeenCalledWith(
+        player._id,
+        { name: player.name, deleted: true },
+        { upsert: true, new: true },
+      );
     });
   });
 
@@ -75,10 +127,7 @@ describe('PlayersService', () => {
         .mockResolvedValueOnce(secondResult as PlayerDocument);
 
       // Act
-      const result = (await playersService.sync([
-        firstPlayer,
-        secondPlayer,
-      ])) as unknown;
+      const result = (await playersService.sync([firstPlayer, secondPlayer])) as unknown;
 
       // Assert
       expect(upsert).toHaveBeenNthCalledWith(1, firstPlayer);

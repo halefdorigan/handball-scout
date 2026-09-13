@@ -13,10 +13,12 @@ export class GamesService {
 
   async upsert(gameData: any): Promise<GameDocument> {
     const { _id, ...updateData } = gameData;
-    return this.gameModel.findByIdAndUpdate(_id, updateData, {
-      upsert: true,
-      new: true
-    }).exec() as Promise<GameDocument>;
+    return this.gameModel
+      .findByIdAndUpdate(_id, updateData, {
+        upsert: true,
+        new: true,
+      })
+      .exec() as Promise<GameDocument>;
   }
 
   async sync(games: any[]): Promise<any> {

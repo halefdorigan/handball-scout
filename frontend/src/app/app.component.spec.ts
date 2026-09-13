@@ -31,6 +31,7 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('.brand-mark__name')?.textContent).toContain('SCOUT');
-    expect(compiled.querySelectorAll('.nav-item').length).toBe(6);
+    expect(compiled.querySelectorAll('.nav-item').length).toBe(8);
+    expect(compiled.textContent).toContain('Jogadores');
   });
 });

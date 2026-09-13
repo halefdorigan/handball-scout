@@ -24,10 +24,12 @@ export class TeamsService {
       updateData.deleted = deleted;
     }
 
-    return this.teamModel.findByIdAndUpdate(_id, updateData, {
-      upsert: true,
-      new: true
-    }).exec() as Promise<TeamDocument>;
+    return this.teamModel
+      .findByIdAndUpdate(_id, updateData, {
+        upsert: true,
+        new: true,
+      })
+      .exec() as Promise<TeamDocument>;
   }
 
   async sync(teams: any[]): Promise<any> {

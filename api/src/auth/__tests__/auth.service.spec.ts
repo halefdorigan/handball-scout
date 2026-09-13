@@ -19,10 +19,7 @@ describe('AuthService', () => {
     userModel = jest.fn() as jest.Mock & { findOne: jest.Mock };
     userModel.findOne = jest.fn();
     jwtService = { sign: jest.fn() };
-    authService = new AuthService(
-      userModel as unknown as Model<User>,
-      jwtService as unknown as JwtService,
-    );
+    authService = new AuthService(userModel as unknown as Model<User>, jwtService as unknown as JwtService);
   });
 
   describe('validateUser', () => {
@@ -43,17 +40,11 @@ describe('AuthService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
       // Act
-      const result = (await authService.validateUser(
-        email,
-        password,
-      )) as unknown;
+      const result = (await authService.validateUser(email, password)) as unknown;
 
       // Assert
       expect(userModel.findOne).toHaveBeenCalledWith({ email });
-      expect(bcrypt.compare).toHaveBeenCalledWith(
-        password,
-        userDocument.passwordHash,
-      );
+      expect(bcrypt.compare).toHaveBeenCalledWith(password, userDocument.passwordHash);
       expect(userDocument.toObject).toHaveBeenCalledTimes(1);
       expect(result).toEqual({
         _id: 'user-id',
@@ -68,10 +59,7 @@ describe('AuthService', () => {
       userModel.findOne.mockResolvedValue(null);
 
       // Act
-      const result = (await authService.validateUser(
-        email,
-        'secret',
-      )) as unknown;
+      const result = (await authService.validateUser(email, 'secret')) as unknown;
 
       // Assert
       expect(result).toBeNull();
@@ -88,10 +76,7 @@ describe('AuthService', () => {
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       // Act
-      const result = (await authService.validateUser(
-        'athlete@example.com',
-        'wrong',
-      )) as unknown;
+      const result = (await authService.validateUser('athlete@example.com', 'wrong')) as unknown;
 
       // Assert
       expect(result).toBeNull();
@@ -129,11 +114,7 @@ describe('AuthService', () => {
       (bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password');
 
       // Act
-      const result = (await authService.register(
-        email,
-        password,
-        name,
-      )) as unknown;
+      const result = (await authService.register(email, password, name)) as unknown;
 
       // Assert
       expect(bcrypt.hash).toHaveBeenCalledWith(password, 10);

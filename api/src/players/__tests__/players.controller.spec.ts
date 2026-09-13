@@ -13,9 +13,7 @@ describe('PlayersController', () => {
       findAll: jest.fn(),
       sync: jest.fn(),
     };
-    playersController = new PlayersController(
-      playersService as unknown as PlayersService,
-    );
+    playersController = new PlayersController(playersService as unknown as PlayersService);
   });
 
   it('should return all players', async () => {

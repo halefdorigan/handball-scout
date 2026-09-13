@@ -13,9 +13,7 @@ describe('TeamsController', () => {
       findAll: jest.fn(),
       sync: jest.fn(),
     };
-    teamsController = new TeamsController(
-      teamsService as unknown as TeamsService,
-    );
+    teamsController = new TeamsController(teamsService as unknown as TeamsService);
   });
 
   it('should return all teams', async () => {

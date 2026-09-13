@@ -23,9 +23,9 @@
   <section class="player-stats" aria-labelledby="player-stats-title">
     <div class="section-heading"><div><p class="eyebrow">Desempenho individual / 02</p><h2 id="player-stats-title">Gols por jogador</h2></div></div>
     <div class="player-grid">
-      <div class="player-stat-item" *ngFor="let player of players$ | async">
-        <ng-container *ngIf="player.teamId === game.teamAId || player.teamId === game.teamBId">
-          <span class="player-number">#{{ player.number }}</span><strong class="player-name">{{ player.name }}</strong><span class="player-team">{{ player.teamId === game.teamAId ? 'CASA' : 'VISITANTE' }}</span><strong class="player-goals">{{ getPlayerGoals(player._id, game.events) }}</strong>
+      <div class="player-stat-item" *ngFor="let item of players$ | async">
+        <ng-container>
+          <span class="player-number">#{{ item.membership.number ?? '—' }}</span><strong class="player-name">{{ item.player.name }}</strong><span class="player-team">{{ item.teamLabel }}</span><strong class="player-goals">{{ getPlayerGoals(item.player._id, game.events) }}</strong>
         </ng-container>
       </div>
     </div>

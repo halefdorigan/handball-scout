@@ -1,25 +1,28 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store, createFeatureSelector, createSelector } from '@ngrx/store';
-import { Observable, Subscription, interval, map, take } from 'rxjs';
+import { Store, createFeatureSelector } from '@ngrx/store';
+import { Observable, Subscription, combineLatest, interval, map } from 'rxjs';
 import { Game, GameEvent } from '../../../core/models/game.model';
 import { Team } from '../../../core/models/team.model';
-import { Player } from '../../../core/models/player.model';
+import { Player, PlayerMembership } from '../../../core/models/player.model';
 import * as GamesActions from '../../../state/games/games.actions';
 import * as TeamsActions from '../../../state/teams/teams.actions';
 import * as PlayersActions from '../../../state/players/players.actions';
-import { adapter as teamsAdapter } from '../../../state/teams/teams.reducer';
-import { adapter as playersAdapter } from '../../../state/players/players.reducer';
 import { adapter as gamesAdapter } from '../../../state/games/games.reducer';
+import * as MembershipsActions from '../../../state/memberships/memberships.actions';
+import { selectActiveMembershipsForTeam } from '../../../state/memberships/memberships.selectors';
+import { selectActivePlayersForTeam } from '../../../state/players/players.selectors';
+import { selectTeamEntities } from '../../../state/teams/teams.selectors';
 import { v4 as uuidv4 } from 'uuid';
 
-const selectTeamsState = createFeatureSelector<any>('teams');
-const selectPlayersState = createFeatureSelector<any>('players');
 const selectGamesState = createFeatureSelector<any>('games');
 
-const { selectEntities: selectTeamEntities } = teamsAdapter.getSelectors(selectTeamsState);
-const { selectAll: selectAllPlayers } = playersAdapter.getSelectors(selectPlayersState);
 const { selectEntities: selectGameEntities } = gamesAdapter.getSelectors(selectGamesState);
+
+interface ScoutPlayer {
+  player: Player;
+  membership: PlayerMembership;
+}
 
 @Component({
   selector: 'app-scout',
@@ -30,8 +33,8 @@ export class ScoutComponent implements OnInit, OnDestroy {
   game$?: Observable<Game | undefined>;
   teamA$?: Observable<Team | undefined>;
   teamB$?: Observable<Team | undefined>;
-  playersA$?: Observable<Player[]>;
-  playersB$?: Observable<Player[]>;
+  playersA$?: Observable<ScoutPlayer[]>;
+  playersB$?: Observable<ScoutPlayer[]>;
 
   timerSeconds = 0;
   isTimerRunning = false;
@@ -56,17 +59,30 @@ export class ScoutComponent implements OnInit, OnDestroy {
       this.game$.subscribe(game => {
         if (game) {
           this.store.dispatch(TeamsActions.loadTeams());
-          this.store.dispatch(PlayersActions.loadPlayers({ teamId: game.teamAId }));
-          this.store.dispatch(PlayersActions.loadPlayers({ teamId: game.teamBId }));
+          this.store.dispatch(PlayersActions.loadPlayers());
+          this.store.dispatch(MembershipsActions.loadMemberships());
 
           this.teamA$ = this.store.select(selectTeamEntities).pipe(map(entities => entities[game.teamAId]));
           this.teamB$ = this.store.select(selectTeamEntities).pipe(map(entities => entities[game.teamBId]));
           
-          this.playersA$ = this.store.select(selectAllPlayers).pipe(map(players => players.filter(p => p.teamId === game.teamAId)));
-          this.playersB$ = this.store.select(selectAllPlayers).pipe(map(players => players.filter(p => p.teamId === game.teamBId)));
+          this.playersA$ = this.getPlayersForTeam(game.teamAId);
+          this.playersB$ = this.getPlayersForTeam(game.teamBId);
         }
       });
     }
+  }
+
+  private getPlayersForTeam(teamId: string): Observable<ScoutPlayer[]> {
+    return combineLatest([
+      this.store.select(selectActivePlayersForTeam(teamId)),
+      this.store.select(selectActiveMembershipsForTeam(teamId))
+    ]).pipe(
+      map(([players, memberships]) => memberships.map(membership => {
+        const player = players.find(item => item._id === membership.playerId);
+        return player ? { player, membership } : undefined;
+      })
+        .filter((item): item is ScoutPlayer => Boolean(item)))
+    );
   }
 
   toggleTimer() {

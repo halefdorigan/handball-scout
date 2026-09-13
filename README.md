@@ -13,8 +13,8 @@ navigation.
 
 - `frontend/` — Angular 15 progressive web app with NgRx state and RxDB local
   persistence.
-- `api/` — NestJS API with MongoDB persistence for teams, players, games, and
-  authentication.
+- `api/` — NestJS API with MongoDB persistence for teams, players, player
+  memberships, games, and authentication.
 - `docker-compose.yml` — MongoDB and backend container definition. The current
   compose file expects the backend build context to be available at
   `./backend`; use the local commands below when running this repository as it
@@ -73,11 +73,13 @@ build output is written to `api/dist`.
 
 ## Main flows
 
-1. Create a team and add its players.
-2. Create a game and select the two teams.
-3. Open **Scout** to start the timer and register match events.
-4. Open the game report from the dashboard to compare team and player output.
-5. Use **Sync** on the teams screen to exchange local data with the API.
+1. Create a global player profile in **Jogadores**.
+2. Create a team and link existing player profiles with their number and
+   position.
+3. Create a game and select the two teams.
+4. Open **Scout** to start the timer and register match events.
+5. Open the game report from the dashboard to compare team and player output.
+6. Use **Sync** on the teams screen to exchange local data with the API.
 
 ## Design notes
 

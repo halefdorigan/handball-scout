@@ -9,16 +9,19 @@ export class Player {
   _id: string;
 
   @Prop({ required: true })
-  teamId: string;
-
-  @Prop({ required: true })
   name: string;
 
   @Prop()
-  number: number;
+  birthDate?: string;
 
-  @Prop()
-  position: string;
+  @Prop({ min: 1 })
+  heightCm?: number;
+
+  @Prop({ min: 1 })
+  weightKg?: number;
+
+  @Prop({ enum: ['RIGHT', 'LEFT', 'BOTH'] })
+  dominantHand?: 'RIGHT' | 'LEFT' | 'BOTH';
 
   @Prop({ default: false })
   deleted: boolean;

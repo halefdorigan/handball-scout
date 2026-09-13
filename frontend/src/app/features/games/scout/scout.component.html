@@ -36,7 +36,7 @@
   <div class="player-overlay" *ngIf="showPlayerSelection" role="dialog" aria-modal="true" aria-labelledby="player-modal-title">
     <div class="player-modal">
       <p class="eyebrow">Associar evento</p><h2 id="player-modal-title">Quem realizou<br><em>{{ pendingAction }}</em>?</h2>
-      <div class="players-grid"><button class="player-btn player-btn--collective" (click)="logEvent()">COLETIVO</button><button *ngFor="let player of (selectedTeamId === game.teamAId ? playersA$ : playersB$) | async" class="player-btn" (click)="logEvent(player._id)"><span class="player-number">{{ player.number }}</span><span class="player-name">{{ player.name }}</span></button></div>
+      <div class="players-grid"><button class="player-btn player-btn--collective" (click)="logEvent()">COLETIVO</button><button *ngFor="let item of (selectedTeamId === game.teamAId ? playersA$ : playersB$) | async" class="player-btn" (click)="logEvent(item.player._id)"><span class="player-number">{{ item.membership.number ?? '—' }}</span><span class="player-name">{{ item.player.name }}</span></button></div>
       <button class="btn btn--secondary btn--full" (click)="showPlayerSelection = false">Cancelar</button>
     </div>
   </div>
