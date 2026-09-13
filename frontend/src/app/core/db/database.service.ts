@@ -12,10 +12,12 @@ import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import {
   gameSchema,
+  matchSchema,
   playerMembershipSchema,
   playerMigrationStrategies,
   playerSchema,
-  teamSchema
+  teamSchema,
+  scoutingSessionSchema
 } from './schemas';
 
 @Injectable({
@@ -54,15 +56,45 @@ export class DatabaseService {
           migrationStrategies: playerMigrationStrategies
         },
         playerMemberships: { schema: playerMembershipSchema },
-        games: { schema: gameSchema }
+        games: { schema: gameSchema },
+        matches: { schema: matchSchema },
+        scoutingSessions: { schema: scoutingSessionSchema }
       });
 
       await this.migrateLegacyPlayers(db);
+      await this.migrateLegacyGames(db);
 
       return db;
     })();
 
     return this.dbPromise;
+  }
+
+  private async migrateLegacyGames(db: any) {
+    const games = await db['games'].find().exec();
+    for (const gameDocument of games) {
+      const game = gameDocument.toJSON();
+      const match = await db['matches'].findOne(game._id).exec();
+      if (!match) {
+        await db['matches'].insert({
+          _id: game._id, name: game.name, dateTime: game.dateTime,
+          homeTeamId: game.teamAId, awayTeamId: game.teamBId, tags: game.tags || [],
+          status: game.status || 'PENDING', updatedAt: game.updatedAt || Date.now(), isDeleted: game.isDeleted ?? false
+        });
+      }
+      const sessionId = `scout-${game._id}`;
+      const session = await db['scoutingSessions'].findOne(sessionId).exec();
+      if (!session) {
+        await db['scoutingSessions'].insert({
+          _id: sessionId, matchId: game._id, elapsedSeconds: 0,
+          events: (game.events || []).map((event: any, index: number) => ({
+            ...event, sequence: index + 1,
+            type: event.type === 'MIN2' ? 'TWO_MINUTES' : event.type === 'YELLOW' ? 'YELLOW_CARD' : event.type
+          })),
+          updatedAt: game.updatedAt || Date.now(), isDeleted: game.isDeleted ?? false
+        });
+      }
+    }
   }
 
   private async migrateLegacyPlayers(db: any) {

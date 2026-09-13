@@ -18,7 +18,8 @@ export class SyncService {
     await this.syncTeams();
     await this.syncPlayers();
     await this.syncMemberships();
-    await this.syncGames();
+    await this.syncMatches();
+    await this.syncScoutingSessions();
   }
 
   private async syncTeams() {
@@ -98,15 +99,35 @@ export class SyncService {
     return Number.isNaN(parsed) ? Date.now() : parsed;
   }
 
-  private async syncGames() {
+  private async syncMatches() {
     const db = await this.dbService.getDb();
-    const localGames = await db['games'].find().exec();
-    const gamesData = localGames.map((g: any) => g.toJSON());
+    const localMatches = await db['matches'].find().exec();
+    const matchesData = localMatches.map((match: any) => {
+      const data = match.toJSON();
+      return { ...data, deleted: data.isDeleted ?? false };
+    });
 
-    const remoteGames = await lastValueFrom(this.http.post<any[]>(`${this.apiUrl}/games/sync`, gamesData));
+    const remoteMatches = await lastValueFrom(this.http.post<any[]>(`${this.apiUrl}/matches/sync`, matchesData));
 
-    for (const game of remoteGames) {
-      await db['games'].upsert(this.normalizeGame(game));
+    for (const match of remoteMatches) {
+      await db['matches'].upsert(this.normalizeMatch(match));
+    }
+  }
+
+  private async syncScoutingSessions() {
+    const db = await this.dbService.getDb();
+    const sessions = await db['scoutingSessions'].find().exec();
+    const payload = sessions.map((session: any) => {
+      const data = session.toJSON();
+      return { ...data, deleted: data.isDeleted ?? false };
+    });
+    const remote = await lastValueFrom(this.http.post<any[]>(`${this.apiUrl}/scouting-sessions/sync`, payload));
+    for (const session of remote) {
+      await db['scoutingSessions'].upsert({
+        _id: session._id, matchId: session.matchId, elapsedSeconds: session.elapsedSeconds || 0,
+        events: session.events || [], updatedAt: this.normalizeUpdatedAt(session.updatedAt),
+        isDeleted: session.isDeleted ?? session.deleted ?? false
+      });
     }
   }
 
@@ -121,16 +142,15 @@ export class SyncService {
     };
   }
 
-  private normalizeGame(game: any) {
+  private normalizeMatch(game: any) {
     return {
       _id: game._id,
       name: game.name,
       ...(game.dateTime ? { dateTime: game.dateTime } : {}),
-      ...(game.teamAId ? { teamAId: game.teamAId } : {}),
-      ...(game.teamBId ? { teamBId: game.teamBId } : {}),
+      ...(game.homeTeamId ? { homeTeamId: game.homeTeamId } : {}),
+      ...(game.awayTeamId ? { awayTeamId: game.awayTeamId } : {}),
       ...(Array.isArray(game.tags) ? { tags: game.tags } : {}),
       ...(game.status ? { status: game.status } : {}),
-      ...(Array.isArray(game.events) ? { events: game.events } : {}),
       updatedAt: this.normalizeUpdatedAt(game.updatedAt),
       isDeleted: game.isDeleted ?? game.deleted ?? false
     };

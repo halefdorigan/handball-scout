@@ -110,3 +110,26 @@ export const gameSchema: RxJsonSchema<any> = {
   },
   required: ['_id', 'name', 'updatedAt']
 };
+
+export const matchSchema: RxJsonSchema<any> = {
+  title: 'match schema', version: 0, description: 'match metadata without scout events',
+  primaryKey: '_id', type: 'object',
+  properties: {
+    _id: { type: 'string', maxLength: 100 }, name: { type: 'string' }, dateTime: { type: 'string' },
+    homeTeamId: { type: 'string', maxLength: 100 }, awayTeamId: { type: 'string', maxLength: 100 },
+    tags: { type: 'array', items: { type: 'string' } }, status: { type: 'string', enum: ['PENDING', 'RUNNING', 'FINISHED'] },
+    updatedAt: { type: 'number' }, isDeleted: { type: 'boolean' }
+  },
+  required: ['_id', 'name', 'homeTeamId', 'awayTeamId', 'status', 'updatedAt']
+};
+
+export const scoutingSessionSchema: RxJsonSchema<any> = {
+  title: 'scouting session schema', version: 0, description: 'events registered for one match',
+  primaryKey: '_id', type: 'object',
+  properties: {
+    _id: { type: 'string', maxLength: 160 }, matchId: { type: 'string', maxLength: 100 },
+    elapsedSeconds: { type: 'number', minimum: 0 }, events: { type: 'array', items: { type: 'object' } },
+    updatedAt: { type: 'number' }, isDeleted: { type: 'boolean' }
+  },
+  required: ['_id', 'matchId', 'elapsedSeconds', 'events', 'updatedAt']
+};
