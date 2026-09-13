@@ -2,6 +2,11 @@
   min-height: 100vh;
 }
 
+.app-shell--public .app-rail,
+.app-shell--public .app-bottom-nav {
+  display: none;
+}
+
 .app-rail {
   background: var(--hb-ink);
   box-sizing: border-box;
@@ -90,6 +95,10 @@
 .app-main {
   margin-left: 220px;
   min-height: 100vh;
+}
+
+.app-main--public {
+  margin-left: 0;
 }
 
 .app-bottom-nav { display: none; }

@@ -78,6 +78,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   font-size: 0.875rem;
   border: 1px solid transparent;
   cursor: pointer;
+  text-decoration: none;
   transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
   user-select: none;
 
