@@ -34,6 +34,19 @@ These instructions apply to the entire repository.
   Accepted ADRs are historical records; record a new decision instead of
   rewriting an accepted decision.
 
+## Persistence boundary
+
+- Only classes under a `repositories/` directory may issue document queries or
+  write commands to RxDB/Dexie or Mongoose.
+- Services orchestrate use cases through repositories; they must not inject
+  Mongoose models, obtain RxDB collections, or execute persistence operations.
+- Controllers, components, NgRx effects, guards, and selectors must access
+  persisted data only through services or repositories' public contracts.
+- The local database bootstrap may create the database and register schemas,
+  but document migrations and CRUD operations belong to repositories.
+- Run `npm run check:persistence-boundary` in each package after changing a
+  persistence integration.
+
 ## Validation requirements
 
 Run the checks relevant to the code you changed. Frontend validation has an additional mandatory browser requirement.

@@ -27,7 +27,7 @@ Angular 15 PWA → NgRx Store → RxDB/Dexie (fonte local)
 | Persistência local | RxDB sobre storage Dexie, base `handball_scout_db`. | [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) |
 | Integração | `SyncService` faz a ponte explícita entre a base local e a API. | [ADR-004](docs/adrs/004-sincronizacao-explicita.md) |
 | Servidor | API NestJS modular exposta por HTTP. | [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) |
-| Persistência remota | MongoDB acessado por Mongoose. | [ADR-003](docs/adrs/003-api-modular-com-mongodb.md) |
+| Persistência remota | MongoDB acessado por repositórios Mongoose. | [ADR-007](docs/adrs/007-fronteira-de-persistencia-por-repositorios.md) |
 
 ## Frontend — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) e [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
 
@@ -50,10 +50,12 @@ Angular 15 PWA → NgRx Store → RxDB/Dexie (fonte local)
 
 - `api/src/main.ts` inicializa a aplicação NestJS, habilita CORS e escuta a
   porta `PORT` ou `3000`. [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
-- `AppModule` compõe os módulos `auth`, `teams`, `players` e `games`.
+- `AppModule` compõe os módulos `auth`, `teams`, `players`, `player-memberships`,
+  `matches` e `scouting`; `games` permanece como fachada de compatibilidade.
+  [ADR-003](docs/adrs/003-api-modular-com-mongodb.md) e [ADR-006](docs/adrs/006-contextos-partida-e-scouting.md)
   [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
-- Cada módulo de domínio organiza controller, service e schema Mongoose.
-  [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
+- Cada módulo de domínio organiza controller, service, repository e schema
+  Mongoose; somente repositórios acessam o driver. [ADR-007](docs/adrs/007-fronteira-de-persistencia-por-repositorios.md)
 - A conexão padrão aponta para o banco MongoDB `handball-scout`; `MONGODB_URI`
   pode substituí-la. [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
 - A API habilita CORS globalmente para permitir a comunicação HTTP da PWA.
@@ -63,8 +65,9 @@ Angular 15 PWA → NgRx Store → RxDB/Dexie (fonte local)
 
 - O RxDB é a fonte de leitura e escrita do fluxo normal do frontend; as telas
   não consultam a API diretamente para carregar dados. [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
-- A base local possui schemas para `Team`, `Player` e `Game`; eventos ficam
-  embutidos no array `events` de uma partida. [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
+- A base local possui schemas legados para `Game` e coleções novas para
+  `Match` e `ScoutingSession`; eventos pertencem à sessão de scout.
+  [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) e [ADR-006](docs/adrs/006-contextos-partida-e-scouting.md)
 - O backend persiste os mesmos agregados como documentos Mongoose separados.
   `teamAId`, `teamBId` e `teamId` são referências por string, sem relações
   Mongoose declaradas. [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)

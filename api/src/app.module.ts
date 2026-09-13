@@ -5,6 +5,8 @@ import { TeamsModule } from './teams/teams.module';
 import { PlayersModule } from './players/players.module';
 import { PlayerMembershipsModule } from './player-memberships/player-memberships.module';
 import { GamesModule } from './games/games.module';
+import { MatchesModule } from './matches/matches.module';
+import { ScoutingModule } from './scouting/scouting.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -16,6 +18,8 @@ import { AppService } from './app.service';
     PlayersModule,
     PlayerMembershipsModule,
     GamesModule,
+    MatchesModule,
+    ScoutingModule,
   ],
   controllers: [AppController],
   providers: [AppService],

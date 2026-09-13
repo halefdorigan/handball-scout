@@ -16,3 +16,4 @@ seu registro histórico.
 - [ADR-003 — API modular com MongoDB](003-api-modular-com-mongodb.md)
 - [ADR-004 — Sincronização explícita](004-sincronizacao-explicita.md)
 - [ADR-005 — Autenticação JWT](005-autenticacao-jwt.md)
+- [ADR-006 — Separação entre partida e scouting](006-contextos-partida-e-scouting.md)

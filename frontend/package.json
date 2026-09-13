@@ -2,9 +2,10 @@
   "name": "frontend",
   "version": "0.0.0",
   "scripts": {
+    "check:persistence-boundary": "node ../scripts/check-persistence-boundary.mjs",
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm run check:persistence-boundary && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

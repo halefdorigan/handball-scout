@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { Player, PlayerDocument } from './schemas/player.schema';
+import { PlayerRepository } from './repositories/player.repository';
 
 interface PlayerSyncData {
   _id: string;
@@ -20,10 +19,10 @@ interface PlayerSyncData {
 
 @Injectable()
 export class PlayersService {
-  constructor(@InjectModel(Player.name) private playerModel: Model<PlayerDocument>) {}
+  constructor(private readonly players: PlayerRepository) {}
 
   async findAll(): Promise<PlayerDocument[]> {
-    return this.playerModel.find({ deleted: false }).exec();
+    return this.players.findActive();
   }
 
   async upsert(playerData: PlayerSyncData): Promise<PlayerDocument> {
@@ -39,12 +38,7 @@ export class PlayersService {
       updateData.deleted = deleted;
     }
 
-    return this.playerModel
-      .findByIdAndUpdate(_id, updateData, {
-        upsert: true,
-        new: true,
-      })
-      .exec() as Promise<PlayerDocument>;
+    return this.players.upsert(_id, updateData);
   }
 
   async sync(players: PlayerSyncData[]): Promise<PlayerDocument[]> {

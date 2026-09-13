@@ -1,5 +1,13 @@
 # Instruções para a API
 
+## Fronteira de persistência
+
+- Apenas arquivos em `repositories/` podem usar `@InjectModel`, `Model` ou
+  executar consultas e comandos Mongoose.
+- Services dependem de repositórios e concentram regras de negócio; controllers
+  e guards dependem apenas de services.
+- Execute `npm run check:persistence-boundary` ao alterar persistência.
+
 ## Organização dos testes
 
 - Considere `api/src/` a entrada dos módulos da API.

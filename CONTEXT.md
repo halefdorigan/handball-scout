@@ -23,6 +23,7 @@ Contas e redefinição de senha ainda não fazem parte da jornada atual do produ
 | --- | --- | --- |
 | **Scout Court** | `Scout Court` | Nome do produto. |
 | **scout** | `Scout`, `scouting` | Acompanhamento de uma partida com registro de eventos. |
+| **sessão de scout** | `ScoutingSession` | Registro de scout associado a uma única partida, que contém o cronômetro e os eventos. |
 | **time** | `Team`, `Time`, `Times` | Grupo esportivo cadastrado e participante de uma partida. |
 | **elenco** | `Roster`, `Jogadores` | Conjunto de jogadores associados a um time; não é uma entidade própria. |
 | **jogador** | `Player`, `Jogador` | Atleta pertencente a um time. |
@@ -52,6 +53,7 @@ Contas e redefinição de senha ainda não fazem parte da jornada atual do produ
 - Um jogador pertence a um único time por vez.
 - Um evento pertence a uma partida e a um time, podendo também identificar um
   jogador.
+- Uma sessão de scout pertence a uma única partida.
 - O placar é derivado dos eventos de gol, não de um valor independente.
 - O trabalho local pode continuar sem conectividade; a sincronização é uma
   capacidade posterior do mesmo dado.

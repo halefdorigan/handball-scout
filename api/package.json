@@ -6,7 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "check:persistence-boundary": "node ../scripts/check-persistence-boundary.mjs",
+    "build": "npm run check:persistence-boundary && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"eslint.config.mjs\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\" \"eslint.config.mjs\"",
     "start": "nest start",

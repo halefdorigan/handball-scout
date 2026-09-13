@@ -3,8 +3,9 @@
 Este documento concentra divergências e lacunas observadas na implementação.
 Elas não fazem parte do contexto semântico global.
 
-- A ação de defesa emite `SAVE`, mas o relatório procura `GK_SAVE`.
-- A ação de dois minutos emite `MIN2`, mas o relatório procura `SUSPENSION`.
+- A interface ainda lê a coleção legada `games`; a migração para `matches` e
+  `scoutingSessions` já é executada na base local, mas as telas precisam ser
+  transferidas antes de remover a compatibilidade.
 - Cartões amarelos são registrados, mas não possuem estatística no relatório.
 - O cronômetro não altera o `Game.status`; a partida permanece `PENDING` após
   sua criação.

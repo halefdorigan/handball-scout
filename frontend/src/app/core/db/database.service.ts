@@ -12,11 +12,14 @@ import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
 import { RxDBMigrationSchemaPlugin } from 'rxdb/plugins/migration-schema';
 import {
   gameSchema,
+  matchSchema,
   playerMembershipSchema,
   playerMigrationStrategies,
   playerSchema,
-  teamSchema
+  teamSchema,
+  scoutingSessionSchema
 } from './schemas';
+import { migrateLegacyData } from '../repositories/legacy-migration.repository';
 
 @Injectable({
   providedIn: 'root'
@@ -54,10 +57,12 @@ export class DatabaseService {
           migrationStrategies: playerMigrationStrategies
         },
         playerMemberships: { schema: playerMembershipSchema },
-        games: { schema: gameSchema }
+        games: { schema: gameSchema },
+        matches: { schema: matchSchema },
+        scoutingSessions: { schema: scoutingSessionSchema }
       });
 
-      await this.migrateLegacyPlayers(db);
+      await migrateLegacyData(db);
 
       return db;
     })();
@@ -65,35 +70,4 @@ export class DatabaseService {
     return this.dbPromise;
   }
 
-  private async migrateLegacyPlayers(db: any) {
-    const legacyPlayers = await db['players'].find().exec();
-
-    for (const player of legacyPlayers) {
-      const playerData = player.toJSON();
-      if (!playerData.legacyTeamId) continue;
-
-      const membershipId = `legacy-${playerData._id}-${playerData.legacyTeamId}`;
-      const existingMembership = await db['playerMemberships'].findOne(membershipId).exec();
-
-      if (!existingMembership) {
-        await db['playerMemberships'].insert({
-          _id: membershipId,
-          playerId: playerData._id,
-          teamId: playerData.legacyTeamId,
-          number: typeof playerData.legacyNumber === 'number' ? playerData.legacyNumber : 0,
-          position: playerData.legacyPosition || 'Não definida',
-          status: playerData.isDeleted ? 'INACTIVE' : 'ACTIVE',
-          updatedAt: playerData.updatedAt || Date.now(),
-          isDeleted: playerData.isDeleted ?? false
-        });
-      }
-
-      await player.modify((data: any) => {
-        delete data.legacyTeamId;
-        delete data.legacyNumber;
-        delete data.legacyPosition;
-        return data;
-      });
-    }
-  }
 }

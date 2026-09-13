@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { PlayerMembership, PlayerMembershipDocument } from './schemas/player-membership.schema';
+import { PlayerMembershipRepository } from './repositories/player-membership.repository';
 
 interface PlayerMembershipSyncData {
   _id: string;
@@ -17,10 +16,10 @@ interface PlayerMembershipSyncData {
 
 @Injectable()
 export class PlayerMembershipsService {
-  constructor(@InjectModel(PlayerMembership.name) private membershipModel: Model<PlayerMembershipDocument>) {}
+  constructor(private readonly memberships: PlayerMembershipRepository) {}
 
   async findAll(): Promise<PlayerMembershipDocument[]> {
-    return this.membershipModel.find({ deleted: false }).exec();
+    return this.memberships.findActive();
   }
 
   async upsert(membershipData: PlayerMembershipSyncData): Promise<PlayerMembershipDocument> {
@@ -33,12 +32,7 @@ export class PlayerMembershipsService {
       updateData.deleted = deleted;
     }
 
-    return this.membershipModel
-      .findByIdAndUpdate(_id, updateData, {
-        upsert: true,
-        new: true,
-      })
-      .exec() as Promise<PlayerMembershipDocument>;
+    return this.memberships.upsert(_id, updateData);
   }
 
   async sync(memberships: PlayerMembershipSyncData[]): Promise<PlayerMembershipDocument[]> {
