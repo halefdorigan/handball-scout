@@ -1,36 +1,34 @@
-import { Model } from 'mongoose';
 import { PlayersService } from '../players.service';
 import { PlayerDocument } from '../schemas/player.schema';
+import { PlayerRepository } from '../repositories/player.repository';
 
 describe('PlayersService', () => {
   let playersService: PlayersService;
-  let playerModel: {
-    find: jest.Mock;
-    findByIdAndUpdate: jest.Mock;
+  let players: {
+    findActive: jest.Mock;
+    upsert: jest.Mock;
   };
 
   beforeEach(() => {
-    playerModel = {
-      find: jest.fn(),
-      findByIdAndUpdate: jest.fn(),
+    players = {
+      findActive: jest.fn(),
+      upsert: jest.fn(),
     };
-    playersService = new PlayersService(playerModel as unknown as Model<PlayerDocument>);
+    playersService = new PlayersService(players as unknown as PlayerRepository);
   });
 
   describe('findAll', () => {
     it('should return non-deleted players', async () => {
       // Arrange
-      const players = [{ _id: 'player-id', name: 'Player A' }];
-      const exec = jest.fn().mockResolvedValue(players);
-      playerModel.find.mockReturnValue({ exec });
+      const playerDocuments = [{ _id: 'player-id', name: 'Player A' }];
+      players.findActive.mockResolvedValue(playerDocuments);
 
       // Act
       const result = await playersService.findAll();
 
       // Assert
-      expect(playerModel.find).toHaveBeenCalledWith({ deleted: false });
-      expect(exec).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(players);
+      expect(players.findActive).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(playerDocuments);
     });
   });
 
@@ -49,25 +47,19 @@ describe('PlayersService', () => {
         position: 'Ponta',
       };
       const savedPlayer = { ...player };
-      const exec = jest.fn().mockResolvedValue(savedPlayer);
-      playerModel.findByIdAndUpdate.mockReturnValue({ exec });
+      players.upsert.mockResolvedValue(savedPlayer);
 
       // Act
       const result = await playersService.upsert(player);
 
       // Assert
-      expect(playerModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        player._id,
-        {
-          name: player.name,
-          birthDate: player.birthDate,
-          heightCm: player.heightCm,
-          weightKg: player.weightKg,
-          dominantHand: player.dominantHand,
-        },
-        { upsert: true, new: true },
-      );
-      expect(exec).toHaveBeenCalledTimes(1);
+      expect(players.upsert).toHaveBeenCalledWith(player._id, {
+        name: player.name,
+        birthDate: player.birthDate,
+        heightCm: player.heightCm,
+        weightKg: player.weightKg,
+        dominantHand: player.dominantHand,
+      });
       expect(result).toEqual(savedPlayer);
     });
 
@@ -78,18 +70,13 @@ describe('PlayersService', () => {
         name: 'Player A',
         isDeleted: true,
       };
-      const exec = jest.fn().mockResolvedValue(player);
-      playerModel.findByIdAndUpdate.mockReturnValue({ exec });
+      players.upsert.mockResolvedValue(player);
 
       // Act
       await playersService.upsert(player);
 
       // Assert
-      expect(playerModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        player._id,
-        { name: player.name, deleted: true },
-        { upsert: true, new: true },
-      );
+      expect(players.upsert).toHaveBeenCalledWith(player._id, { name: player.name, deleted: true });
     });
 
     it('should preserve the API deletion flag when syncing remote data', async () => {
@@ -99,18 +86,13 @@ describe('PlayersService', () => {
         name: 'Player A',
         deleted: true,
       };
-      const exec = jest.fn().mockResolvedValue(player);
-      playerModel.findByIdAndUpdate.mockReturnValue({ exec });
+      players.upsert.mockResolvedValue(player);
 
       // Act
       await playersService.upsert(player);
 
       // Assert
-      expect(playerModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        player._id,
-        { name: player.name, deleted: true },
-        { upsert: true, new: true },
-      );
+      expect(players.upsert).toHaveBeenCalledWith(player._id, { name: player.name, deleted: true });
     });
   });
 

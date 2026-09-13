@@ -17,3 +17,6 @@ seu registro histórico.
 - [ADR-004 — Sincronização explícita](004-sincronizacao-explicita.md)
 - [ADR-005 — Autenticação JWT](005-autenticacao-jwt.md)
 - [ADR-006 — Separação entre partida e scouting](006-contextos-partida-e-scouting.md)
+- [ADR-007 — Fronteira de persistência por repositórios](007-fronteira-de-persistencia-por-repositorios.md)
+- [ADR-008 — Fluxo de sessão no frontend](008-fluxo-de-sessao-no-frontend.md)
+- [ADR-009 — Configuração por ambiente](009-configuracao-por-ambiente.md)

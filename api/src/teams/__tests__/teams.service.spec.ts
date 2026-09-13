@@ -1,38 +1,36 @@
-import { Model } from 'mongoose';
 import { TeamsService } from '../teams.service';
 import { TeamDocument } from '../schemas/team.schema';
+import { TeamRepository } from '../repositories/team.repository';
 
 describe('TeamsService', () => {
   let teamsService: TeamsService;
-  let teamModel: {
-    find: jest.Mock;
+  let teams: {
+    findActive: jest.Mock;
     findById: jest.Mock;
-    findByIdAndUpdate: jest.Mock;
+    upsert: jest.Mock;
   };
 
   beforeEach(() => {
-    teamModel = {
-      find: jest.fn(),
+    teams = {
+      findActive: jest.fn(),
       findById: jest.fn(),
-      findByIdAndUpdate: jest.fn(),
+      upsert: jest.fn(),
     };
-    teamsService = new TeamsService(teamModel as unknown as Model<TeamDocument>);
+    teamsService = new TeamsService(teams as unknown as TeamRepository);
   });
 
   describe('findAll', () => {
     it('should return non-deleted teams', async () => {
       // Arrange
-      const teams = [{ _id: 'team-id', name: 'Team A' }];
-      const exec = jest.fn().mockResolvedValue(teams);
-      teamModel.find.mockReturnValue({ exec });
+      const teamDocuments = [{ _id: 'team-id', name: 'Team A' }];
+      teams.findActive.mockResolvedValue(teamDocuments);
 
       // Act
       const result = await teamsService.findAll();
 
       // Assert
-      expect(teamModel.find).toHaveBeenCalledWith({ deleted: false });
-      expect(exec).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(teams);
+      expect(teams.findActive).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(teamDocuments);
     });
   });
 
@@ -40,15 +38,13 @@ describe('TeamsService', () => {
     it('should return the team with the requested id', async () => {
       // Arrange
       const team = { _id: 'team-id', name: 'Team A' };
-      const exec = jest.fn().mockResolvedValue(team);
-      teamModel.findById.mockReturnValue({ exec });
+      teams.findById.mockResolvedValue(team);
 
       // Act
       const result = await teamsService.findOne('team-id');
 
       // Assert
-      expect(teamModel.findById).toHaveBeenCalledWith('team-id');
-      expect(exec).toHaveBeenCalledTimes(1);
+      expect(teams.findById).toHaveBeenCalledWith('team-id');
       expect(result).toEqual(team);
     });
   });
@@ -58,19 +54,13 @@ describe('TeamsService', () => {
       // Arrange
       const team = { _id: 'team-id', name: 'Team A', color: '#fff' };
       const savedTeam = { ...team };
-      const exec = jest.fn().mockResolvedValue(savedTeam);
-      teamModel.findByIdAndUpdate.mockReturnValue({ exec });
+      teams.upsert.mockResolvedValue(savedTeam);
 
       // Act
       const result = await teamsService.upsert(team);
 
       // Assert
-      expect(teamModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        team._id,
-        { name: team.name, color: team.color },
-        { upsert: true, new: true },
-      );
-      expect(exec).toHaveBeenCalledTimes(1);
+      expect(teams.upsert).toHaveBeenCalledWith(team._id, { name: team.name, color: team.color });
       expect(result).toEqual(savedTeam);
     });
 
@@ -78,18 +68,13 @@ describe('TeamsService', () => {
       // Arrange
       const team = { _id: 'team-id', name: 'Team A', isDeleted: true };
       const savedTeam = { ...team, deleted: true };
-      const exec = jest.fn().mockResolvedValue(savedTeam);
-      teamModel.findByIdAndUpdate.mockReturnValue({ exec });
+      teams.upsert.mockResolvedValue(savedTeam);
 
       // Act
       const result = await teamsService.upsert(team);
 
       // Assert
-      expect(teamModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        team._id,
-        { name: team.name, deleted: true },
-        { upsert: true, new: true },
-      );
+      expect(teams.upsert).toHaveBeenCalledWith(team._id, { name: team.name, deleted: true });
       expect(result).toEqual(savedTeam);
     });
   });

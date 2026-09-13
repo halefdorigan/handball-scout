@@ -1,35 +1,34 @@
-import { Model } from 'mongoose';
 import { PlayerMembershipDocument } from '../schemas/player-membership.schema';
 import { PlayerMembershipsService } from '../player-memberships.service';
+import { PlayerMembershipRepository } from '../repositories/player-membership.repository';
 
 describe('PlayerMembershipsService', () => {
   let membershipsService: PlayerMembershipsService;
-  let membershipModel: {
-    find: jest.Mock;
-    findByIdAndUpdate: jest.Mock;
+  let memberships: {
+    findActive: jest.Mock;
+    upsert: jest.Mock;
   };
 
   beforeEach(() => {
-    membershipModel = {
-      find: jest.fn(),
-      findByIdAndUpdate: jest.fn(),
+    memberships = {
+      findActive: jest.fn(),
+      upsert: jest.fn(),
     };
-    membershipsService = new PlayerMembershipsService(membershipModel as unknown as Model<PlayerMembershipDocument>);
+    membershipsService = new PlayerMembershipsService(memberships as unknown as PlayerMembershipRepository);
   });
 
   describe('findAll', () => {
     it('should return non-deleted memberships', async () => {
       // Arrange
-      const memberships = [{ _id: 'membership-id', playerId: 'player-id' }];
-      const exec = jest.fn().mockResolvedValue(memberships);
-      membershipModel.find.mockReturnValue({ exec });
+      const membershipDocuments = [{ _id: 'membership-id', playerId: 'player-id' }];
+      memberships.findActive.mockResolvedValue(membershipDocuments);
 
       // Act
       const result = await membershipsService.findAll();
 
       // Assert
-      expect(membershipModel.find).toHaveBeenCalledWith({ deleted: false });
-      expect(result).toEqual(memberships);
+      expect(memberships.findActive).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(membershipDocuments);
     });
   });
 
@@ -46,25 +45,20 @@ describe('PlayerMembershipsService', () => {
         isDeleted: true,
       };
       const savedMembership = { ...membership };
-      const exec = jest.fn().mockResolvedValue(savedMembership);
-      membershipModel.findByIdAndUpdate.mockReturnValue({ exec });
+      memberships.upsert.mockResolvedValue(savedMembership);
 
       // Act
       const result = await membershipsService.upsert(membership);
 
       // Assert
-      expect(membershipModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        membership._id,
-        {
-          playerId: membership.playerId,
-          teamId: membership.teamId,
-          number: membership.number,
-          position: membership.position,
-          status: membership.status,
-          deleted: true,
-        },
-        { upsert: true, new: true },
-      );
+      expect(memberships.upsert).toHaveBeenCalledWith(membership._id, {
+        playerId: membership.playerId,
+        teamId: membership.teamId,
+        number: membership.number,
+        position: membership.position,
+        status: membership.status,
+        deleted: true,
+      });
       expect(result).toEqual(savedMembership);
     });
 
@@ -79,25 +73,20 @@ describe('PlayerMembershipsService', () => {
         status: 'ACTIVE' as const,
         deleted: true,
       };
-      const exec = jest.fn().mockResolvedValue(membership);
-      membershipModel.findByIdAndUpdate.mockReturnValue({ exec });
+      memberships.upsert.mockResolvedValue(membership);
 
       // Act
       await membershipsService.upsert(membership);
 
       // Assert
-      expect(membershipModel.findByIdAndUpdate).toHaveBeenCalledWith(
-        membership._id,
-        {
-          playerId: membership.playerId,
-          teamId: membership.teamId,
-          number: membership.number,
-          position: membership.position,
-          status: membership.status,
-          deleted: true,
-        },
-        { upsert: true, new: true },
-      );
+      expect(memberships.upsert).toHaveBeenCalledWith(membership._id, {
+        playerId: membership.playerId,
+        teamId: membership.teamId,
+        number: membership.number,
+        position: membership.position,
+        status: membership.status,
+        deleted: true,
+      });
     });
   });
 

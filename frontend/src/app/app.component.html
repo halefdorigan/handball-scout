@@ -24,6 +24,11 @@
       </a>
     </nav>
 
+    <button class="nav-item nav-item--logout" type="button" (click)="logout()">
+      <span class="nav-item__index">05</span>
+      <span class="nav-item__label">Sair</span>
+    </button>
+
     <div class="rail-footnote">HANDBALL<br>SCOUTING<br><span>v.0.1 / LOCAL</span></div>
   </aside>
 
@@ -44,5 +49,8 @@
     <a routerLink="/games" routerLinkActive="nav-item--active" class="nav-item">
       <span class="nav-item__index">04</span><span class="nav-item__label">Jogos</span>
     </a>
+    <button class="nav-item nav-item--logout" type="button" (click)="logout()">
+      <span class="nav-item__index">05</span><span class="nav-item__label">Sair</span>
+    </button>
   </nav>
 </div>

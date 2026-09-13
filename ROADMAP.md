@@ -17,7 +17,8 @@ Aplicativo de scout de handebol, que busca auxiliar times no registros de treino
 
 ### Autenticação
 
-Fluxo de autenticação com JWT, Bearer token, guards de rota de frontend, middlewares de autenticação no backend
+Fluxo de autenticação com JWT, Bearer token, guards de rota de frontend e
+middlewares de autenticação no backend — concluído.
 
 ### Cadastro de novos usuários
 
@@ -62,4 +63,3 @@ regras da organização.
 - Ampliar a preservação e a visualização do histórico por jogador e por time.
 - Adicionar avaliações avançadas e observações somente após definir finalidade,
 permissões e política de retenção.
-

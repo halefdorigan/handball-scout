@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtSignOptions } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthService } from './auth.service';
@@ -8,13 +8,26 @@ import { User, UserSchema } from './schemas/user.schema';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UserRepository } from './repositories/user.repository';
 
+function requiredEnvironmentVariable(name: string): string {
+  const value = process.env[name];
+
+  if (!value) {
+    throw new Error(`${name} environment variable is required.`);
+  }
+
+  return value;
+}
+
+const jwtSecret = requiredEnvironmentVariable('JWT_SECRET');
+const jwtExpiresIn = requiredEnvironmentVariable('JWT_EXPIRES_IN') as JwtSignOptions['expiresIn'];
+
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     PassportModule,
     JwtModule.register({
-      secret: 'SECRET_KEY', // Em produção, usar variável de ambiente
-      signOptions: { expiresIn: '7d' },
+      secret: jwtSecret,
+      signOptions: { expiresIn: jwtExpiresIn },
     }),
   ],
   controllers: [AuthController],

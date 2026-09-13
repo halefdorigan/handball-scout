@@ -6,6 +6,10 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
+The development build uses `src/environments/environment.ts` and calls the API
+at `http://localhost:3000`. Production builds replace it with
+`environment.prod.ts`, which uses the same-origin `/api` proxy.
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.

@@ -43,8 +43,13 @@ Angular 15 PWA → NgRx Store → RxDB/Dexie (fonte local)
   coleções `teams`, `players` e `games`. [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
 - O service worker é habilitado apenas fora do modo de desenvolvimento.
   [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
-- O interceptor registrado no `AppModule` acrescenta o token Bearer quando
-  existe `localStorage.auth_token`. [ADR-005](docs/adrs/005-autenticacao-jwt.md)
+- `AuthGuard` protege `/dashboard`, `/teams`, `/players` e `/games`; sem
+  sessão, ele redireciona para `/login` preservando a URL de retorno.
+  `GuestGuard` redireciona sessões existentes de `/login` e `/register` para o
+  dashboard. [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md)
+- O único interceptor registrado no `AppModule` acrescenta o token Bearer
+  quando existe `localStorage.auth_token`; o logout remove esse token local.
+  [ADR-005](docs/adrs/005-autenticacao-jwt.md) e [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md)
 
 ## Backend — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) e [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
 
@@ -93,23 +98,29 @@ Angular 15 PWA → NgRx Store → RxDB/Dexie (fonte local)
   [ADR-005](docs/adrs/005-autenticacao-jwt.md)
 - Os controllers de times, jogadores e partidas usam `JwtAuthGuard`.
   [ADR-005](docs/adrs/005-autenticacao-jwt.md)
-- O frontend armazena o token em `auth_token` e o interceptor ativo o envia
-  como `Authorization: Bearer <token>`. [ADR-005](docs/adrs/005-autenticacao-jwt.md)
-- O frontend ainda não possui telas ou rotas de autenticação; a arquitetura
-  local-first permite o trabalho local sem a API, mas a sincronização protegida
-  depende de um JWT. [ADR-005](docs/adrs/005-autenticacao-jwt.md)
+- O frontend armazena o token em `auth_token`, o interceptor ativo o envia
+  como `Authorization: Bearer <token>`, e os guards condicionam a navegação
+  interna a uma sessão local. [ADR-005](docs/adrs/005-autenticacao-jwt.md) e
+  [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md)
+- A API recebe `JWT_SECRET` e `JWT_EXPIRES_IN` por variáveis de ambiente;
+  os exemplos de desenvolvimento e produção documentam os nomes necessários.
+  [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md) e
+  [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
 
 ## Restrições de execução e deploy — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) e [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
 
-- O frontend é executado em `http://localhost:4200` e aponta a sincronização
-  para `http://localhost:3000`. [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
+- Em desenvolvimento, o frontend é executado em `http://localhost:4200` e usa
+  `http://localhost:3000` como API. Em produção, ele usa a rota relativa
+  `/api`, encaminhada pelo Nginx para o backend. [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
+  e [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
 - A operação offline depende do armazenamento local do navegador; a troca com
   a API só ocorre quando o usuário solicita sincronização e há conectividade.
   [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) e [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
-- O `docker-compose.yml` ainda usa `./backend` como contexto de build, embora
-  o backend esteja em `api/`. [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
+- O `docker-compose.yml` publica a PWA em `http://localhost:8080`; o Nginx
+  encaminha `/api` ao serviço `backend`, que recebe as variáveis de produção
+  pelo ambiente do container. [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
 
-## Fontes de implementação — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md), [ADR-002](docs/adrs/002-persistencia-local-offline-first.md), [ADR-003](docs/adrs/003-api-modular-com-mongodb.md), [ADR-004](docs/adrs/004-sincronizacao-explicita.md) e [ADR-005](docs/adrs/005-autenticacao-jwt.md)
+## Fontes de implementação — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md), [ADR-002](docs/adrs/002-persistencia-local-offline-first.md), [ADR-003](docs/adrs/003-api-modular-com-mongodb.md), [ADR-004](docs/adrs/004-sincronizacao-explicita.md), [ADR-005](docs/adrs/005-autenticacao-jwt.md), [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md) e [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
 
 - [Frontend](frontend/src/) — shell, módulos lazy, estado e persistência local.
   [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) e [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
