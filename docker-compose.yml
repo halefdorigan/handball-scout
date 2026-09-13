@@ -9,15 +9,28 @@ services:
 
   backend:
     build:
-      context: ./backend
+      context: ./api
       dockerfile: Dockerfile
     container_name: handball-scout-backend
     ports:
       - "3000:3000"
     environment:
-      - MONGODB_URI=mongodb://mongodb:27017/handball-scout
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongodb:27017/handball-scout
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
     depends_on:
       - mongodb
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: handball-scout-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
 
 volumes:
   mongodb_data:

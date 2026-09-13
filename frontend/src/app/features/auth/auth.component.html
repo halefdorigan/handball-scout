@@ -6,7 +6,7 @@
     </a>
     <p>
       <span>{{ isRegister ? 'Já tem uma conta?' : 'Ainda não tem uma conta?' }}</span>
-      <a [routerLink]="isRegister ? '/login' : '/register'">
+      <a [routerLink]="isRegister ? '/login' : '/register'" [queryParams]="returnUrl ? { returnUrl: returnUrl } : null">
         {{ isRegister ? 'Entrar' : 'Criar conta' }} <span aria-hidden="true">↗</span>
       </a>
     </p>

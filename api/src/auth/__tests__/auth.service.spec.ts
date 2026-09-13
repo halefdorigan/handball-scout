@@ -4,22 +4,20 @@ jest.mock('bcrypt', () => ({
 }));
 
 import { JwtService } from '@nestjs/jwt';
-import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from '../auth.service';
-import { User } from '../schemas/user.schema';
+import { UserRepository } from '../repositories/user.repository';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let userModel: jest.Mock & { findOne: jest.Mock };
+  let users: { findByEmail: jest.Mock; create: jest.Mock };
   let jwtService: { sign: jest.Mock };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    userModel = jest.fn() as jest.Mock & { findOne: jest.Mock };
-    userModel.findOne = jest.fn();
+    users = { findByEmail: jest.fn(), create: jest.fn() };
     jwtService = { sign: jest.fn() };
-    authService = new AuthService(userModel as unknown as Model<User>, jwtService as unknown as JwtService);
+    authService = new AuthService(users as unknown as UserRepository, jwtService as unknown as JwtService);
   });
 
   describe('validateUser', () => {
@@ -36,14 +34,14 @@ describe('AuthService', () => {
           passwordHash: 'hashed-password',
         }),
       };
-      userModel.findOne.mockResolvedValue(userDocument);
+      users.findByEmail.mockResolvedValue(userDocument);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
       // Act
       const result = (await authService.validateUser(email, password)) as unknown;
 
       // Assert
-      expect(userModel.findOne).toHaveBeenCalledWith({ email });
+      expect(users.findByEmail).toHaveBeenCalledWith(email);
       expect(bcrypt.compare).toHaveBeenCalledWith(password, userDocument.passwordHash);
       expect(userDocument.toObject).toHaveBeenCalledTimes(1);
       expect(result).toEqual({
@@ -56,7 +54,7 @@ describe('AuthService', () => {
     it('should return null when the user does not exist', async () => {
       // Arrange
       const email = 'missing@example.com';
-      userModel.findOne.mockResolvedValue(null);
+      users.findByEmail.mockResolvedValue(null);
 
       // Act
       const result = (await authService.validateUser(email, 'secret')) as unknown;
@@ -72,7 +70,7 @@ describe('AuthService', () => {
         passwordHash: 'hashed-password',
         toObject: jest.fn(),
       };
-      userModel.findOne.mockResolvedValue(userDocument);
+      users.findByEmail.mockResolvedValue(userDocument);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       // Act
@@ -103,14 +101,13 @@ describe('AuthService', () => {
   });
 
   describe('register', () => {
-    it('should hash the password, create the user and save it', async () => {
+    it('should hash the password and create the user through the repository', async () => {
       // Arrange
       const email = 'athlete@example.com';
       const password = 'secret';
       const name = 'Athlete';
       const savedUser = { _id: 'user-id', email, name };
-      const save = jest.fn().mockResolvedValue(savedUser);
-      userModel.mockImplementation((data: unknown) => ({ data, save }));
+      users.create.mockResolvedValue(savedUser);
       (bcrypt.hash as jest.Mock).mockResolvedValue('hashed-password');
 
       // Act
@@ -118,12 +115,7 @@ describe('AuthService', () => {
 
       // Assert
       expect(bcrypt.hash).toHaveBeenCalledWith(password, 10);
-      expect(userModel).toHaveBeenCalledWith({
-        email,
-        passwordHash: 'hashed-password',
-        name,
-      });
-      expect(save).toHaveBeenCalledTimes(1);
+      expect(users.create).toHaveBeenCalledWith(email, 'hashed-password', name);
       expect(result).toEqual(savedUser);
     });
   });

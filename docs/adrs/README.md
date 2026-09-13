@@ -18,3 +18,5 @@ its historical record.
 - [ADR-005 — JWT authentication](005-autenticacao-jwt.md)
 - [ADR-006 — Match and scouting context separation](006-contextos-partida-e-scouting.md)
 - [ADR-007 — Repository persistence boundary](007-fronteira-de-persistencia-por-repositorios.md)
+- [ADR-008 — Frontend session flow](008-fluxo-de-sessao-no-frontend.md)
+- [ADR-009 — Environment configuration](009-configuracao-por-ambiente.md)

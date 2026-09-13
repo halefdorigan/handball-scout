@@ -6,12 +6,13 @@ import { PlayerRepository } from '../repositories/player.repository';
 import { PlayerMembershipRepository } from '../repositories/player-membership.repository';
 import { MatchRepository } from '../repositories/match.repository';
 import { ScoutingSessionRepository } from '../repositories/scouting-session.repository';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SyncService {
-  private apiUrl = 'http://localhost:3000';
+  private readonly apiUrl = environment.apiUrl;
 
   constructor(
     private http: HttpClient,

@@ -14,6 +14,7 @@ export class AuthComponent implements OnInit {
   isSubmitting = false;
   errorMessage = '';
   successMessage = '';
+  returnUrl: string | null = null;
 
   readonly authForm = this.formBuilder.group({
     name: [''],
@@ -31,6 +32,7 @@ export class AuthComponent implements OnInit {
 
   ngOnInit(): void {
     this.isRegister = this.router.url.startsWith('/register');
+    this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
 
     if (this.isRegister) {
       this.authForm.controls.name.setValidators([Validators.required, Validators.minLength(2)]);
@@ -67,9 +69,14 @@ export class AuthComponent implements OnInit {
       .subscribe({
         next: () => {
           if (this.isRegister) {
-            this.router.navigate(['/login'], { queryParams: { registered: 1 } });
+            this.router.navigate(['/login'], {
+              queryParams: {
+                registered: 1,
+                ...(this.isSafeReturnUrl(this.returnUrl) ? { returnUrl: this.returnUrl } : {})
+              }
+            });
           } else {
-            this.router.navigate(['/dashboard']);
+            this.router.navigateByUrl(this.isSafeReturnUrl(this.returnUrl) ? this.returnUrl : '/dashboard');
           }
         },
         error: () => {
@@ -78,5 +85,9 @@ export class AuthComponent implements OnInit {
             : 'E-mail ou senha incorretos.';
         }
       });
+  }
+
+  private isSafeReturnUrl(returnUrl: string | null): returnUrl is string {
+    return Boolean(returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//'));
   }
 }

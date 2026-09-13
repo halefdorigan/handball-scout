@@ -17,7 +17,7 @@ to obtain general and specific metrics.
 ### Authentication
 
 Authentication flow with JWT, Bearer token, frontend route guards, and backend
-authentication middleware.
+authentication middleware — complete.
 
 ### New-user registration
 

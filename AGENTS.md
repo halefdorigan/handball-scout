@@ -2,6 +2,11 @@
 
 These instructions apply to the entire repository.
 
+## Commit
+
+- Commit messages must not contain what files has changed, but why it changed.
+- Should be clear to humans and for AI agents.
+
 ## Repository context
 
 - `frontend/` contains the Angular 15 progressive web app.
@@ -23,41 +28,41 @@ These instructions apply to the entire repository.
 ## Context rules
 
 - `CONTEXT.md` is limited to project-wide semantic context: ubiquitous
-  language, canonical domain definitions, domain invariants, product scope,
-  and assumptions that influence multiple features.
+language, canonical domain definitions, domain invariants, product scope,
+and assumptions that influence multiple features.
 - Add information to `CONTEXT.md` only when omitting it could cause a
-  developer or agent to misunderstand the product domain or make an
-  inconsistent cross-feature decision.
+developer or agent to misunderstand the product domain or make an
+inconsistent cross-feature decision.
 - Do not add user flows, routes, implementation details, architecture, API
-  documentation, setup instructions, or feature-specific notes to
-  `CONTEXT.md`; keep those topics in their dedicated documentation.
+documentation, setup instructions, or feature-specific notes to
+`CONTEXT.md`; keep those topics in their dedicated documentation.
 - Read and update `CONTEXT.md` whenever a canonical domain term, business
-  definition, invariant, or product boundary changes.
+definition, invariant, or product boundary changes.
 
 ## Architecture rules
 
 - `ARCHITECTURE.md` is the source of truth for the current architecture,
-  including components, boundaries, data flow, persistence, and deployment
-  constraints.
+including components, boundaries, data flow, persistence, and deployment
+constraints.
 - Every architecture entry in `ARCHITECTURE.md` must link to an ADR in
-  `docs/adrs/`. Architectural changes must update `ARCHITECTURE.md` and create
-  or supersede the corresponding ADR in the same change.
+`docs/adrs/`. Architectural changes must update `ARCHITECTURE.md` and create
+or supersede the corresponding ADR in the same change.
 - Read `ARCHITECTURE.md` and the relevant ADRs before changing architecture.
-  Accepted ADRs are historical records; record a new decision instead of
-  rewriting an accepted decision.
+Accepted ADRs are historical records; record a new decision instead of
+rewriting an accepted decision.
 
 ## Persistence boundary
 
 - Only classes under a `repositories/` directory may issue document queries or
-  write commands to RxDB/Dexie or Mongoose.
+write commands to RxDB/Dexie or Mongoose.
 - Services orchestrate use cases through repositories; they must not inject
-  Mongoose models, obtain RxDB collections, or execute persistence operations.
+Mongoose models, obtain RxDB collections, or execute persistence operations.
 - Controllers, components, NgRx effects, guards, and selectors must access
-  persisted data only through services or repositories' public contracts.
+persisted data only through services or repositories' public contracts.
 - The local database bootstrap may create the database and register schemas,
-  but document migrations and CRUD operations belong to repositories.
+but document migrations and CRUD operations belong to repositories.
 - Run `npm run check:persistence-boundary` in each package after changing a
-  persistence integration.
+persistence integration.
 
 ## BDD for user flows
 
