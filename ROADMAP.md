@@ -34,3 +34,18 @@ Permitir que novos usuários criem uma conta para acessar o aplicativo.
 
 Permitir que usuários redefinam a senha com segurança quando não conseguirem
 acessar a conta.
+
+### Privacidade e governança
+
+- Definir base legal, aviso de privacidade, consentimento quando aplicável e
+  responsável pelo tratamento.
+- Implementar exportação, correção, anonimização e exclusão física conforme as
+  regras da organização.
+- Definir perfis de acesso, auditoria, retenção e resposta a incidentes.
+
+### Evolução do cadastro de jogadores
+
+- Avaliar suporte a foto com consentimento e controles de retenção.
+- Ampliar a preservação e a visualização do histórico por jogador e por time.
+- Adicionar avaliações avançadas e observações somente após definir finalidade,
+  permissões e política de retenção.

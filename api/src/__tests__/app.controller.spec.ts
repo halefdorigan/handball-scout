@@ -7,9 +7,7 @@ describe('AppController', () => {
     const appService = {
       getHello: jest.fn().mockReturnValue('Hello World!'),
     };
-    const appController = new AppController(
-      appService as unknown as AppService,
-    );
+    const appController = new AppController(appService as unknown as AppService);
 
     // Act
     const result = appController.getHello();

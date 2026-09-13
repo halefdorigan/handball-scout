@@ -32,10 +32,7 @@ describe('AuthController', () => {
       const result = await authController.login(body);
 
       // Assert
-      expect(authService.validateUser).toHaveBeenCalledWith(
-        body.email,
-        body.password,
-      );
+      expect(authService.validateUser).toHaveBeenCalledWith(body.email, body.password);
       expect(authService.login).toHaveBeenCalledWith(user);
       expect(result).toEqual(loginResult);
     });
@@ -69,11 +66,7 @@ describe('AuthController', () => {
       const result = await authController.register(body);
 
       // Assert
-      expect(authService.register).toHaveBeenCalledWith(
-        body.email,
-        body.password,
-        body.name,
-      );
+      expect(authService.register).toHaveBeenCalledWith(body.email, body.password, body.name);
       expect(result).toEqual(registeredUser);
     });
   });

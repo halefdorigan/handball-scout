@@ -13,6 +13,8 @@ import { teamsReducer } from './state/teams/teams.reducer';
 import { TeamsEffects } from './state/teams/teams.effects';
 import { playersReducer } from './state/players/players.reducer';
 import { PlayersEffects } from './state/players/players.effects';
+import { membershipsReducer } from './state/memberships/memberships.reducer';
+import { MembershipsEffects } from './state/memberships/memberships.effects';
 import { gamesReducer } from './state/games/games.reducer';
 import { GamesEffects } from './state/games/games.effects';
 import { SyncEffects } from './state/sync/sync.effects';
@@ -33,9 +35,10 @@ import { SyncEffects } from './state/sync/sync.effects';
     StoreModule.forRoot({ 
       teams: teamsReducer, 
       players: playersReducer,
+      memberships: membershipsReducer,
       games: gamesReducer 
     }),
-    EffectsModule.forRoot([TeamsEffects, PlayersEffects, GamesEffects, SyncEffects]),
+    EffectsModule.forRoot([TeamsEffects, PlayersEffects, MembershipsEffects, GamesEffects, SyncEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
   ],
   providers: [

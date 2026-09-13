@@ -20,8 +20,11 @@ export const initialState: PlayersState = adapter.getInitialState({
 export const playersReducer = createReducer(
   initialState,
   on(PlayersActions.loadPlayers, (state) => ({ ...state, loading: true })),
-  on(PlayersActions.loadPlayersSuccess, (state, { players }) => adapter.upsertMany(players, { ...state, loading: false })),
-  on(PlayersActions.loadPlayersFailure, (state, { error }) => ({ ...state, loading: false, error }))
+  on(PlayersActions.loadPlayersSuccess, (state, { players }) => adapter.setAll(players, { ...state, loading: false, error: null })),
+  on(PlayersActions.loadPlayersFailure, (state, { error }) => ({ ...state, loading: false, error })),
+  on(PlayersActions.addPlayerSuccess, (state, { player }) => adapter.addOne(player, state)),
+  on(PlayersActions.updatePlayerSuccess, (state, { player }) => adapter.upsertOne(player, state)),
+  on(PlayersActions.archivePlayerSuccess, (state, { player }) => adapter.upsertOne(player, state))
 );
 
 export const {

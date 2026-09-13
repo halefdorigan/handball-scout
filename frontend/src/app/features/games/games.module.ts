@@ -9,8 +9,8 @@ import { ScoutComponent } from './scout/scout.component';
 const routes: Routes = [
   { path: '', component: GameListComponent },
   { path: 'new', component: GameDetailComponent },
-  { path: ':id', component: GameDetailComponent },
-  { path: ':id/scout', component: ScoutComponent }
+  { path: ':id/scout', component: ScoutComponent },
+  { path: ':id', component: GameDetailComponent }
 ];
 
 @NgModule({

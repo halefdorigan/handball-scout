@@ -14,9 +14,7 @@ describe('GamesService', () => {
       find: jest.fn(),
       findByIdAndUpdate: jest.fn(),
     };
-    gamesService = new GamesService(
-      gameModel as unknown as Model<GameDocument>,
-    );
+    gamesService = new GamesService(gameModel as unknown as Model<GameDocument>);
   });
 
   describe('findAll', () => {
@@ -71,10 +69,7 @@ describe('GamesService', () => {
         .mockResolvedValueOnce(secondResult as GameDocument);
 
       // Act
-      const result = (await gamesService.sync([
-        firstGame,
-        secondGame,
-      ])) as unknown;
+      const result = (await gamesService.sync([firstGame, secondGame])) as unknown;
 
       // Assert
       expect(upsert).toHaveBeenNthCalledWith(1, firstGame);

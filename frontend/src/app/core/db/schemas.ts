@@ -21,21 +21,60 @@ export const teamSchema: RxJsonSchema<any> = {
 
 export const playerSchema: RxJsonSchema<any> = {
   title: 'player schema',
-  version: 0,
+  version: 1,
   description: 'describes a handball player',
   primaryKey: '_id',
   type: 'object',
   properties: {
     _id: { type: 'string', maxLength: 100 },
-    teamId: { type: 'string', maxLength: 100 },
     name: { type: 'string' },
-    number: { type: 'number' },
-    position: { type: 'string' },
+    birthDate: { type: 'string' },
+    heightCm: { type: 'number', minimum: 1 },
+    weightKg: { type: 'number', minimum: 1 },
+    dominantHand: { type: 'string', enum: ['RIGHT', 'LEFT', 'BOTH'] },
+    legacyTeamId: { type: 'string', maxLength: 100 },
+    legacyNumber: { type: 'number' },
+    legacyPosition: { type: 'string' },
     updatedAt: { type: 'number' },
     isDeleted: { type: 'boolean' }
   },
-  required: ['_id', 'teamId', 'name', 'updatedAt'],
-  indexes: ['teamId']
+  required: ['_id', 'name', 'updatedAt']
+};
+
+export const playerMigrationStrategies = {
+  1: (oldDoc: any) => ({
+    _id: oldDoc._id,
+    name: oldDoc.name,
+    ...(oldDoc.birthDate ? { birthDate: oldDoc.birthDate } : {}),
+    ...(typeof oldDoc.heightCm === 'number' ? { heightCm: oldDoc.heightCm } : {}),
+    ...(typeof oldDoc.weightKg === 'number' ? { weightKg: oldDoc.weightKg } : {}),
+    ...(oldDoc.dominantHand ? { dominantHand: oldDoc.dominantHand } : {}),
+    ...(oldDoc.teamId ? { legacyTeamId: oldDoc.teamId } : {}),
+    ...(typeof oldDoc.number === 'number' ? { legacyNumber: oldDoc.number } : {}),
+    ...(oldDoc.position ? { legacyPosition: oldDoc.position } : {}),
+    updatedAt: typeof oldDoc.updatedAt === 'number' ? oldDoc.updatedAt : Date.now(),
+    isDeleted: oldDoc.isDeleted ?? false
+  })
+};
+
+export const playerMembershipSchema: RxJsonSchema<any> = {
+  title: 'player membership schema',
+  version: 0,
+  description: 'describes a player relationship with a handball team',
+  primaryKey: '_id',
+  type: 'object',
+  properties: {
+    _id: { type: 'string', maxLength: 300 },
+    playerId: { type: 'string', maxLength: 100 },
+    teamId: { type: 'string', maxLength: 100 },
+    number: { type: 'number', minimum: 0 },
+    position: { type: 'string' },
+    status: { type: 'string', enum: ['ACTIVE', 'INACTIVE'] },
+    updatedAt: { type: 'number' },
+    isDeleted: { type: 'boolean' }
+  },
+  required: ['_id', 'playerId', 'teamId', 'status', 'updatedAt'],
+  indexes: ['playerId', 'teamId']
 };
 
 export const gameSchema: RxJsonSchema<any> = {

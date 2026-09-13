@@ -6,6 +6,7 @@ const routes: Routes = [
   { path: 'login', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) },
   { path: 'register', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) },
   { path: 'teams', loadChildren: () => import('./features/teams/teams.module').then(m => m.TeamsModule) },
+  { path: 'players', loadChildren: () => import('./features/players/players.module').then(m => m.PlayersModule) },
   { path: 'games', loadChildren: () => import('./features/games/games.module').then(m => m.GamesModule) },
   { 
     path: 'dashboard', 

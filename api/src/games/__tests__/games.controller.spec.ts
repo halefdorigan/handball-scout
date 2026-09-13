@@ -13,9 +13,7 @@ describe('GamesController', () => {
       findAll: jest.fn(),
       sync: jest.fn(),
     };
-    gamesController = new GamesController(
-      gamesService as unknown as GamesService,
-    );
+    gamesController = new GamesController(gamesService as unknown as GamesService);
   });
 
   it('should return all games', async () => {
