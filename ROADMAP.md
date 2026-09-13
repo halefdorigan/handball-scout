@@ -2,9 +2,18 @@
 
 Aplicativo de scout de handebol, que busca auxiliar times no registros de treinos e de jogos visando a obtenção de métricas gerais e específicas.
 
+## Entregas concluídas
+
+### Homepage e autenticação
+
+- [x] Landing page pública com apresentação do Scout Court e suas
+  funcionalidades.
+- [x] Navegação para as telas de login e registro.
+- [x] Formulários de login e registro conectados ao serviço de autenticação.
+- [x] Acesso preservado ao dashboard interno em `/dashboard`.
+
 ## Roadmap
 
 ### Scout simultâneo
 
 Busca permitir que duas pessoas registre o mesmo jogo ou treino - um registrando o time da casa (titular) e outro o time visitante (reserva). Se há apenas um usuário no jogo, ele deve poder registrar eventos de ambos os times.
-
