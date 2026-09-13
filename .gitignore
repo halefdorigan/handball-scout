@@ -65,6 +65,7 @@ frontend/.angular/cache
 
 # SDD
 tasks
+output
 .playwright-cli
 .notebook
 
