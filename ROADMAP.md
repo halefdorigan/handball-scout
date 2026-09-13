@@ -19,6 +19,13 @@ to obtain general and specific metrics.
 Authentication flow with JWT, Bearer token, frontend route guards, and backend
 authentication middleware — complete.
 
+### Deployment
+
+- [x] Prepare the frontend and API for separate Railway services with private
+  service networking and container healthchecks.
+- [ ] Create and validate the production Railway project, services, domains,
+  and managed MongoDB instance.
+
 ### New-user registration
 
 Allow new users to create an account to access the application.

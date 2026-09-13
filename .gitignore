@@ -26,6 +26,8 @@ yarn-error.log*
 
 # Local env files
 .env
+.env.development
+.env.production
 .env.local
 .env.development.local
 .env.test.local
@@ -68,5 +70,4 @@ tasks
 output
 .playwright-cli
 .notebook
-
 

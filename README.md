@@ -15,14 +15,12 @@ navigation.
   persistence.
 - `api/` — NestJS API with MongoDB persistence for teams, players, player
   memberships, games, and authentication.
-- `docker-compose.yml` — MongoDB and backend container definition. The current
-  compose file expects the backend build context to be available at
-  `./backend`; use the local commands below when running this repository as it
-  is currently structured.
+- `docker-compose.yml` — local MongoDB, API, and frontend container stack.
 - `ARCHITECTURE.md` — current architecture, with links to the related ADRs.
 - `docs/adrs/` — Architecture Decision Records for architectural changes.
 - `specs/` — BDD specifications for user flows, organized by domain.
 - `docs/known-limitations.md` — known implementation gaps and divergences.
+- `docs/deployment/railway.md` — Railway services and production deployment.
 - `DESIGN.md` — product design tokens and visual direction.
 
 ## Requirements
@@ -84,6 +82,12 @@ build output is written to `api/dist`.
 4. Open **Scout** to start the timer and register match events.
 5. Open the game report from the dashboard to compare team and player output.
 6. Use **Sync** on the teams screen to exchange local data with the API.
+
+## Deploy to Railway
+
+The frontend and API are deployable as separate Railway services from this
+isolated monorepo. Follow [`docs/deployment/railway.md`](docs/deployment/railway.md)
+for the service, variable, networking, and domain configuration.
 
 ## Design notes
 
