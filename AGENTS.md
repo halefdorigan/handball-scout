@@ -58,6 +58,10 @@ Use the Playwright skill's CLI-first workflow and guardrails, including refreshi
 - Run the relevant package build and tests for backend or shared-code changes.
 - Treat build, unit-test, and browser-validation failures as blockers to completion unless the task explicitly documents an accepted exception.
 
+## Roadmap
+
+Every time that you are finishing a task, you must check [ROADMAP.md](http://ROADMAP.md) if something is done. If a partial implement was done, relate that on existent item
+
 ## Completion summary
 
 Before handing off work, summarize the files changed, validation commands run, affected user flows checked, and any remaining limitations.
