@@ -1,0 +1,18 @@
+# Architecture Decision Records
+
+Esta pasta contém as decisões arquiteturais aceitas do Scout Court. Cada
+decisão tem numeração sequencial e registra contexto, alternativas, escolha e
+consequências.
+
+`ARCHITECTURE.md` descreve o estado arquitetural atual e deve apontar para as
+ADRs que fundamentam cada entrada. Quando uma decisão mudar, crie uma nova ADR
+e marque a anterior como superseded; não reescreva uma ADR aceita para alterar
+seu registro histórico.
+
+## Decisões
+
+- [ADR-001 — Separação entre PWA e API](001-separacao-entre-pwa-e-api.md)
+- [ADR-002 — Persistência local offline-first](002-persistencia-local-offline-first.md)
+- [ADR-003 — API modular com MongoDB](003-api-modular-com-mongodb.md)
+- [ADR-004 — Sincronização explícita](004-sincronizacao-explicita.md)
+- [ADR-005 — Autenticação JWT](005-autenticacao-jwt.md)

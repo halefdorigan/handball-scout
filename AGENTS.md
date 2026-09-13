@@ -8,6 +8,32 @@ These instructions apply to the entire repository.
 - `api/` contains the NestJS backend.
 - Keep changes scoped to the requested work and preserve unrelated working-tree changes.
 
+## Context rules
+
+- `CONTEXT.md` is limited to project-wide semantic context: ubiquitous
+  language, canonical domain definitions, domain invariants, product scope,
+  and assumptions that influence multiple features.
+- Add information to `CONTEXT.md` only when omitting it could cause a
+  developer or agent to misunderstand the product domain or make an
+  inconsistent cross-feature decision.
+- Do not add user flows, routes, implementation details, architecture, API
+  documentation, setup instructions, or feature-specific notes to
+  `CONTEXT.md`; keep those topics in their dedicated documentation.
+- Read and update `CONTEXT.md` whenever a canonical domain term, business
+  definition, invariant, or product boundary changes.
+
+## Architecture rules
+
+- `ARCHITECTURE.md` is the source of truth for the current architecture,
+  including components, boundaries, data flow, persistence, and deployment
+  constraints.
+- Every architecture entry in `ARCHITECTURE.md` must link to an ADR in
+  `docs/adrs/`. Architectural changes must update `ARCHITECTURE.md` and create
+  or supersede the corresponding ADR in the same change.
+- Read `ARCHITECTURE.md` and the relevant ADRs before changing architecture.
+  Accepted ADRs are historical records; record a new decision instead of
+  rewriting an accepted decision.
+
 ## Validation requirements
 
 Run the checks relevant to the code you changed. Frontend validation has an additional mandatory browser requirement.
@@ -31,6 +57,10 @@ Use the Playwright skill's CLI-first workflow and guardrails, including refreshi
 
 - Run the relevant package build and tests for backend or shared-code changes.
 - Treat build, unit-test, and browser-validation failures as blockers to completion unless the task explicitly documents an accepted exception.
+
+## Roadmap
+
+Every time that you are finishing a task, you must check [ROADMAP.md](http://ROADMAP.md) if something is done. If a partial implement was done, relate that on existent item
 
 ## Completion summary
 

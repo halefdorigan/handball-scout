@@ -1,4 +1,4 @@
-<div class="app-shell">
+<div class="app-shell" [class.app-shell--public]="isPublicRoute">
   <aside class="app-rail" aria-label="Navegação principal">
     <a class="brand-mark" routerLink="/dashboard" aria-label="Scout home">
       <span class="brand-mark__slash">/</span>
@@ -27,7 +27,7 @@
     <div class="rail-footnote">HANDBALL<br>SCOUTING<br><span>v.0.1 / LOCAL</span></div>
   </aside>
 
-  <main class="app-main">
+  <main class="app-main" [class.app-main--public]="isPublicRoute">
     <router-outlet></router-outlet>
   </main>
 
