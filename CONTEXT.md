@@ -1,69 +1,69 @@
-# Contexto do projeto
+# Project context
 
-> Linguagem ubíqua e contexto semântico global do Scout Court.
+> Scout Court ubiquitous language and global semantic context.
 
-Última verificação: 13 de setembro de 2026.
+Last reviewed: September 13, 2026.
 
-Este arquivo contém apenas informações necessárias para interpretar o domínio
-do produto de forma consistente entre funcionalidades. Não é um catálogo de
-arquitetura, fluxos, rotas, API ou detalhes de implementação.
+This file contains only the information needed to interpret the product domain
+consistently across features. It is not a catalog of architecture, flows,
+routes, APIs, or implementation details.
 
-## Escopo do produto
+## Product scope
 
-**Scout Court** é um espaço de trabalho offline-first para profissionais que
-acompanham handebol. O produto permite cadastrar times, jogadores e partidas,
-registrar eventos durante o scout e consultar relatórios de desempenho.
+**Scout Court** is an offline-first workspace for handball professionals. The
+product supports registering teams, players, and matches, recording events
+during a scout, and reviewing performance reports.
 
-O roadmap inclui scout simultâneo, cadastro de usuários e redefinição de senha.
-Contas e redefinição de senha ainda não fazem parte da jornada atual do produto.
+The roadmap includes simultaneous scouting, user registration, and password
+reset. Accounts and password reset are not yet part of the current product
+journey.
 
-## Linguagem ubíqua
+## Ubiquitous language
 
-| Termo canônico | Termos usados | Definição |
+| Canonical term | UI and code terms | Definition |
 | --- | --- | --- |
-| **Scout Court** | `Scout Court` | Nome do produto. |
-| **scout** | `Scout`, `scouting` | Acompanhamento de uma partida com registro de eventos. |
-| **sessão de scout** | `ScoutingSession` | Registro de scout associado a uma única partida, que contém o cronômetro e os eventos. |
-| **time** | `Team`, `Time`, `Times` | Grupo esportivo cadastrado e participante de uma partida. |
-| **elenco** | `Roster`, `Jogadores` | Conjunto de jogadores associados a um time; não é uma entidade própria. |
-| **jogador** | `Player`, `Jogador` | Atleta pertencente a um time. |
-| **número da camisa** | `Nº` | Número usado para identificar o jogador durante o scout. |
-| **posição** | `Goleiro`, `Ponta`, `Armador`, `Pivô` | Função esportiva cadastrada para o jogador. |
-| **partida** | `Game`, `jogo`, `Jogos` | Confronto entre dois times que pode ser acompanhado e analisado. |
-| **time da casa** | `Casa`, `Time A` | Primeiro participante da partida. |
-| **time visitante** | `Visitante`, `Time B` | Segundo participante da partida. |
-| **evento de partida** | `evento` | Ocorrência registrada durante o scout. |
-| **ação de scout** | `GOL`, `FORA`, `DEFESA`, `AMARELO`, `2 MIN` | Ação esportiva escolhida para registro. |
-| **registro coletivo** | `COLETIVO` | Evento atribuído ao time sem identificar um jogador. |
-| **gol** | `GOL` | Evento que soma um ponto ao placar. |
-| **arremesso para fora** | `FORA` | Finalização sem gol. |
-| **defesa** | `DEFESA` | Ação defensiva de um time. |
-| **advertência amarela** | `AMARELO` | Cartão amarelo recebido por um time. |
-| **suspensão de 2 minutos** | `2 MIN` | Penalidade temporária de um jogador ou time. |
-| **placar** | `placar` | Resultado formado pela contagem de gols de cada time. |
-| **cronômetro** | `cronômetro` | Tempo de jogo acompanhado durante o scout. |
-| **status da partida** | `pendente`, `em andamento`, `finalizada` | Estado atual da partida. |
-| **relatório de partida** | `relatório` | Leitura consolidada do placar e dos eventos registrados. |
-| **tag** | `tag` | Rótulo livre para classificar um time ou uma partida. |
-| **sincronização** | `Sincronizar` | Atualização dos dados locais com a cópia remota. |
+| **Scout Court** | `Scout Court` | Product name. |
+| **scout** | `Scout`, `scouting` | Observing a match while recording events. |
+| **scouting session** | `ScoutingSession` | Scout record associated with one match, containing its timer and events. |
+| **team** | `Team`, `Time`, `Times` | Registered sports group that participates in a match. |
+| **roster** | `Roster`, `Jogadores` | Set of players associated with a team; it is not a separate entity. |
+| **player** | `Player`, `Jogador` | Athlete belonging to a team. |
+| **shirt number** | `Nº` | Number used to identify a player during a scout. |
+| **position** | `Goleiro`, `Ponta`, `Armador`, `Pivô` | Sporting role registered for a player. |
+| **match** | `Game`, `jogo`, `Jogos` | Contest between two teams that can be observed and analyzed. |
+| **home team** | `Casa`, `Time A` | First match participant. |
+| **away team** | `Visitante`, `Time B` | Second match participant. |
+| **match event** | `evento` | Occurrence recorded during a scout. |
+| **scout action** | `GOL`, `FORA`, `DEFESA`, `AMARELO`, `2 MIN` | Sporting action selected for recording. |
+| **collective entry** | `COLETIVO` | Event attributed to a team without identifying a player. |
+| **goal** | `GOL` | Event that adds one point to the score. |
+| **missed shot** | `FORA` | Shot without a goal. |
+| **save** | `DEFESA` | Defensive action by a team. |
+| **yellow card** | `AMARELO` | Yellow card received by a team. |
+| **2-minute suspension** | `2 MIN` | Temporary penalty for a player or team. |
+| **score** | `placar` | Result formed by each team's goal count. |
+| **timer** | `cronômetro` | Match time tracked during a scout. |
+| **match status** | `pendente`, `em andamento`, `finalizada` | Current state of a match. |
+| **match report** | `relatório` | Consolidated view of the score and recorded events. |
+| **tag** | `tag` | Free-form label that classifies a team or match. |
+| **synchronization** | `Sincronizar` | Updating local data with its remote copy. |
 
-## Invariantes do domínio
+## Domain invariants
 
-- Uma partida relaciona um time da casa e um time visitante.
-- Um jogador pertence a um único time por vez.
-- Um evento pertence a uma partida e a um time, podendo também identificar um
-  jogador.
-- Uma sessão de scout pertence a uma única partida.
-- O placar é derivado dos eventos de gol, não de um valor independente.
-- O trabalho local pode continuar sem conectividade; a sincronização é uma
-  capacidade posterior do mesmo dado.
+- A match relates one home team and one away team.
+- A player belongs to only one team at a time.
+- An event belongs to a match and a team and can also identify a player.
+- A scouting session belongs to only one match.
+- The score is derived from goal events, not an independent value.
+- Local work can continue without connectivity; synchronization is a later
+  capability of the same data.
 
-## Documentação relacionada
+## Related documentation
 
-- [`ARCHITECTURE.md`](ARCHITECTURE.md) — componentes, fronteiras, persistência,
-  fluxo técnico e restrições de deploy.
-- [`docs/adrs/`](docs/adrs/) — justificativas das decisões arquiteturais.
-- [`docs/flows/`](docs/flows/) — fluxos de navegação e uso da aplicação.
-- [`docs/known-limitations.md`](docs/known-limitations.md) — limitações e
-  divergências conhecidas da implementação.
-- [`README.md`](README.md) — execução local e visão geral do repositório.
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — components, boundaries, persistence,
+  technical flow, and deployment constraints.
+- [`docs/adrs/`](docs/adrs/) — rationale for architectural decisions.
+- [`specs/`](specs/) — BDD specifications for user flows, organized by domain.
+- [`docs/known-limitations.md`](docs/known-limitations.md) — known
+  implementation limitations and divergences.
+- [`README.md`](README.md) — local execution and repository overview.

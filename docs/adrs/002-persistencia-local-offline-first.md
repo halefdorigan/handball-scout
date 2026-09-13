@@ -1,53 +1,52 @@
-# ADR-002: Persistência local offline-first
+# ADR-002: Offline-first local persistence
 
-- **Data**: 2026-09-13
-- **Status**: Aceito
-- **Decisores**: Equipe do projeto
-- **Tags**: frontend, offline-first, estado, persistência
+- **Date**: 2026-09-13
+- **Status**: Accepted
+- **Deciders**: Project team
+- **Tags**: frontend, offline-first, state, persistence
 
-## Contexto e problema
+## Context and problem
 
-O scout precisa registrar dados durante uma partida mesmo quando a conexão não
-está disponível. O frontend possui entidades de times, jogadores, partidas e
-eventos que devem sobreviver à navegação e ser observáveis pela interface. A
-arquitetura vigente já usa RxDB com storage Dexie e NgRx.
+The scout must record data during a match even when connectivity is
+unavailable. The frontend has team, player, match, and event entities that
+must survive navigation and remain observable to the UI. The current
+architecture already uses RxDB with Dexie storage and NgRx.
 
-## Fatores de decisão
+## Decision drivers
 
-- permitir registro e consulta local sem depender da API;
-- manter uma base reativa para componentes e effects Angular;
-- persistir documentos estruturados no navegador;
-- deixar a sincronização explícita e separada da leitura normal.
+- Allow local recording and consultation without depending on the API.
+- Maintain a reactive base for Angular components and effects.
+- Persist structured documents in the browser.
+- Keep synchronization explicit and separate from normal reads.
 
-## Opções consideradas
+## Considered options
 
-- Usar RxDB sobre Dexie como persistência local e NgRx como estado reativo de
-  interface.
-- Usar `localStorage` e estado mantido diretamente nos componentes.
-- Fazer a API ser a fonte primária e bloquear o uso offline.
+- Use RxDB over Dexie for local persistence and NgRx for reactive UI state.
+- Use `localStorage` and state kept directly in components.
+- Make the API the primary source and block offline use.
 
-## Decisão
+## Decision
 
-Usaremos RxDB com storage Dexie como fonte local durável para as coleções
-`teams`, `players` e `games`. O NgRx Store manterá a projeção reativa dessas
-entidades para os componentes; os effects farão a ponte entre ações do usuário
-e o RxDB. A base local se chama `handball_scout_db`.
+We will use RxDB with Dexie storage as the durable local source for the
+`teams`, `players`, and `games` collections. The NgRx Store will maintain the
+reactive projection of these entities for components; effects will bridge user
+actions and RxDB. The local database is named `handball_scout_db`.
 
-### Consequências positivas
+### Positive consequences
 
-- O scout continua utilizável sem conectividade.
-- Os dados permanecem disponíveis após recarregar a PWA.
-- NgRx oferece seleção e atualização reativas, enquanto o RxDB concentra a
-  persistência.
+- The scout remains usable without connectivity.
+- Data remains available after the PWA reloads.
+- NgRx provides reactive selection and updates, while RxDB concentrates
+  persistence.
 
-### Consequências negativas
+### Negative consequences
 
-- O cliente precisa tratar reconciliação e conflitos durante a sincronização.
-- Os modelos local e remoto precisam permanecer compatíveis.
-- O armazenamento do navegador não substitui uma cópia remota sincronizada.
+- The client must handle reconciliation and conflicts during synchronization.
+- Local and remote models must remain compatible.
+- Browser storage does not replace a synchronized remote copy.
 
 ## Links
 
-- [Arquitetura atual](../../ARCHITECTURE.md)
-- [Serviço de banco local](../../frontend/src/app/core/db/database.service.ts)
-- [Schemas locais](../../frontend/src/app/core/db/schemas.ts)
+- [Current architecture](../../ARCHITECTURE.md)
+- [Local database service](../../frontend/src/app/core/db/database.service.ts)
+- [Local schemas](../../frontend/src/app/core/db/schemas.ts)

@@ -1,65 +1,64 @@
 # Handball Scout
 
-Aplicativo de scout de handebol, que busca auxiliar times no registros de treinos e de jogos visando a obtenção de métricas gerais e específicas.
+An application that helps teams record training sessions and matches in order
+to obtain general and specific metrics.
 
-## Entregas concluídas
+## Completed deliveries
 
-### Homepage e autenticação
+### Homepage and authentication
 
-- [x] Landing page pública com apresentação do Scout Court e suas
-
-  funcionalidades.
-- [x] Navegação para as telas de login e registro.
-- [x] Formulários de login e registro conectados ao serviço de autenticação.
-- [x] Acesso preservado ao dashboard interno em `/dashboard`.
+- [x] Public landing page introducing Scout Court and its capabilities.
+- [x] Navigation to login and registration screens.
+- [x] Login and registration forms connected to the authentication service.
+- [x] Preserved access to the internal dashboard at `/dashboard`.
 
 ## Roadmap
 
-### Autenticação
+### Authentication
 
-Fluxo de autenticação com JWT, Bearer token, guards de rota de frontend, middlewares de autenticação no backend
+Authentication flow with JWT, Bearer token, frontend route guards, and backend
+authentication middleware.
 
-### Cadastro de novos usuários
+### New-user registration
 
-Permitir que novos usuários criem uma conta para acessar o aplicativo.
+Allow new users to create an account to access the application.
 
-### Redefinição de senha
+### Password reset
 
-Permitir que usuários redefinam a senha com segurança quando não conseguirem  
-acessar a conta.
+Allow users to reset their password securely when they cannot access their
+account.
 
 ### Multi-tenancy
 
-Cada usuário administrador deve possuir um banco de dados. Deve prever a migração de uma base de dados single database em multi database.
+Each administrator user must have a database. The application must support a
+migration from a single database to multiple databases.
 
-### Cargos de usuário 
+### User roles
 
-Admin, scouter, jogador.  Cada um deve estar vinculado a um tenant
+Admin, scouter, and player. Each role must be associated with a tenant.
 
-### Scout simultâneo
+### Simultaneous scouting
 
-Busca permitir que duas pessoas registrem o mesmo jogo ou treino — uma  
-registrando o time da casa (titular) e outra o time visitante (reserva). Se  
-houver apenas um usuário no jogo, ele deve poder registrar eventos de ambos os  
-times.
+Allow two people to record the same match or training session: one records the
+home team (starter) and the other records the away team (reserve). When there
+is only one user in the match, that user must be able to record events for both
+teams.
 
-> **Disclaimer — modo offline:** no modo offline, o scout simultâneo não  
-> garante sincronização em tempo real entre dispositivos. Os eventos devem ser  
-> sincronizados quando a conexão for restabelecida, com tratamento de possíveis  
-> conflitos.
+> **Offline-mode disclaimer:** in offline mode, simultaneous scouting does not
+> guarantee real-time synchronization between devices. Events must synchronize
+> when connectivity is restored, with possible conflicts handled.
 
-### Privacidade e governança
+### Privacy and governance
 
-- Definir base legal, aviso de privacidade, consentimento quando aplicável e
-responsável pelo tratamento.
-- Implementar exportação, correção, anonimização e exclusão física conforme as
-regras da organização.
-- Definir perfis de acesso, auditoria, retenção e resposta a incidentes.
+- Define the legal basis, privacy notice, consent when applicable, and the
+  controller.
+- Implement export, correction, anonymization, and physical deletion according
+  to the organization's rules.
+- Define access profiles, auditing, retention, and incident response.
 
-### Evolução do cadastro de jogadores
+### Player-registration evolution
 
-- Avaliar suporte a foto com consentimento e controles de retenção.
-- Ampliar a preservação e a visualização do histórico por jogador e por time.
-- Adicionar avaliações avançadas e observações somente após definir finalidade,
-permissões e política de retenção.
-
+- Evaluate photo support with consent and retention controls.
+- Expand the preservation and viewing of player and team history.
+- Add advanced evaluations and notes only after defining purpose, permissions,
+  and retention policy.

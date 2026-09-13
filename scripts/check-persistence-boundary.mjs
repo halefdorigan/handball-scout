@@ -7,4 +7,4 @@ function walk(dir) { for (const entry of readdirSync(dir, { withFileTypes: true 
 walk(join(root, 'api/src')); walk(join(root, 'frontend/src'));
 const persistence = /@InjectModel|\bModel<|\.getDb\(|\bdb\s*\[/;
 const violations = files.filter(path => persistence.test(readFileSync(path, 'utf8')) && !path.includes('/repositories/') && !path.endsWith('/core/db/database.service.ts') && !path.endsWith('/schemas.ts'));
-if (violations.length) { console.error(`Persistência fora de repositories:\n${violations.join('\n')}`); process.exit(1); }
+if (violations.length) { console.error(`Persistence access outside repositories:\n${violations.join('\n')}`); process.exit(1); }

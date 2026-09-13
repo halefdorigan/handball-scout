@@ -1,22 +1,22 @@
-# ADR-007: Fronteira de persistência por repositórios
+# ADR-007: Repository persistence boundary
 
 ## Status
 
-Aceita.
+Accepted.
 
-## Contexto
+## Context
 
-Effects do frontend acessavam RxDB diretamente e os services da API dependiam
-diretamente de modelos Mongoose. Isso acoplava casos de uso aos drivers.
+Frontend effects accessed RxDB directly, and API services depended directly on
+Mongoose models. This coupled use cases to drivers.
 
-## Decisão
+## Decision
 
-Consultas e comandos de documentos são permitidos apenas em repositórios.
-Services orquestram regras e sincronização; UI, effects, controllers e guards
-dependem de seus contratos. A criação e o registro de schemas do banco local
-continuam como bootstrap técnico, sem CRUD de documentos.
+Document queries and commands are allowed only in repositories. Services
+orchestrate rules and synchronization; UI, effects, controllers, and guards
+depend on their contracts. Local database schema creation and registration
+remain technical bootstrap work, without document CRUD.
 
-## Consequências
+## Consequences
 
-Testes de services mockam repositórios, e uma verificação automatizada impede
-novos acessos diretos fora dessa fronteira.
+Service tests mock repositories, and an automated check prevents new direct
+accesses outside this boundary.

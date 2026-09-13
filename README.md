@@ -21,7 +21,7 @@ navigation.
   is currently structured.
 - `ARCHITECTURE.md` — current architecture, with links to the related ADRs.
 - `docs/adrs/` — Architecture Decision Records for architectural changes.
-- `docs/flows/` — application navigation and user journeys.
+- `specs/` — BDD specifications for user flows, organized by domain.
 - `docs/known-limitations.md` — known implementation gaps and divergences.
 - `DESIGN.md` — product design tokens and visual direction.
 

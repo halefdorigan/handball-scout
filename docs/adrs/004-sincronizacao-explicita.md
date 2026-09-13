@@ -1,53 +1,54 @@
-# ADR-004: Sincronização explícita
+# ADR-004: Explicit synchronization
 
-- **Data**: 2026-09-13
-- **Status**: Aceito
-- **Decisores**: Equipe do projeto
-- **Tags**: sincronização, offline-first, integração, consistência
+- **Date**: 2026-09-13
+- **Status**: Accepted
+- **Deciders**: Project team
+- **Tags**: synchronization, offline-first, integration, consistency
 
-## Contexto e problema
+## Context and problem
 
-O frontend registra primeiro no armazenamento local, mas precisa trocar os
-documentos com a API quando houver conectividade. O roadmap registra que o
-modo offline não garante sincronização em tempo real entre dispositivos. O
-fluxo atual precisa ser simples, acionado pelo usuário e compatível com as
-coleções de times, jogadores e partidas.
+The frontend records data in local storage first, but must exchange documents
+with the API when connectivity exists. The roadmap states that offline mode
+does not guarantee real-time synchronization between devices. The current flow
+must be simple, user-initiated, and compatible with team, player, and match
+collections.
 
-## Fatores de decisão
+## Decision drivers
 
-- manter o scout utilizável sem conexão;
-- tornar a sincronização uma ação observável e controlável pelo usuário;
-- preservar a ordem de dependência entre times, jogadores e partidas;
-- permitir que a API faça upsert dos documentos recebidos.
+- Keep the scout usable without a connection.
+- Make synchronization observable and controllable by the user.
+- Preserve dependency order between teams, players, and matches.
+- Allow the API to upsert received documents.
 
-## Opções consideradas
+## Considered options
 
-- Sincronização explícita sequencial com push local, resposta da API e upsert
-  local.
-- Sincronização automática em tempo real entre dispositivos.
-- Tornar a API a única fonte de escrita e bloquear alterações offline.
+- Explicit sequential synchronization with local push, API response, and local
+  upsert.
+- Automatic real-time synchronization between devices.
+- Make the API the only write source and block offline changes.
 
-## Decisão
+## Decision
 
-Usaremos sincronização explícita, iniciada pela ação **Sincronizar**. O serviço
-executará `teams`, `players` e `games`, nessa ordem. Para cada coleção, enviará
-os documentos locais ao endpoint `/sync`, receberá os documentos processados e
-fará upsert no RxDB. A arquitetura não promete sincronização em tempo real.
+We will use explicit synchronization initiated through the **Sincronizar**
+action. The service will execute `teams`, `players`, and `games` in that order.
+For each collection, it will send local documents to the `/sync` endpoint,
+receive processed documents, and upsert them in RxDB. The architecture does not
+promise real-time synchronization.
 
-### Consequências positivas
+### Positive consequences
 
-- O usuário consegue trabalhar localmente e escolher quando trocar dados.
-- A ordem reduz referências ausentes durante a sincronização.
-- O fluxo é pequeno e compatível com os endpoints atuais da API.
+- Users can work locally and choose when to exchange data.
+- The order reduces missing references during synchronization.
+- The flow is small and compatible with current API endpoints.
 
-### Consequências negativas
+### Negative consequences
 
-- Dados de dispositivos diferentes podem ficar divergentes até a próxima ação.
-- Conflitos e falhas parciais exigem tratamento futuro.
-- A conversão de exclusão lógica precisa ser mantida em cada coleção.
+- Data on different devices can diverge until the next action.
+- Conflicts and partial failures require future handling.
+- Soft-deletion conversion must be maintained in each collection.
 
 ## Links
 
-- [Arquitetura atual](../../ARCHITECTURE.md)
-- [Serviço de sincronização](../../frontend/src/app/core/services/sync.service.ts)
+- [Current architecture](../../ARCHITECTURE.md)
+- [Synchronization service](../../frontend/src/app/core/services/sync.service.ts)
 - [Roadmap](../../ROADMAP.md)

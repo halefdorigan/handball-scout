@@ -1,70 +1,66 @@
-# Dados pessoais e responsabilidades
+# Personal data and responsibilities
 
-Este documento descreve o tratamento de dados pessoais no MVP do cadastro
-global de jogadores. Ele é uma orientação técnica do produto e não substitui
-a revisão jurídica, o aviso de privacidade ou os procedimentos da organização
-responsável pelo uso do sistema.
+This document describes personal-data processing in the global player-profile
+MVP. It is product technical guidance and does not replace legal review, a
+privacy notice, or the procedures of the organization operating the system.
 
-## Dados coletados e finalidade
+## Collected data and purpose
 
-| Dado | Finalidade | Obrigatório |
+| Data | Purpose | Required |
 | --- | --- | --- |
-| Nome | Identificar o jogador no cadastro e no scout | Sim |
-| Data de nascimento | Apoiar a identificação e a organização do elenco | Não |
-| Altura e peso | Contextualizar o perfil esportivo | Não |
-| Mão dominante | Contextualizar o perfil esportivo | Não |
-| Time, número, posição e status | Representar o vínculo do jogador com cada time | No vínculo |
-| `playerId` nos eventos | Preservar a autoria histórica dos eventos de jogos | Técnico |
+| Name | Identify the player in registration and scouting | Yes |
+| Date of birth | Support identity and roster organization | No |
+| Height and weight | Provide sporting-profile context | No |
+| Dominant hand | Provide sporting-profile context | No |
+| Team, number, position, and status | Represent the player's membership in each team | For a membership |
+| `playerId` in events | Preserve the historical attribution of match events | Technical |
 
-O MVP não coleta foto, avaliações avançadas, observações livres ou histórico
-detalhado. Esses itens devem passar por nova análise antes de serem incluídos.
+The MVP does not collect photos, advanced evaluations, free-form notes, or
+detailed history. These items require a new review before inclusion.
 
-## Armazenamento e sincronização
+## Storage and synchronization
 
-- O cadastro é salvo localmente no dispositivo, como parte do fluxo
-  offline-first.
-- A sincronização com a API envia os dados cadastrados pelo usuário para o
-  ambiente configurado pela organização.
-- O perfil de identidade (`Player`) é separado dos vínculos com times
-  (`PlayerMembership`). Assim, número e posição não são tratados como
-  atributos globais do jogador.
-- A sincronização por identificador deve ser idempotente e respeitar a marca
-  de exclusão lógica (`isDeleted` local e `deleted` na API).
+- The profile is saved locally on the device as part of the offline-first flow.
+- Synchronization with the API sends data entered by the user to the
+  environment configured by the organization.
+- The identity profile (`Player`) is separate from team memberships
+  (`PlayerMembership`). Therefore, number and position are not global player
+  attributes.
+- Identifier-based synchronization must be idempotent and respect the soft
+  deletion marker (`isDeleted` locally and `deleted` in the API).
 
-## Retenção, arquivamento e eventos
+## Retention, archiving, and events
 
-Arquivar um jogador ou vínculo é uma exclusão lógica. O jogador arquivado e os
-vínculos inativos deixam de aparecer nos cadastros ativos e nas escalações,
-mas os eventos existentes continuam referenciando o `playerId` para preservar
-os relatórios históricos. O MVP não implementa exclusão física automática.
+Archiving a player or membership is a soft deletion. The archived player and
+inactive memberships no longer appear in active registrations and lineups, but
+existing events continue to reference `playerId` to preserve historical
+reports. The MVP does not implement automatic physical deletion.
 
-## Riscos e limites do MVP
+## MVP risks and limits
 
-- Dados de menores podem ser informados, especialmente quando a data de
-  nascimento é preenchida; a organização deve definir regras apropriadas para
-  coleta, acesso e consentimento.
-- O produto não deve receber categorias de dados sensíveis, documentos,
-  informações médicas ou dados de contato neste cadastro.
-- O armazenamento local pode existir em dispositivos compartilhados ou
-  perdidos; o responsável pela operação deve aplicar bloqueio, controle de
-  acesso e gestão de dispositivos adequados.
-- O transporte, autenticação, autorização, backups e retenção do ambiente de
-  API devem ser configurados e revisados fora deste MVP.
+- Data about minors can be entered, especially when the date of birth is
+  filled in; the organization must define appropriate rules for collection,
+  access, and consent.
+- The product must not receive sensitive data categories, documents, medical
+  information, or contact details in this registration.
+- Local storage can exist on shared or lost devices; the operations owner must
+  apply appropriate locking, access control, and device management.
+- Transport, authentication, authorization, backups, and retention of the API
+  environment must be configured and reviewed outside this MVP.
 
-## Pendências jurídicas e operacionais
+## Outstanding legal and operational work
 
-Antes de uso em produção, o responsável pelo produto deve confirmar a base
-legal, o aviso de privacidade, o prazo de retenção, os perfis de acesso, o
-registro de consentimento quando aplicável e o procedimento para incidentes.
-Também deve ser definido quem é responsável pelo tratamento e como titulares
-podem exercer seus direitos. Essas definições não são implementadas por este
-documento.
+Before production use, the product owner must confirm the legal basis, privacy
+notice, retention period, access profiles, consent record when applicable, and
+incident procedure. The controller and the way data subjects can exercise
+their rights must also be defined. This document does not implement these
+definitions.
 
-## Privacidade, governança e solicitações
+## Privacy, governance, and requests
 
-O responsável pela organização deve limitar o acesso por função, revisar os
-dados periodicamente e orientar os usuários a preencher somente o necessário.
-Exportação, atendimento de solicitações de acesso/correção e exclusão física
-ou anonimização ainda não fazem parte do MVP. O arquivamento disponível na
-interface preserva os eventos e deve ser tratado como medida operacional, não
-como atendimento automático a uma solicitação legal de exclusão.
+The organization owner must limit access by role, periodically review data,
+and instruct users to enter only what is necessary. Exporting, responding to
+access or correction requests, physical deletion, and anonymization are not
+yet part of the MVP. Archiving in the interface preserves events and must be
+treated as an operational measure, not as automatic fulfillment of a legal
+deletion request.
