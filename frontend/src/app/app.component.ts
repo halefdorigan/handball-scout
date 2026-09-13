@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { Subject, filter, takeUntil } from 'rxjs';
+import { AuthService } from './core/auth/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ export class AppComponent implements OnDestroy {
 
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private router: Router) {
+  constructor(private readonly router: Router, private readonly authService: AuthService) {
     this.updateShell(this.router.url);
     this.router.events
       .pipe(
@@ -26,6 +27,11 @@ export class AppComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   private updateShell(url: string): void {

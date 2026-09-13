@@ -1,6 +1,10 @@
 import { JwtStrategy } from '../jwt.strategy';
 
 describe('JwtStrategy', () => {
+  beforeAll(() => {
+    process.env.JWT_SECRET = 'test-jwt-secret';
+  });
+
   it('should map the JWT payload to the authenticated user', async () => {
     // Arrange
     const strategy = new JwtStrategy();

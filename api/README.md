@@ -44,6 +44,14 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Environment configuration
+
+Copy `.env.development.example` to the ignored file `.env.development` before
+starting the API locally. For production, copy `.env.production.example` to
+`.env.production`, or provide the same
+variables through the deployment environment. Configure `MONGODB_URI` for the
+target database; the API requires `JWT_SECRET` and `JWT_EXPIRES_IN`.
+
 ## Run tests
 
 ```bash
