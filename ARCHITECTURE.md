@@ -1,134 +1,134 @@
-# Arquitetura
+# Architecture
 
-> Arquitetura vigente do Scout Court, com rastreabilidade para ADRs.
+> Current Scout Court architecture, with ADR traceability.
 
-Última verificação: 13 de setembro de 2026.
+Last reviewed: September 13, 2026.
 
-Este arquivo é a fonte da verdade para a arquitetura atual: componentes,
-fronteiras, fluxo de dados, persistência e restrições de execução/deploy. Cada
-seção e cada entrada arquitetural está vinculada a pelo menos uma ADR. As ADRs
-registram o motivo da decisão; este arquivo registra como a decisão aparece na
-implementação atual.
+This file is the source of truth for the current architecture: components,
+boundaries, data flow, persistence, and execution and deployment constraints.
+Each architectural section and entry is linked to at least one ADR. ADRs record
+the rationale for a decision; this file records how it appears in the current
+implementation.
 
-## Visão geral — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
+## Overview — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
 
 ```text
-Usuário
+User
   ↓
-Angular 15 PWA → NgRx Store → RxDB/Dexie (fonte local)
-                              ↓ sincronização explícita
+Angular 15 PWA → NgRx Store → RxDB/Dexie (local source)
+                              ↓ explicit synchronization
                        NestJS API → MongoDB
 ```
 
-| Camada | Implementação atual | ADR |
+| Layer | Current implementation | ADR |
 | --- | --- | --- |
-| Cliente | PWA Angular 15 executada no navegador. | [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) |
-| Estado de interface | NgRx Store com entidades `teams`, `players` e `games`. | [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) |
-| Persistência local | RxDB sobre storage Dexie, base `handball_scout_db`. | [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) |
-| Integração | `SyncService` faz a ponte explícita entre a base local e a API. | [ADR-004](docs/adrs/004-sincronizacao-explicita.md) |
-| Servidor | API NestJS modular exposta por HTTP. | [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) |
-| Persistência remota | MongoDB acessado por repositórios Mongoose. | [ADR-007](docs/adrs/007-fronteira-de-persistencia-por-repositorios.md) |
+| Client | Angular 15 PWA running in the browser. | [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) |
+| UI state | NgRx Store with `teams`, `players`, and `games` entities. | [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) |
+| Local persistence | RxDB over Dexie storage, database `handball_scout_db`. | [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) |
+| Integration | `SyncService` explicitly bridges the local database and API. | [ADR-004](docs/adrs/004-sincronizacao-explicita.md) |
+| Server | Modular NestJS API exposed over HTTP. | [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) |
+| Remote persistence | MongoDB accessed through Mongoose repositories. | [ADR-007](docs/adrs/007-fronteira-de-persistencia-por-repositorios.md) |
 
-## Frontend — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) e [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
+## Frontend — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) and [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
 
-- O ponto de entrada é `frontend/src/main.ts`, que inicializa o `AppModule`.
+- The entry point is `frontend/src/main.ts`, which initializes `AppModule`.
   [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
-- O shell da aplicação fica em `AppComponent` e fornece rail lateral no
-  desktop e navegação inferior no mobile. [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
-- `dashboard`, `teams` e `games` são módulos lazy carregados pelo roteador.
+- The application shell is in `AppComponent`, providing a side rail on desktop
+  and bottom navigation on mobile. [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
+- `dashboard`, `teams`, and `games` are lazy-loaded router modules.
   [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
-- O NgRx Store mantém estado reativo para times, jogadores e partidas; os
-  reducers usam adapters de entidades. [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
-- Os effects consultam e atualizam o RxDB. A base local usa Dexie e contém as
-  coleções `teams`, `players` e `games`. [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
-- O service worker é habilitado apenas fora do modo de desenvolvimento.
+- The NgRx Store keeps reactive state for teams, players, and matches; reducers
+  use entity adapters. [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
+- Effects read and update RxDB. The local database uses Dexie and contains the
+  `teams`, `players`, and `games` collections. [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
+- The service worker is enabled only outside development mode.
   [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
-- `AuthGuard` protege `/dashboard`, `/teams`, `/players` e `/games`; sem
-  sessão, ele redireciona para `/login` preservando a URL de retorno.
-  `GuestGuard` redireciona sessões existentes de `/login` e `/register` para o
-  dashboard. [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md)
-- O único interceptor registrado no `AppModule` acrescenta o token Bearer
-  quando existe `localStorage.auth_token`; o logout remove esse token local.
-  [ADR-005](docs/adrs/005-autenticacao-jwt.md) e [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md)
+- `AuthGuard` protects `/dashboard`, `/teams`, `/players`, and `/games`; when
+  no session exists, it redirects to `/login` while preserving the return URL.
+  `GuestGuard` redirects existing sessions from `/login` and `/register` to
+  the dashboard. [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md)
+- The sole interceptor registered in `AppModule` adds a Bearer token when
+  `localStorage.auth_token` exists; logout removes that local token.
+  [ADR-005](docs/adrs/005-autenticacao-jwt.md) and [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md)
 
-## Backend — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) e [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
+## Backend — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) and [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
 
-- `api/src/main.ts` inicializa a aplicação NestJS, habilita CORS e escuta a
-  porta `PORT` ou `3000`. [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
-- `AppModule` compõe os módulos `auth`, `teams`, `players`, `player-memberships`,
-  `matches` e `scouting`; `games` permanece como fachada de compatibilidade.
-  [ADR-003](docs/adrs/003-api-modular-com-mongodb.md) e [ADR-006](docs/adrs/006-contextos-partida-e-scouting.md)
+- `api/src/main.ts` initializes the NestJS application, enables CORS, and
+  listens on `PORT` or `3000`. [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
+- `AppModule` composes the `auth`, `teams`, `players`, `player-memberships`,
+  `matches`, and `scouting` modules; `games` remains a compatibility facade.
+  [ADR-003](docs/adrs/003-api-modular-com-mongodb.md) and [ADR-006](docs/adrs/006-contextos-partida-e-scouting.md)
   [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
-- Cada módulo de domínio organiza controller, service, repository e schema
-  Mongoose; somente repositórios acessam o driver. [ADR-007](docs/adrs/007-fronteira-de-persistencia-por-repositorios.md)
-- A conexão padrão aponta para o banco MongoDB `handball-scout`; `MONGODB_URI`
-  pode substituí-la. [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
-- A API habilita CORS globalmente para permitir a comunicação HTTP da PWA.
+- Each domain module organizes a controller, service, repository, and Mongoose
+  schema; only repositories access the driver. [ADR-007](docs/adrs/007-fronteira-de-persistencia-por-repositorios.md)
+- The default connection points to the `handball-scout` MongoDB database;
+  `MONGODB_URI` can override it. [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
+- The API enables global CORS to allow HTTP communication from the PWA.
   [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
 
-## Estado e persistência — [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) e [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
+## State and persistence — [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) and [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
 
-- O RxDB é a fonte de leitura e escrita do fluxo normal do frontend; as telas
-  não consultam a API diretamente para carregar dados. [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
-- A base local possui schemas legados para `Game` e coleções novas para
-  `Match` e `ScoutingSession`; eventos pertencem à sessão de scout.
-  [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) e [ADR-006](docs/adrs/006-contextos-partida-e-scouting.md)
-- O backend persiste os mesmos agregados como documentos Mongoose separados.
-  `teamAId`, `teamBId` e `teamId` são referências por string, sem relações
-  Mongoose declaradas. [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
-- A base local representa exclusão lógica com `isDeleted`; a API representa a
-  mesma ideia com `deleted`. [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) e [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
+- RxDB is the frontend's read and write source for the normal flow; screens do
+  not query the API directly to load data. [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
+- The local database has legacy schemas for `Game` and new collections for
+  `Match` and `ScoutingSession`; events belong to the scouting session.
+  [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) and [ADR-006](docs/adrs/006-contextos-partida-e-scouting.md)
+- The backend persists the same aggregates as separate Mongoose documents.
+  `teamAId`, `teamBId`, and `teamId` are string references without declared
+  Mongoose relationships. [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
+- The local database represents soft deletion with `isDeleted`; the API
+  represents the same idea with `deleted`. [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) and [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
 
-## Sincronização — [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
+## Synchronization — [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
 
-- A sincronização é iniciada explicitamente pelo usuário na tela **Times**.
+- Synchronization is explicitly started by the user from the **Times** screen.
   [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
-- `SyncService.syncAll()` executa `teams`, depois `players`, depois `games`.
-  Cada etapa envia os documentos locais para o endpoint `/sync`, recebe a
-  resposta e faz upsert local. [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
-- O fluxo atual é push local → API → pull da resposta; não há sincronização em
-  tempo real entre dispositivos. [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
-- O tratamento explícito de `isDeleted`/`deleted` existe no envio e recebimento
-  de times; jogadores e partidas seguem o documento local sem essa conversão.
+- `SyncService.syncAll()` executes `teams`, then `players`, then `games`.
+  Each stage sends local documents to the `/sync` endpoint, receives the
+  response, and performs a local upsert. [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
+- The current flow is local push → API → response pull; there is no real-time
+  synchronization between devices. [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
+- Explicit `isDeleted`/`deleted` handling exists when sending and receiving
+  teams; players and matches follow the local document without this conversion.
   [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
 
-## Autorização da fronteira HTTP — [ADR-005](docs/adrs/005-autenticacao-jwt.md)
+## HTTP boundary authorization — [ADR-005](docs/adrs/005-autenticacao-jwt.md)
 
-- `/auth/login` e `/auth/register` são endpoints públicos da API.
+- `/auth/login` and `/auth/register` are public API endpoints.
   [ADR-005](docs/adrs/005-autenticacao-jwt.md)
-- Os controllers de times, jogadores e partidas usam `JwtAuthGuard`.
+- Controllers for teams, players, and matches use `JwtAuthGuard`.
   [ADR-005](docs/adrs/005-autenticacao-jwt.md)
-- O frontend armazena o token em `auth_token`, o interceptor ativo o envia
-  como `Authorization: Bearer <token>`, e os guards condicionam a navegação
-  interna a uma sessão local. [ADR-005](docs/adrs/005-autenticacao-jwt.md) e
-  [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md)
-- A API recebe `JWT_SECRET` e `JWT_EXPIRES_IN` por variáveis de ambiente;
-  os exemplos de desenvolvimento e produção documentam os nomes necessários.
-  [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md) e
+- The frontend stores the token in `auth_token`; the active interceptor sends
+  it as `Authorization: Bearer <token>`, and route guards require a local
+  session before internal navigation. [ADR-005](docs/adrs/005-autenticacao-jwt.md)
+  and [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md)
+- The API reads `JWT_SECRET` and `JWT_EXPIRES_IN` from environment variables;
+  development and production examples document the required names.
+  [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md) and
   [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
 
-## Restrições de execução e deploy — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) e [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
+## Execution and deployment constraints — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) and [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
 
-- Em desenvolvimento, o frontend é executado em `http://localhost:4200` e usa
-  `http://localhost:3000` como API. Em produção, ele usa a rota relativa
-  `/api`, encaminhada pelo Nginx para o backend. [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
-  e [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
-- A operação offline depende do armazenamento local do navegador; a troca com
-  a API só ocorre quando o usuário solicita sincronização e há conectividade.
-  [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) e [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
-- O `docker-compose.yml` publica a PWA em `http://localhost:8080`; o Nginx
-  encaminha `/api` ao serviço `backend`, que recebe as variáveis de produção
-  pelo ambiente do container. [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
+- In development, the frontend runs at `http://localhost:4200` and uses
+  `http://localhost:3000` as its API. In production, it uses the relative
+  `/api` route, which Nginx forwards to the backend. [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md)
+  and [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
+- Offline operation depends on local browser storage; data is exchanged with
+  the API only when the user requests synchronization and connectivity exists.
+  [ADR-002](docs/adrs/002-persistencia-local-offline-first.md) and [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
+- `docker-compose.yml` exposes the PWA at `http://localhost:8080`; Nginx
+  forwards `/api` to the `backend` service, which receives production
+  variables from its container environment. [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
 
-## Fontes de implementação — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md), [ADR-002](docs/adrs/002-persistencia-local-offline-first.md), [ADR-003](docs/adrs/003-api-modular-com-mongodb.md), [ADR-004](docs/adrs/004-sincronizacao-explicita.md), [ADR-005](docs/adrs/005-autenticacao-jwt.md), [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md) e [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
+## Implementation sources — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md), [ADR-002](docs/adrs/002-persistencia-local-offline-first.md), [ADR-003](docs/adrs/003-api-modular-com-mongodb.md), [ADR-004](docs/adrs/004-sincronizacao-explicita.md), [ADR-005](docs/adrs/005-autenticacao-jwt.md), [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md), and [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
 
-- [Frontend](frontend/src/) — shell, módulos lazy, estado e persistência local.
-  [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) e [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
-- [Backend](api/src/) — módulos NestJS, controllers, services e schemas.
-  [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) e [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
-- [Sincronização](frontend/src/app/core/services/sync.service.ts) — sequência
-  e transformação dos dados. [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
-- [Configuração de módulos](api/src/app.module.ts) — composição da API e banco.
+- [Frontend](frontend/src/) — shell, lazy modules, state, and local persistence.
+  [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) and [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)
+- [Backend](api/src/) — NestJS modules, controllers, services, and schemas.
+  [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) and [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
+- [Synchronization](frontend/src/app/core/services/sync.service.ts) — data
+  sequence and transformation. [ADR-004](docs/adrs/004-sincronizacao-explicita.md)
+- [Module configuration](api/src/app.module.ts) — API and database composition.
   [ADR-003](docs/adrs/003-api-modular-com-mongodb.md)
-- [Índice de ADRs](docs/adrs/README.md) — decisões que fundamentam este mapa.
-  [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md), [ADR-002](docs/adrs/002-persistencia-local-offline-first.md), [ADR-003](docs/adrs/003-api-modular-com-mongodb.md), [ADR-004](docs/adrs/004-sincronizacao-explicita.md) e [ADR-005](docs/adrs/005-autenticacao-jwt.md)
+- [ADR index](docs/adrs/README.md) — decisions that support this map.
+  [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md), [ADR-002](docs/adrs/002-persistencia-local-offline-first.md), [ADR-003](docs/adrs/003-api-modular-com-mongodb.md), [ADR-004](docs/adrs/004-sincronizacao-explicita.md), and [ADR-005](docs/adrs/005-autenticacao-jwt.md)

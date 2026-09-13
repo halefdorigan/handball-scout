@@ -1,19 +1,19 @@
-# Limitações conhecidas
+# Known limitations
 
-Este documento concentra divergências e lacunas observadas na implementação.
-Elas não fazem parte do contexto semântico global.
+This document captures observed implementation divergences and gaps. They are
+not part of the global semantic context.
 
-- A interface ainda lê a coleção legada `games`; a migração para `matches` e
-  `scoutingSessions` já é executada na base local, mas as telas precisam ser
-  transferidas antes de remover a compatibilidade.
-- Cartões amarelos são registrados, mas não possuem estatística no relatório.
-- O cronômetro não altera o `Game.status`; a partida permanece `PENDING` após
-  sua criação.
-- A rota `/games/:id` existe, mas o carregamento da partida para edição ainda
-  não foi implementado.
-- O frontend não possui telas ou rotas de autenticação, embora a API ofereça
-  login e registro.
-- A conversão de exclusão lógica entre `isDeleted` e `deleted` é explícita
-  apenas para times durante a sincronização.
-- O `docker-compose.yml` usa `./backend` como contexto de build, embora o
-  backend esteja no diretório `api/`.
+- The UI still reads the legacy `games` collection; migration to `matches` and
+  `scoutingSessions` already runs in the local database, but screens must be
+  migrated before compatibility can be removed.
+- Yellow cards are recorded but have no statistic in the report.
+- The timer does not change `Game.status`; the match remains `PENDING` after
+  creation.
+- The `/games/:id` route exists, but loading a match for editing is not yet
+  implemented.
+- The frontend has no authentication screens or routes, although the API
+  offers login and registration.
+- The soft-deletion conversion between `isDeleted` and `deleted` is explicit
+  only for teams during synchronization.
+- `docker-compose.yml` uses `./backend` as its build context, although the
+  backend is in the `api/` directory.

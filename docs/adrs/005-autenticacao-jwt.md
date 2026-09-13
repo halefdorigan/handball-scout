@@ -1,53 +1,52 @@
-# ADR-005: Autenticação JWT
+# ADR-005: JWT authentication
 
-- **Data**: 2026-09-13
-- **Status**: Aceito
-- **Decisores**: Equipe do projeto
-- **Tags**: autenticação, autorização, API, JWT
+- **Date**: 2026-09-13
+- **Status**: Accepted
+- **Deciders**: Project team
+- **Tags**: authentication, authorization, API, JWT
 
-## Contexto e problema
+## Context and problem
 
-Os dados sincronizados precisam atravessar a fronteira entre a PWA e a API com
-identidade e autorização. O backend já possui registro e login, e os
-controllers de times, jogadores e partidas estão protegidos por
-`JwtAuthGuard`. O frontend possui um interceptor para anexar o token às
-requisições.
+Synchronized data must cross the boundary between the PWA and API with
+identity and authorization. The backend already has registration and login,
+and team, player, and match controllers are protected by `JwtAuthGuard`. The
+frontend has an interceptor to attach the token to requests.
 
-## Fatores de decisão
+## Decision drivers
 
-- proteger os recursos persistidos no servidor;
-- usar um mecanismo compatível com chamadas HTTP da PWA;
-- manter autenticação stateless na API;
-- permitir que o cliente continue trabalhando localmente sem login disponível.
+- Protect resources persisted on the server.
+- Use a mechanism compatible with PWA HTTP calls.
+- Keep API authentication stateless.
+- Allow the client to continue local work without login availability.
 
-## Opções consideradas
+## Considered options
 
-- Usar JWT no header Bearer, validado pela estratégia Passport da API.
-- Usar sessões de servidor com cookie.
-- Deixar os endpoints de domínio sem autenticação.
+- Use JWT in the Bearer header, validated by the API Passport strategy.
+- Use server sessions with cookies.
+- Leave domain endpoints unauthenticated.
 
-## Decisão
+## Decision
 
-Usaremos JWT Bearer para autorizar a API. `/auth/login` e `/auth/register`
-permanecem públicos; os controllers de `teams`, `players` e `games` usam
-`JwtAuthGuard`. O frontend armazenará o token em `auth_token` e o interceptor
-ativo o enviará no header `Authorization`.
+We will use JWT Bearer to authorize the API. `/auth/login` and
+`/auth/register` remain public; `teams`, `players`, and `games` controllers use
+`JwtAuthGuard`. The frontend will store the token in `auth_token`, and the
+active interceptor will send it in the `Authorization` header.
 
-### Consequências positivas
+### Positive consequences
 
-- A API pode validar cada chamada sem manter sessão no servidor.
-- A mesma fronteira protege leitura e sincronização dos dados remotos.
-- O trabalho local permanece separado da disponibilidade do serviço de auth.
+- The API can validate each call without keeping a server session.
+- The same boundary protects reads and synchronization of remote data.
+- Local work remains separate from authentication-service availability.
 
-### Consequências negativas
+### Negative consequences
 
-- O frontend ainda precisa de telas de autenticação para obter o token por uma
-  jornada completa de usuário.
-- Expiração, renovação e revogação de tokens exigem evolução posterior.
-- O cliente precisa lidar com chamadas protegidas quando não possui token.
+- The frontend still needs authentication screens for a complete token-acquisition
+  journey.
+- Token expiration, renewal, and revocation require future work.
+- The client must handle protected calls when it has no token.
 
 ## Links
 
-- [Arquitetura atual](../../ARCHITECTURE.md)
-- [Módulo de autenticação](../../api/src/auth/)
-- [Interceptor registrado](../../frontend/src/app/core/interceptors/auth.interceptor.ts)
+- [Current architecture](../../ARCHITECTURE.md)
+- [Authentication module](../../api/src/auth/)
+- [Registered interceptor](../../frontend/src/app/core/interceptors/auth.interceptor.ts)

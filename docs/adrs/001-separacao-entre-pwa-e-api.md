@@ -1,52 +1,53 @@
-# ADR-001: Separação entre PWA e API
+# ADR-001: PWA and API separation
 
-- **Data**: 2026-09-13
-- **Status**: Aceito
-- **Decisores**: Equipe do projeto
-- **Tags**: arquitetura, frontend, backend, integração
+- **Date**: 2026-09-13
+- **Status**: Accepted
+- **Deciders**: Project team
+- **Tags**: architecture, frontend, backend, integration
 
-## Contexto e problema
+## Context and problem
 
-O projeto já possui dois executáveis com responsabilidades distintas: uma PWA
-Angular em `frontend/` e uma API NestJS em `api/`. A PWA precisa continuar
-operando localmente, enquanto a API fornece persistência remota, autenticação e
-sincronização. A arquitetura precisa preservar uma fronteira HTTP clara entre
-essas responsabilidades.
+The project already has two executables with distinct responsibilities: an
+Angular PWA in `frontend/` and a NestJS API in `api/`. The PWA must continue
+operating locally, while the API provides remote persistence, authentication,
+and synchronization. The architecture must preserve a clear HTTP boundary
+between these responsibilities.
 
-## Fatores de decisão
+## Decision drivers
 
-- manter a operação local do cliente independente da disponibilidade da API;
-- separar ciclos de build, execução e deploy do frontend e do backend;
-- permitir que a API seja consumida por outros clientes no futuro;
-- preservar o limite já refletido na estrutura do repositório.
+- Keep client local operation independent from API availability.
+- Separate frontend and backend build, execution, and deployment cycles.
+- Allow other clients to consume the API in the future.
+- Preserve the boundary already represented by the repository structure.
 
-## Opções consideradas
+## Considered options
 
-- Manter uma PWA Angular e uma API NestJS separadas por HTTP.
-- Unificar frontend e backend em uma única aplicação executável.
-- Fazer o frontend acessar diretamente o MongoDB.
+- Keep an Angular PWA and a NestJS API separated by HTTP.
+- Combine frontend and backend into one executable application.
+- Have the frontend access MongoDB directly.
 
-## Decisão
+## Decision
 
-Manteremos `frontend/` e `api/` como aplicações separadas, com a comunicação
-entre elas feita pela API HTTP. O frontend não acessa o MongoDB diretamente;
-ele usa a persistência local e a API para sincronização e autenticação.
+We will keep `frontend/` and `api/` as separate applications, communicating
+through the HTTP API. The frontend does not access MongoDB directly; it uses
+local persistence and the API for synchronization and authentication.
 
-### Consequências positivas
+### Positive consequences
 
-- A operação offline fica isolada da disponibilidade do servidor.
-- Cada camada pode evoluir e ser validada com suas próprias ferramentas.
-- A fronteira HTTP explicita os contratos entre cliente e servidor.
+- Offline operation is isolated from server availability.
+- Each layer can evolve and be validated with its own tools.
+- The HTTP boundary makes client and server contracts explicit.
 
-### Consequências negativas
+### Negative consequences
 
-- O projeto precisa manter configurações, dependências e comandos em dois
-  pacotes.
-- CORS, autenticação, disponibilidade da API e compatibilidade de contratos
-  passam a ser preocupações de integração.
-- O compose atual precisa ser mantido alinhado ao diretório real `api/`.
+- The project must maintain configuration, dependencies, and commands in two
+  packages.
+- CORS, authentication, API availability, and contract compatibility become
+  integration concerns.
+- The current compose configuration must remain aligned with the actual
+  `api/` directory.
 
 ## Links
 
-- [Arquitetura atual](../../ARCHITECTURE.md)
-- [Visão geral do projeto](../../README.md)
+- [Current architecture](../../ARCHITECTURE.md)
+- [Repository overview](../../README.md)

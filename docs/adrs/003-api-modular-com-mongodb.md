@@ -1,51 +1,52 @@
-# ADR-003: API modular com MongoDB
+# ADR-003: Modular API with MongoDB
 
-- **Data**: 2026-09-13
-- **Status**: Aceito
-- **Decisores**: Equipe do projeto
+- **Date**: 2026-09-13
+- **Status**: Accepted
+- **Deciders**: Project team
 - **Tags**: backend, NestJS, MongoDB, Mongoose
 
-## Contexto e problema
+## Context and problem
 
-O servidor precisa expor autenticação e sincronização para os agregados de
-times, jogadores e partidas. O código atual é NestJS e organiza cada área em
-um módulo próprio, com schemas Mongoose e uma conexão MongoDB. A persistência
-precisa acompanhar documentos que contêm listas e eventos de uma partida.
+The server must expose authentication and synchronization for team, player,
+and match aggregates. The current NestJS code organizes each area into its own
+module, with Mongoose schemas and a MongoDB connection. Persistence must handle
+documents containing lists and match events.
 
-## Fatores de decisão
+## Decision drivers
 
-- manter módulos de domínio isolados no backend;
-- persistir os agregados usados pelo cliente offline-first;
-- suportar o array de eventos embutido em uma partida;
-- usar as bibliotecas e a estrutura já presentes no repositório.
+- Keep isolated domain modules in the backend.
+- Persist the aggregates used by the offline-first client.
+- Support the embedded event array in a match.
+- Use the libraries and structure already present in the repository.
 
-## Opções consideradas
+## Considered options
 
-- Usar NestJS com módulos de domínio, Mongoose e MongoDB.
-- Usar NestJS com um banco relacional e ORM.
-- Usar um driver de banco sem schemas Mongoose e sem módulos de domínio.
+- Use NestJS with domain modules, Mongoose, and MongoDB.
+- Use NestJS with a relational database and ORM.
+- Use a database driver without Mongoose schemas or domain modules.
 
-## Decisão
+## Decision
 
-Usaremos NestJS como framework da API, com módulos `auth`, `teams`, `players` e
-`games`. Mongoose define os schemas e MongoDB persiste os documentos. Times,
-jogadores e partidas são documentos separados; as referências entre eles são
-identificadores string (`teamId`, `teamAId` e `teamBId`).
+We will use NestJS as the API framework, with `auth`, `teams`, `players`, and
+`games` modules. Mongoose defines schemas and MongoDB persists documents.
+Teams, players, and matches are separate documents; references between them are
+string identifiers (`teamId`, `teamAId`, and `teamBId`).
 
-### Consequências positivas
+### Positive consequences
 
-- A organização por módulo acompanha as áreas funcionais do produto.
-- MongoDB representa naturalmente documentos e eventos embutidos.
-- Mongoose fornece schemas, timestamps e integração com NestJS.
+- Module organization follows the product's functional areas.
+- MongoDB naturally represents documents and embedded events.
+- Mongoose provides schemas, timestamps, and NestJS integration.
 
-### Consequências negativas
+### Negative consequences
 
-- A integridade entre referências precisa ser tratada pela aplicação.
-- Consultas que cruzam times, jogadores e partidas exigem composição explícita.
-- A API e a base local precisam coordenar nomes como `deleted` e `isDeleted`.
+- Application code must handle reference integrity.
+- Queries that cross teams, players, and matches require explicit composition.
+- The API and local database must coordinate names such as `deleted` and
+  `isDeleted`.
 
 ## Links
 
-- [Arquitetura atual](../../ARCHITECTURE.md)
-- [Módulo principal da API](../../api/src/app.module.ts)
-- [Schemas de domínio](../../api/src/)
+- [Current architecture](../../ARCHITECTURE.md)
+- [API root module](../../api/src/app.module.ts)
+- [Domain schemas](../../api/src/)

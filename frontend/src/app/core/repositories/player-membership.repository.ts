@@ -8,7 +8,7 @@ import { DatabaseService } from '../db/database.service';
 @Injectable({ providedIn: 'root' })
 export class PlayerMembershipRepository extends LocalRepository {
   constructor(database: DatabaseService) { super(database); }
-  observeAll(): Observable<any[]> { return from(this.collection('playerMemberships')).pipe(switchMap(c => c.find().$), map(items => (items as any[]).map((x: any) => x.toJSON()))); }
+  observeAll(): Observable<any[]> { return from(this.collection('playerMemberships')).pipe(switchMap(c => c.find().$ as Observable<any[]>), map(items => items.map((x: any) => x.toJSON()))); }
   all(): Promise<any[]> { return this.list('playerMemberships'); }
   create(membership: any): Promise<any> { return this.collection('playerMemberships').then(c => c.insert({ _id: uuidv4(), ...membership, status: membership.status || 'ACTIVE', updatedAt: Date.now(), isDeleted: false })); }
   update(membership: any): Promise<any> { return this.collection('playerMemberships').then(c => c.upsert({ ...membership, updatedAt: Date.now() })); }

@@ -13,6 +13,18 @@ These instructions apply to the entire repository.
 - `api/` contains the NestJS backend.
 - Keep changes scoped to the requested work and preserve unrelated working-tree changes.
 
+## Project language
+
+- Write all non-user-facing project artifacts in English, including code
+  identifiers, comments, documentation, tests, BDD specs, and commit-facing
+  artifacts.
+- Keep UI and UX content in Portuguese, including visible interface copy,
+  validation and error messages presented to users, accessibility labels, and
+  user-entered or displayable domain values.
+- When touching an existing internal non-English artifact, translate the
+  affected content to English as part of the same change. Preserve proper
+  names, external data, legally required text, and user-facing Portuguese.
+
 ## Context rules
 
 - `CONTEXT.md` is limited to project-wide semantic context: ubiquitous
@@ -51,6 +63,28 @@ persisted data only through services or repositories' public contracts.
 but document migrations and CRUD operations belong to repositories.
 - Run `npm run check:persistence-boundary` in each package after changing a
 persistence integration.
+
+## BDD for user flows
+
+- Every user-facing flow must be specified in BDD (Gherkin) before it is
+  implemented or changed. Store the specification at
+  `specs/<domain>/*.feature`, using the bounded domain that owns the flow.
+- Write every BDD feature, scenario, example, and step in English. Use the
+  default English Gherkin keywords (`Feature`, `Background`, `Scenario`,
+  `Scenario Outline`, `Examples`, `Given`, `When`, `Then`, `And`, `But`).
+- When a task reveals a new user flow, an agent must identify its domain and
+  create or extend the corresponding `.feature` file in the same change. A
+  user-flow change is not complete until its happy path, relevant validation
+  or failure path, and domain rules are represented in BDD.
+- Keep scenarios focused on observable user behavior and domain language;
+  do not encode Angular, NestJS, RxDB, Mongoose, selectors, routes, or other
+  implementation details as steps. Reuse the canonical terms in `CONTEXT.md`.
+- Maintain existing scenarios when behavior changes: update the affected
+  scenario, remove behavior that no longer exists, and add coverage for the
+  new outcome. Keep specs separated by domain; do not create a catch-all
+  feature file for unrelated flows.
+- Before handoff, check that every touched user flow has a corresponding spec
+  under `specs/` and report the feature files added or updated.
 
 ## Validation requirements
 

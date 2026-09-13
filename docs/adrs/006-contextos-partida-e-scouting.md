@@ -1,25 +1,25 @@
-# ADR-006: Separação entre partida e scouting
+# ADR-006: Match and scouting context separation
 
-- **Data**: 2026-09-13
-- **Status**: Aceito
+- **Date**: 2026-09-13
+- **Status**: Accepted
 
-## Contexto
+## Context
 
-O agregado legado `Game` misturava dados de uma partida com a captura de
-eventos em tempo real. Isso contrariava a fronteira entre Match Context e
-Scouting Context e tornava a evolução de relatórios e sincronização frágil.
+The legacy `Game` aggregate mixed match data with real-time event capture. This
+violated the boundary between Match Context and Scouting Context and made the
+evolution of reports and synchronization fragile.
 
-## Decisão
+## Decision
 
-Partidas são persistidas como `Match`, sem eventos. Cada partida possui uma
-`ScoutingSession` com relógio e eventos ordenados. Os endpoints e a coleção
-`games` são mantidos apenas como compatibilidade de migração. O frontend cria
-coleções locais `matches` e `scoutingSessions` e converte documentos legados
-de modo idempotente.
+Matches are persisted as `Match` without events. Each match has a
+`ScoutingSession` with an ordered clock and events. The `games` endpoints and
+collection remain only for migration compatibility. The frontend creates local
+`matches` and `scoutingSessions` collections and converts legacy documents
+idempotently.
 
-## Consequências
+## Consequences
 
-- Scouting pode evoluir sem acoplar captura ao cadastro da partida.
-- Relatórios são projeções que combinam contextos, sem escrever nos eventos.
-- A migração preserva os IDs e eventos existentes; a fachada legada será
-  removida em decisão futura após a transição de clientes.
+- Scouting can evolve without coupling capture to match registration.
+- Reports are projections that combine contexts without writing to events.
+- The migration preserves existing IDs and events; the legacy facade will be
+  removed in a future decision after client transition.
