@@ -20,3 +20,4 @@ its historical record.
 - [ADR-007 — Repository persistence boundary](007-fronteira-de-persistencia-por-repositorios.md)
 - [ADR-008 — Frontend session flow](008-fluxo-de-sessao-no-frontend.md)
 - [ADR-009 — Environment configuration](009-configuracao-por-ambiente.md)
+- [ADR-010 — Railway deployment](010-deploy-na-railway.md)
