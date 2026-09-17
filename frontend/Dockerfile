@@ -3,15 +3,18 @@ FROM node:18-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
-RUN npm run build
+# Railway builds this image from /frontend, so the repository-level
+# persistence-boundary script is outside the Docker build context.
+RUN npx ng build
 
 FROM nginx:alpine
 
 COPY --from=build /app/dist/frontend /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+ENV BACKEND_URL=http://backend:3000
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 EXPOSE 80
 

@@ -120,7 +120,20 @@ Angular 15 PWA → NgRx Store → RxDB/Dexie (local source)
   forwards `/api` to the `backend` service, which receives production
   variables from its container environment. [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
 
-## Implementation sources — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md), [ADR-002](docs/adrs/002-persistencia-local-offline-first.md), [ADR-003](docs/adrs/003-api-modular-com-mongodb.md), [ADR-004](docs/adrs/004-sincronizacao-explicita.md), [ADR-005](docs/adrs/005-autenticacao-jwt.md), [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md), and [ADR-009](docs/adrs/009-configuracao-por-ambiente.md)
+## Railway deployment — [ADR-010](docs/adrs/010-deploy-na-railway.md)
+
+- The PWA and API deploy as separate Railway services from the isolated
+  monorepo directories `/frontend` and `/api`. [ADR-010](docs/adrs/010-deploy-na-railway.md)
+- The `frontend` service owns the public domain. Its Nginx container forwards
+  `/api` to the private `backend` service using the runtime `BACKEND_URL`
+  reference. [ADR-010](docs/adrs/010-deploy-na-railway.md)
+- The `backend` service exposes `/health` for deployment healthchecks and
+  receives `MONGODB_URI`, `JWT_SECRET`, `JWT_EXPIRES_IN`, and `PORT` from
+  Railway variables. [ADR-010](docs/adrs/010-deploy-na-railway.md)
+- MongoDB is provisioned as a separate managed service, with its private
+  connection string referenced by the API. [ADR-010](docs/adrs/010-deploy-na-railway.md)
+
+## Implementation sources — [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md), [ADR-002](docs/adrs/002-persistencia-local-offline-first.md), [ADR-003](docs/adrs/003-api-modular-com-mongodb.md), [ADR-004](docs/adrs/004-sincronizacao-explicita.md), [ADR-005](docs/adrs/005-autenticacao-jwt.md), [ADR-008](docs/adrs/008-fluxo-de-sessao-no-frontend.md), [ADR-009](docs/adrs/009-configuracao-por-ambiente.md), and [ADR-010](docs/adrs/010-deploy-na-railway.md)
 
 - [Frontend](frontend/src/) — shell, lazy modules, state, and local persistence.
   [ADR-001](docs/adrs/001-separacao-entre-pwa-e-api.md) and [ADR-002](docs/adrs/002-persistencia-local-offline-first.md)

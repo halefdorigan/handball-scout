@@ -16,4 +16,15 @@ describe('AppController', () => {
     expect(result).toBe('Hello World!');
     expect(appService.getHello).toHaveBeenCalledTimes(1);
   });
+
+  it('should report that the API is healthy', () => {
+    // Arrange
+    const appController = new AppController({} as AppService);
+
+    // Act
+    const result = appController.getHealth();
+
+    // Assert
+    expect(result).toEqual({ status: 'ok' });
+  });
 });

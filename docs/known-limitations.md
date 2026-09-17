@@ -15,5 +15,3 @@ not part of the global semantic context.
   offers login and registration.
 - The soft-deletion conversion between `isDeleted` and `deleted` is explicit
   only for teams during synchronization.
-- `docker-compose.yml` uses `./backend` as its build context, although the
-  backend is in the `api/` directory.
