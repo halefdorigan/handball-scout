@@ -47,7 +47,7 @@ export class DatabaseService {
       const db = await createRxDatabase({
         name: 'handball_scout_db',
         storage,
-        ignoreDuplicate: true
+        ...(isDevMode() ? { ignoreDuplicate: true } : {})
       });
 
       await db.addCollections({
