@@ -32,10 +32,15 @@ Feature: Match management
     When I remove the tag
     Then the tag is no longer associated with the match
 
-  Scenario: Display the match date and time in the Brazilian format
+  Scenario: Display the match date and time in the local format
     Given matches exist
     When I open the match list
-    Then I see each match date and time in the Brazilian format
+    Then I see each match date and time in my device's local timezone
+
+  Scenario: Preserve the scheduled time across timezones
+    Given a match is scheduled on a date and time
+    When I view the match from a device in another timezone
+    Then I see the date and time converted to the device's local timezone
 
   Scenario: Open the scout for a registered match
     Given a match exists

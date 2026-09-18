@@ -57,6 +57,8 @@ journey.
 - The score is derived from goal events, not an independent value.
 - Local work can continue without connectivity; synchronization is a later
   capability of the same data.
+- Temporal values are stored as UTC instants and presented in the viewer's
+  local timezone.
 
 ## Related documentation
 

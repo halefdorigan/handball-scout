@@ -8,6 +8,7 @@ import * as TeamsActions from '../../../state/teams/teams.actions';
 import * as GamesActions from '../../../state/games/games.actions';
 import { adapter as teamsAdapter } from '../../../state/teams/teams.reducer';
 import { adapter as gamesAdapter } from '../../../state/games/games.reducer';
+import { localWallTimeToUtc, utcToLocalWallTime } from '../../../core/utils/utc-date';
 
 const selectTeamsState = createFeatureSelector<any>('teams');
 const { selectAll: selectAllTeams } = teamsAdapter.getSelectors(selectTeamsState);
@@ -34,7 +35,7 @@ export class GameDetailComponent implements OnInit {
   ) {
     this.gameForm = this.fb.group({
       name: ['', Validators.required],
-      dateTime: [this.localDatetimeValue(new Date()), Validators.required],
+      dateTime: [utcToLocalWallTime(new Date().toISOString()), Validators.required],
       teamAId: ['', Validators.required],
       teamBId: ['', Validators.required],
       tags: [[]]
@@ -53,7 +54,7 @@ export class GameDetailComponent implements OnInit {
         take(1)
       ).subscribe(entities => {
         const game = entities[this.gameId!];
-        if (game) this.gameForm.patchValue(game);
+        if (game) this.gameForm.patchValue({ ...game, dateTime: utcToLocalWallTime(game.dateTime) });
       });
     }
   }
@@ -79,14 +80,9 @@ export class GameDetailComponent implements OnInit {
 
   save() {
     if (this.gameForm.valid) {
-      this.store.dispatch(GamesActions.addGame({ game: this.gameForm.value }));
+      const game = { ...this.gameForm.value, dateTime: localWallTimeToUtc(this.gameForm.value.dateTime) };
+      this.store.dispatch(GamesActions.addGame({ game }));
       this.router.navigate(['/games']);
     }
-  }
-
-  private localDatetimeValue(date: Date): string {
-    return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
-      .toISOString()
-      .substring(0, 16);
   }
 }
