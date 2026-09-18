@@ -11,6 +11,13 @@ import * as PlayersActions from '../../../state/players/players.actions';
 import { selectAllPlayers, selectPlayerById } from '../../../state/players/players.selectors';
 import * as TeamsActions from '../../../state/teams/teams.actions';
 import { selectAllTeams } from '../../../state/teams/teams.selectors';
+import {
+  brazilianIntegerValidator,
+  brazilianNumberRangeValidator,
+  brazilianNumberValidator,
+  formatBrazilianNumber,
+  parseBrazilianNumber
+} from '../../../core/utils/brazilian-number';
 
 @Component({
   selector: 'app-player-detail',
@@ -38,13 +45,13 @@ export class PlayerDetailComponent implements OnInit {
     this.playerForm = this.fb.group({
       name: ['', Validators.required],
       birthDate: [''],
-      heightCm: ['', [Validators.min(1), Validators.max(260)]],
-      weightKg: ['', [Validators.min(1), Validators.max(400)]],
+      heightCm: ['', [brazilianIntegerValidator(), brazilianNumberRangeValidator(1, 260)]],
+      weightKg: ['', [brazilianNumberValidator(), brazilianNumberRangeValidator(1, 400)]],
       dominantHand: ['']
     });
     this.membershipForm = this.fb.group({
       teamId: ['', Validators.required],
-      number: ['', [Validators.min(0), Validators.max(99)]],
+      number: ['', [brazilianIntegerValidator(), brazilianNumberRangeValidator(0, 99)]],
       position: ['Goleiro']
     });
     this.teams$ = this.store.select(selectAllTeams);
@@ -76,7 +83,13 @@ export class PlayerDetailComponent implements OnInit {
         take(1)
       ).subscribe(player => {
         this.currentPlayer = player;
-        this.playerForm.patchValue(player);
+        this.playerForm.patchValue({
+          name: player.name,
+          birthDate: player.birthDate ?? '',
+          heightCm: player.heightCm !== undefined ? String(player.heightCm) : '',
+          weightKg: player.weightKg !== undefined ? formatBrazilianNumber(player.weightKg) : '',
+          dominantHand: player.dominantHand ?? ''
+        });
       });
     }
   }
@@ -88,11 +101,13 @@ export class PlayerDetailComponent implements OnInit {
     }
 
     const value = this.playerForm.value;
+    const heightCm = parseBrazilianNumber(value.heightCm);
+    const weightKg = parseBrazilianNumber(value.weightKg);
     const player = {
       name: value.name.trim(),
       ...(value.birthDate ? { birthDate: value.birthDate } : {}),
-      ...(value.heightCm !== '' && value.heightCm !== null ? { heightCm: Number(value.heightCm) } : {}),
-      ...(value.weightKg !== '' && value.weightKg !== null ? { weightKg: Number(value.weightKg) } : {}),
+      ...(heightCm !== null ? { heightCm } : {}),
+      ...(weightKg !== null ? { weightKg } : {}),
       ...(value.dominantHand ? { dominantHand: value.dominantHand } : {}),
       isDeleted: this.currentPlayer?.isDeleted ?? false
     };
@@ -120,6 +135,7 @@ export class PlayerDetailComponent implements OnInit {
     }
 
     const membership = this.membershipForm.value;
+    const membershipNumber = parseBrazilianNumber(membership.number);
     this.store.select(selectAllMemberships).pipe(take(1)).subscribe(memberships => {
       const duplicate = memberships.some(item =>
         item.playerId === this.playerId && item.teamId === membership.teamId && !item.isDeleted
@@ -133,7 +149,7 @@ export class PlayerDetailComponent implements OnInit {
         membership: {
           playerId: this.playerId!,
           teamId: membership.teamId,
-          ...(membership.number !== '' && membership.number !== null ? { number: Number(membership.number) } : {}),
+          ...(membershipNumber !== null ? { number: membershipNumber } : {}),
           ...(membership.position ? { position: membership.position } : {}),
           status: 'ACTIVE',
           isDeleted: false

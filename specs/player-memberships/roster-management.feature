@@ -15,6 +15,12 @@ Feature: Roster management
     When I try to link the player to the same team again
     Then the system does not create another active membership for that player and team
 
+  Scenario: Reject a shirt number that is not a whole number
+    Given I am adding a player to a team's roster
+    When I provide a shirt number that is not a whole number
+    Then the player is not linked to the roster
+    And I see a validation message in Portuguese explaining the invalid number
+
   Scenario: Deactivate and reactivate a roster membership
     Given a player has an active membership in a team
     When I deactivate the membership

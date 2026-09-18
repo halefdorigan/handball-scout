@@ -35,11 +35,17 @@
       </div>
       <div class="form-group">
         <label for="player-height">Altura (cm)</label>
-        <input id="player-height" type="number" formControlName="heightCm" min="1" max="260" inputmode="numeric" placeholder="Ex: 178">
+        <input id="player-height" type="text" inputmode="numeric" autocomplete="off" formControlName="heightCm" placeholder="Ex: 178" aria-describedby="player-height-error">
+        <small id="player-height-error" class="field-error" *ngIf="playerForm.get('heightCm')?.touched && playerForm.get('heightCm')?.hasError('invalidNumber')">Informe um número inteiro válido para a altura.</small>
+        <small class="field-error" *ngIf="playerForm.get('heightCm')?.touched && playerForm.get('heightCm')?.hasError('min')">A altura deve ser de pelo menos 1 cm.</small>
+        <small class="field-error" *ngIf="playerForm.get('heightCm')?.touched && playerForm.get('heightCm')?.hasError('max')">A altura deve ser de no máximo 260 cm.</small>
       </div>
       <div class="form-group">
         <label for="player-weight">Peso (kg)</label>
-        <input id="player-weight" type="number" formControlName="weightKg" min="1" max="400" inputmode="decimal" placeholder="Ex: 72">
+        <input id="player-weight" type="text" inputmode="decimal" autocomplete="off" formControlName="weightKg" placeholder="Ex: 72" aria-describedby="player-weight-error">
+        <small id="player-weight-error" class="field-error" *ngIf="playerForm.get('weightKg')?.touched && playerForm.get('weightKg')?.hasError('invalidNumber')">Informe um peso válido usando vírgula para decimais (ex.: 72,5).</small>
+        <small class="field-error" *ngIf="playerForm.get('weightKg')?.touched && playerForm.get('weightKg')?.hasError('min')">O peso deve ser de pelo menos 1 kg.</small>
+        <small class="field-error" *ngIf="playerForm.get('weightKg')?.touched && playerForm.get('weightKg')?.hasError('max')">O peso deve ser de no máximo 400 kg.</small>
       </div>
     </div>
   </form>
@@ -60,7 +66,10 @@
       </div>
       <div class="membership-field membership-field--number">
         <label for="membership-number">Número</label>
-        <input id="membership-number" type="number" formControlName="number" min="0" max="99" inputmode="numeric" placeholder="Nº">
+        <input id="membership-number" type="text" inputmode="numeric" autocomplete="off" formControlName="number" placeholder="Nº" aria-describedby="membership-number-error">
+        <small id="membership-number-error" class="field-error" *ngIf="membershipForm.get('number')?.touched && membershipForm.get('number')?.hasError('invalidNumber')">Informe um número inteiro entre 0 e 99.</small>
+        <small class="field-error" *ngIf="membershipForm.get('number')?.touched && membershipForm.get('number')?.hasError('min')">O número mínimo é 0.</small>
+        <small class="field-error" *ngIf="membershipForm.get('number')?.touched && membershipForm.get('number')?.hasError('max')">O número máximo é 99.</small>
       </div>
       <div class="membership-field">
         <label for="membership-position">Posição</label>

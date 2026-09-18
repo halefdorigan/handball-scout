@@ -10,6 +10,11 @@ import { Observable, combineLatest, map } from 'rxjs';
 import { adapter as teamsAdapter } from '../../../state/teams/teams.reducer';
 import { selectAllPlayers } from '../../../state/players/players.selectors';
 import { selectAllMemberships } from '../../../state/memberships/memberships.selectors';
+import {
+  brazilianIntegerValidator,
+  brazilianNumberRangeValidator,
+  parseBrazilianNumber
+} from '../../../core/utils/brazilian-number';
 
 const selectTeamsState = createFeatureSelector<any>('teams');
 const { selectEntities: selectTeamEntities } = teamsAdapter.getSelectors(selectTeamsState);
@@ -47,7 +52,7 @@ export class TeamDetailComponent implements OnInit {
 
     this.playerForm = this.fb.group({
       playerId: ['', Validators.required],
-      number: ['', [Validators.min(0), Validators.max(99)]],
+      number: ['', [brazilianIntegerValidator(), brazilianNumberRangeValidator(0, 99)]],
       position: ['Goleiro']
     });
   }
@@ -111,11 +116,12 @@ export class TeamDetailComponent implements OnInit {
 
   addPlayer() {
     if (this.playerForm.valid && this.teamId) {
+      const number = parseBrazilianNumber(this.playerForm.value.number);
       this.store.dispatch(MembershipsActions.addMembership({
         membership: {
           playerId: this.playerForm.value.playerId,
           teamId: this.teamId,
-          ...(this.playerForm.value.number !== '' && this.playerForm.value.number !== null ? { number: Number(this.playerForm.value.number) } : {}),
+          ...(number !== null ? { number } : {}),
           ...(this.playerForm.value.position ? { position: this.playerForm.value.position } : {}),
           status: 'ACTIVE',
           isDeleted: false
