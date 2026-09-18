@@ -2,34 +2,98 @@
   <header class="page-header">
     <div>
       <a class="back-link" routerLink="/games">← Jogos</a>
-      <p class="eyebrow">{{ isNew ? 'Nova partida' : 'Editar partida' }} / 03</p>
-      <h1>{{ isNew ? 'Novo jogo' : 'Editar jogo' }}</h1>
+      <p class="eyebrow">
+        {{ isNew ? "Nova partida" : "Editar partida" }} / 03
+      </p>
+      <h1>{{ isNew ? "Novo jogo" : "Editar jogo" }}</h1>
     </div>
     <div class="header-actions">
       <a class="btn btn--secondary" routerLink="/games">Cancelar</a>
-      <a *ngIf="!isNew && gameId" class="btn btn--secondary" [routerLink]="['/games', gameId, 'scout']">Abrir scout ↗</a>
-      <button class="btn btn--primary" (click)="save()" [disabled]="gameForm.invalid">Salvar <span aria-hidden="true">↗</span></button>
+      <a
+        *ngIf="!isNew && gameId"
+        class="btn btn--secondary"
+        [routerLink]="['/games', gameId, 'scout']"
+        >Abrir scout ↗</a
+      >
+      <button
+        class="btn btn--primary"
+        (click)="save()"
+        [disabled]="gameForm.invalid"
+      >
+        Salvar <span aria-hidden="true">↗</span>
+      </button>
     </div>
   </header>
 
   <form [formGroup]="gameForm" class="game-form">
-    <div class="form-intro"><span>01</span><p>Detalhes da partida</p></div>
+    <div class="form-intro">
+      <span>01</span>
+      <p>Detalhes da partida</p>
+    </div>
     <div class="form-group form-group--wide">
       <label for="game-name">Nome do jogo / evento</label>
-      <input id="game-name" type="text" formControlName="name" placeholder="Ex: Final Regional Sub-17">
+      <input
+        id="game-name"
+        type="text"
+        formControlName="name"
+        placeholder="Ex: Final Regional Sub-17"
+      />
     </div>
     <div class="form-row">
-      <div class="form-group"><label for="game-date">Data e hora</label><input id="game-date" type="datetime-local" formControlName="dateTime"></div>
-      <div class="form-group"><label for="game-tags">Tags</label><input id="game-tags" type="text" (keydown)="addTag($event)" placeholder="Enter para adicionar"></div>
+      <div class="form-group">
+        <label for="game-date">Data e hora</label
+        ><input
+          id="game-date"
+          type="datetime-local"
+          formControlName="dateTime"
+        />
+      </div>
+      <div class="form-group">
+        <label for="game-tags">Tags</label
+        ><input
+          id="game-tags"
+          type="text"
+          (keydown)="addTag($event)"
+          placeholder="Enter para adicionar"
+        />
+      </div>
     </div>
-    <div class="form-intro form-intro--teams"><span>02</span><p>Confronto</p></div>
+    <div class="form-intro form-intro--teams">
+      <span>02</span>
+      <p>Confronto</p>
+    </div>
     <div class="teams-selection">
-      <div class="form-group"><label for="team-a">Time A / casa</label><select id="team-a" formControlName="teamAId"><option value="">Selecione um time</option><option *ngFor="let team of teams$ | async" [value]="team._id">{{ team.name }}</option></select></div>
+      <div class="form-group">
+        <label for="team-a">Time A / casa</label
+        ><select id="team-a" formControlName="teamAId">
+          <option value="">Selecione um time</option>
+          <option *ngFor="let team of teams$ | async" [value]="team._id">
+            {{ team.name }}
+          </option>
+        </select>
+      </div>
       <div class="versus" aria-hidden="true">VS</div>
-      <div class="form-group"><label for="team-b">Time B / visitante</label><select id="team-b" formControlName="teamBId"><option value="">Selecione um time</option><option *ngFor="let team of teams$ | async" [value]="team._id">{{ team.name }}</option></select></div>
+      <div class="form-group">
+        <label for="team-b">Time B / visitante</label
+        ><select id="team-b" formControlName="teamBId">
+          <option value="">Selecione um time</option>
+          <option *ngFor="let team of teams$ | async" [value]="team._id">
+            {{ team.name }}
+          </option>
+        </select>
+      </div>
     </div>
     <div class="tags-display" *ngIf="gameForm.get('tags')?.value?.length">
-      <span *ngFor="let tag of gameForm.get('tags')?.value" class="tag">{{ tag }} <button type="button" (click)="removeTag(tag)" [attr.aria-label]="'Remover ' + tag">×</button></span>
+      <span *ngFor="let tag of gameForm.get('tags')?.value" class="tag"
+        >{{ tag }}
+        <button
+          type="button"
+          (click)="removeTag(tag)"
+          [attr.aria-label]="'Remover ' + tag"
+        >
+          ×
+        </button></span
+      >
     </div>
   </form>
 </div>

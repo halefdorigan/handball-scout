@@ -13,7 +13,7 @@ const { selectAll } = adapter.getSelectors(selectTeamsState);
 @Component({
   selector: 'app-team-list',
   templateUrl: './team-list.component.html',
-  styleUrls: ['./team-list.component.scss']
+  styleUrls: ['./team-list.component.scss'],
 })
 export class TeamListComponent implements OnInit {
   teams$: Observable<Team[]>;

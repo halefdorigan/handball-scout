@@ -12,7 +12,7 @@ const selectAllGames = createSelector(selectGamesState, selectAll);
 @Component({
   selector: 'app-game-list',
   templateUrl: './game-list.component.html',
-  styleUrls: ['./game-list.component.scss']
+  styleUrls: ['./game-list.component.scss'],
 })
 export class GameListComponent implements OnInit {
   games$: Observable<Game[]>;

@@ -8,18 +8,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 const routes: Routes = [
   { path: '', component: TeamListComponent },
   { path: 'new', component: TeamDetailComponent },
-  { path: ':id', component: TeamDetailComponent }
+  { path: ':id', component: TeamDetailComponent },
 ];
 
 @NgModule({
-  declarations: [
-    TeamListComponent,
-    TeamDetailComponent
-  ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule.forChild(routes)
-  ]
+  declarations: [TeamListComponent, TeamDetailComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule.forChild(routes)],
 })
-export class TeamsModule { }
+export class TeamsModule {}

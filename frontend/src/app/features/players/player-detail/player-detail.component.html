@@ -2,27 +2,68 @@
   <header class="page-header">
     <div>
       <a class="back-link" routerLink="/players">← Jogadores</a>
-      <p class="eyebrow">{{ isNew ? 'Novo registro' : 'Perfil global' }} / 03</p>
-      <h1>{{ isNew ? 'Novo jogador' : (currentPlayer?.name || 'Jogador') }}</h1>
+      <p class="eyebrow">
+        {{ isNew ? "Novo registro" : "Perfil global" }} / 03
+      </p>
+      <h1>{{ isNew ? "Novo jogador" : currentPlayer?.name || "Jogador" }}</h1>
     </div>
     <div class="header-actions">
       <a class="btn btn--secondary" routerLink="/players">Cancelar</a>
-      <button *ngIf="!isNew && !currentPlayer?.isDeleted" type="button" class="btn btn--danger" (click)="openArchiveModal()">Arquivar jogador</button>
-      <button type="button" (click)="save()" class="btn btn--primary" [disabled]="playerForm.invalid">Salvar perfil <span aria-hidden="true">↗</span></button>
+      <button
+        *ngIf="!isNew && !currentPlayer?.isDeleted"
+        type="button"
+        class="btn btn--danger"
+        (click)="openArchiveModal()"
+      >
+        Arquivar jogador
+      </button>
+      <button
+        type="button"
+        (click)="save()"
+        class="btn btn--primary"
+        [disabled]="playerForm.invalid"
+      >
+        Salvar perfil <span aria-hidden="true">↗</span>
+      </button>
     </div>
   </header>
 
   <form [formGroup]="playerForm" (ngSubmit)="save()" class="player-form">
-    <div class="form-intro"><span class="form-intro__number">01</span><p>Identidade do jogador</p></div>
+    <div class="form-intro">
+      <span class="form-intro__number">01</span>
+      <p>Identidade do jogador</p>
+    </div>
     <div class="form-grid">
       <div class="form-group form-group--wide">
-        <label for="player-name">Nome completo <span aria-hidden="true">*</span></label>
-        <input id="player-name" type="text" formControlName="name" autocomplete="name" placeholder="Ex: Ana Souza" aria-describedby="player-name-error">
-        <small id="player-name-error" class="field-error" *ngIf="playerForm.get('name')?.touched && playerForm.get('name')?.hasError('required')">Informe o nome do jogador.</small>
+        <label for="player-name"
+          >Nome completo <span aria-hidden="true">*</span></label
+        >
+        <input
+          id="player-name"
+          type="text"
+          formControlName="name"
+          autocomplete="name"
+          placeholder="Ex: Ana Souza"
+          aria-describedby="player-name-error"
+        />
+        <small
+          id="player-name-error"
+          class="field-error"
+          *ngIf="
+            playerForm.get('name')?.touched &&
+            playerForm.get('name')?.hasError('required')
+          "
+          >Informe o nome do jogador.</small
+        >
       </div>
       <div class="form-group">
         <label for="player-birth-date">Data de nascimento</label>
-        <input id="player-birth-date" type="date" formControlName="birthDate" autocomplete="bday">
+        <input
+          id="player-birth-date"
+          type="date"
+          formControlName="birthDate"
+          autocomplete="bday"
+        />
       </div>
       <div class="form-group">
         <label for="player-dominant-hand">Mão dominante</label>
@@ -35,61 +76,170 @@
       </div>
       <div class="form-group">
         <label for="player-height">Altura (cm)</label>
-        <input id="player-height" type="number" formControlName="heightCm" min="1" max="260" inputmode="numeric" placeholder="Ex: 178">
+        <input
+          id="player-height"
+          type="number"
+          formControlName="heightCm"
+          min="1"
+          max="260"
+          inputmode="numeric"
+          placeholder="Ex: 178"
+        />
       </div>
       <div class="form-group">
         <label for="player-weight">Peso (kg)</label>
-        <input id="player-weight" type="number" formControlName="weightKg" min="1" max="400" inputmode="decimal" placeholder="Ex: 72">
+        <input
+          id="player-weight"
+          type="number"
+          formControlName="weightKg"
+          min="1"
+          max="400"
+          inputmode="decimal"
+          placeholder="Ex: 72"
+        />
       </div>
     </div>
   </form>
 
-  <section class="memberships-section" *ngIf="!isNew" aria-labelledby="memberships-title">
+  <section
+    class="memberships-section"
+    *ngIf="!isNew"
+    aria-labelledby="memberships-title"
+  >
     <div class="section-heading">
-      <div><p class="eyebrow">Vínculos / 02</p><h2 id="memberships-title">Times do jogador</h2></div>
-      <span class="section-heading__note">Número e posição são definidos por time</span>
+      <div>
+        <p class="eyebrow">Vínculos / 02</p>
+        <h2 id="memberships-title">Times do jogador</h2>
+      </div>
+      <span class="section-heading__note"
+        >Número e posição são definidos por time</span
+      >
     </div>
 
-    <form [formGroup]="membershipForm" (ngSubmit)="addMembership()" class="membership-form">
+    <form
+      [formGroup]="membershipForm"
+      (ngSubmit)="addMembership()"
+      class="membership-form"
+    >
       <div class="membership-field">
         <label for="membership-team">Adicionar a um time</label>
         <select id="membership-team" formControlName="teamId">
           <option value="">Selecione um time</option>
-          <option *ngFor="let team of availableTeams$ | async" [value]="team._id">{{ team.name }}</option>
+          <option
+            *ngFor="let team of availableTeams$ | async"
+            [value]="team._id"
+          >
+            {{ team.name }}
+          </option>
         </select>
       </div>
       <div class="membership-field membership-field--number">
         <label for="membership-number">Número</label>
-        <input id="membership-number" type="number" formControlName="number" min="0" max="99" inputmode="numeric" placeholder="Nº">
+        <input
+          id="membership-number"
+          type="number"
+          formControlName="number"
+          min="0"
+          max="99"
+          inputmode="numeric"
+          placeholder="Nº"
+        />
       </div>
       <div class="membership-field">
         <label for="membership-position">Posição</label>
         <select id="membership-position" formControlName="position">
-          <option value="">Não informada</option><option value="Goleiro">Goleiro</option><option value="Ponta">Ponta</option><option value="Armador">Armador</option><option value="Pivô">Pivô</option>
+          <option value="">Não informada</option>
+          <option value="Goleiro">Goleiro</option>
+          <option value="Ponta">Ponta</option>
+          <option value="Armador">Armador</option>
+          <option value="Pivô">Pivô</option>
         </select>
       </div>
-      <button type="submit" class="btn btn--primary" [disabled]="membershipForm.invalid">Vincular jogador <span aria-hidden="true">＋</span></button>
+      <button
+        type="submit"
+        class="btn btn--primary"
+        [disabled]="membershipForm.invalid"
+      >
+        Vincular jogador <span aria-hidden="true">＋</span>
+      </button>
     </form>
-    <p class="form-error" *ngIf="membershipError" role="alert">{{ membershipError }}</p>
+    <p class="form-error" *ngIf="membershipError" role="alert">
+      {{ membershipError }}
+    </p>
 
     <div class="memberships-list" *ngIf="teams$ | async as teams">
-      <div *ngFor="let membership of memberships$ | async" class="membership-item" [class.membership-item--inactive]="membership.status !== 'ACTIVE'">
-        <span class="membership-item__number">#{{ membership.number ?? '—' }}</span>
-        <span class="membership-item__info"><strong>{{ getTeamName(membership.teamId, teams) }}</strong><small>{{ membership.position || 'Posição não informada' }}</small></span>
-        <span class="membership-item__status">{{ membership.status === 'ACTIVE' ? 'Ativo' : 'Inativo' }}</span>
-        <button type="button" class="membership-action" (click)="toggleMembership(membership)">{{ membership.status === 'ACTIVE' ? 'Inativar' : 'Ativar' }}</button>
-        <button type="button" class="membership-action membership-action--danger" (click)="removeMembership(membership)">Remover vínculo</button>
+      <div
+        *ngFor="let membership of memberships$ | async"
+        class="membership-item"
+        [class.membership-item--inactive]="membership.status !== 'ACTIVE'"
+      >
+        <span class="membership-item__number"
+          >#{{ membership.number ?? "—" }}</span
+        >
+        <span class="membership-item__info"
+          ><strong>{{ getTeamName(membership.teamId, teams) }}</strong
+          ><small>{{
+            membership.position || "Posição não informada"
+          }}</small></span
+        >
+        <span class="membership-item__status">{{
+          membership.status === "ACTIVE" ? "Ativo" : "Inativo"
+        }}</span>
+        <button
+          type="button"
+          class="membership-action"
+          (click)="toggleMembership(membership)"
+        >
+          {{ membership.status === "ACTIVE" ? "Inativar" : "Ativar" }}
+        </button>
+        <button
+          type="button"
+          class="membership-action membership-action--danger"
+          (click)="removeMembership(membership)"
+        >
+          Remover vínculo
+        </button>
       </div>
-      <p *ngIf="(memberships$ | async)?.length === 0" class="memberships-empty">Este jogador ainda não está vinculado a um time.</p>
+      <p *ngIf="(memberships$ | async)?.length === 0" class="memberships-empty">
+        Este jogador ainda não está vinculado a um time.
+      </p>
     </div>
   </section>
 
-  <div *ngIf="showArchiveModal" class="archive-overlay" role="presentation" (click)="closeArchiveModal()">
-    <section class="archive-modal" role="dialog" aria-modal="true" aria-labelledby="archive-player-title" (click)="$event.stopPropagation()">
+  <div
+    *ngIf="showArchiveModal"
+    class="archive-overlay"
+    role="presentation"
+    (click)="closeArchiveModal()"
+  >
+    <section
+      class="archive-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="archive-player-title"
+      (click)="$event.stopPropagation()"
+    >
       <p class="eyebrow">Arquivar registro</p>
       <h2 id="archive-player-title">Arquivar este jogador?</h2>
-      <p>O perfil deixa de aparecer nas listas ativas e no scout. Eventos de jogos anteriores continuam preservados.</p>
-      <div class="archive-modal__actions"><button type="button" class="btn btn--secondary" (click)="closeArchiveModal()">Manter jogador</button><button type="button" class="btn btn--danger" (click)="confirmArchive()">Arquivar jogador</button></div>
+      <p>
+        O perfil deixa de aparecer nas listas ativas e no scout. Eventos de
+        jogos anteriores continuam preservados.
+      </p>
+      <div class="archive-modal__actions">
+        <button
+          type="button"
+          class="btn btn--secondary"
+          (click)="closeArchiveModal()"
+        >
+          Manter jogador</button
+        ><button
+          type="button"
+          class="btn btn--danger"
+          (click)="confirmArchive()"
+        >
+          Arquivar jogador
+        </button>
+      </div>
     </section>
   </div>
 </div>

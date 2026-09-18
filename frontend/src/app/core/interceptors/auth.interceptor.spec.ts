@@ -1,5 +1,8 @@
 import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { AuthService } from '../auth/auth.service';
 import { AuthInterceptor } from './auth.interceptor';
@@ -12,7 +15,9 @@ describe('AuthInterceptor', () => {
     localStorage.clear();
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }]
+      providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+      ],
     });
     http = TestBed.inject(HttpClient);
     httpController = TestBed.inject(HttpTestingController);
@@ -33,7 +38,9 @@ describe('AuthInterceptor', () => {
     const request = httpController.expectOne('/protected');
 
     // Assert
-    expect(request.request.headers.get('Authorization')).toBe('Bearer signed-token');
+    expect(request.request.headers.get('Authorization')).toBe(
+      'Bearer signed-token',
+    );
     request.flush({});
   });
 

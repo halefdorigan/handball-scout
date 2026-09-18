@@ -12,7 +12,8 @@ export interface Match {
   isDeleted: boolean;
 }
 
-export type ScoutAction = 'GOAL' | 'MISS' | 'SAVE' | 'YELLOW_CARD' | 'TWO_MINUTES';
+export type ScoutAction =
+  'GOAL' | 'MISS' | 'SAVE' | 'YELLOW_CARD' | 'TWO_MINUTES';
 
 export interface ScoutEvent {
   id: string;

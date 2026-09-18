@@ -35,13 +35,13 @@
   color: var(--hb-accent-pink);
   font-size: 40px;
   font-weight: 500;
-  line-height: .7;
+  line-height: 0.7;
 }
 
 .brand-mark__name {
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: 0.12em;
   line-height: 1.1;
 }
 
@@ -59,7 +59,9 @@
   gap: 14px;
   padding: 9px 0;
   text-decoration: none;
-  transition: color 180ms ease, transform 180ms ease;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
 }
 
 button.nav-item {
@@ -70,7 +72,9 @@ button.nav-item {
   text-align: left;
 }
 
-.nav-item--logout { margin-top: auto; }
+.nav-item--logout {
+  margin-top: auto;
+}
 
 .nav-item:hover,
 .nav-item--active {
@@ -85,7 +89,7 @@ button.nav-item {
 .nav-item__index {
   color: var(--hb-mute);
   font-size: 11px;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
 }
 
 .nav-item__label {
@@ -96,11 +100,13 @@ button.nav-item {
 .rail-footnote {
   color: var(--hb-stone);
   font-size: 9px;
-  letter-spacing: .14em;
+  letter-spacing: 0.14em;
   line-height: 1.75;
 }
 
-.rail-footnote span { color: var(--hb-mute); }
+.rail-footnote span {
+  color: var(--hb-mute);
+}
 
 .app-main {
   margin-left: 220px;
@@ -111,10 +117,14 @@ button.nav-item {
   margin-left: 0;
 }
 
-.app-bottom-nav { display: none; }
+.app-bottom-nav {
+  display: none;
+}
 
 @media (max-width: 720px) {
-  .app-rail { display: none; }
+  .app-rail {
+    display: none;
+  }
 
   .app-main {
     margin-left: 0;
@@ -143,8 +153,14 @@ button.nav-item {
     transform: none;
   }
 
-  .app-bottom-nav .nav-item--logout { margin-top: 0; }
+  .app-bottom-nav .nav-item--logout {
+    margin-top: 0;
+  }
 
-  .app-bottom-nav .nav-item__label { font-size: 11px; }
-  .app-bottom-nav .nav-item__index { font-size: 9px; }
+  .app-bottom-nav .nav-item__label {
+    font-size: 11px;
+  }
+  .app-bottom-nav .nav-item__index {
+    font-size: 9px;
+  }
 }

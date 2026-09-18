@@ -8,11 +8,11 @@ import { PlayerListComponent } from './player-list/player-list.component';
 const routes: Routes = [
   { path: '', component: PlayerListComponent },
   { path: 'new', component: PlayerDetailComponent },
-  { path: ':id', component: PlayerDetailComponent }
+  { path: ':id', component: PlayerDetailComponent },
 ];
 
 @NgModule({
   declarations: [PlayerListComponent, PlayerDetailComponent],
-  imports: [CommonModule, ReactiveFormsModule, RouterModule.forChild(routes)]
+  imports: [CommonModule, ReactiveFormsModule, RouterModule.forChild(routes)],
 })
 export class PlayersModule {}

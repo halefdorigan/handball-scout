@@ -15,7 +15,8 @@ import { selectAllMemberships } from '../../../state/memberships/memberships.sel
 import { selectTeamEntities } from '../../../state/teams/teams.selectors';
 
 const selectGamesState = createFeatureSelector<any>('games');
-const { selectEntities: selectGameEntities } = gamesAdapter.getSelectors(selectGamesState);
+const { selectEntities: selectGameEntities } =
+  gamesAdapter.getSelectors(selectGamesState);
 
 interface PlayerReportEntry {
   player: Player;
@@ -26,7 +27,7 @@ interface PlayerReportEntry {
 @Component({
   selector: 'app-game-report',
   templateUrl: './game-report.component.html',
-  styleUrls: ['./game-report.component.scss']
+  styleUrls: ['./game-report.component.scss'],
 })
 export class GameReportComponent implements OnInit {
   game$: Observable<Game | undefined>;
@@ -34,45 +35,67 @@ export class GameReportComponent implements OnInit {
   teamB$: Observable<Team | undefined>;
   players$: Observable<PlayerReportEntry[]>;
 
-  constructor(private route: ActivatedRoute, private store: Store) {
+  constructor(
+    private route: ActivatedRoute,
+    private store: Store,
+  ) {
     const gameId$ = this.route.params.pipe(map((p: any) => p['id']));
 
     this.game$ = gameId$.pipe(
-      switchMap(id => this.store.select(selectGameEntities).pipe(map((entities: any) => entities[id])))
+      switchMap((id) =>
+        this.store
+          .select(selectGameEntities)
+          .pipe(map((entities: any) => entities[id])),
+      ),
     );
 
     this.teamA$ = this.game$.pipe(
-      filter(g => !!g),
-      switchMap(g => this.store.select(selectTeamEntities).pipe(map((entities: any) => entities[g!.teamAId])))
+      filter((g) => !!g),
+      switchMap((g) =>
+        this.store
+          .select(selectTeamEntities)
+          .pipe(map((entities: any) => entities[g!.teamAId])),
+      ),
     );
 
     this.teamB$ = this.game$.pipe(
-      filter(g => !!g),
-      switchMap(g => this.store.select(selectTeamEntities).pipe(map((entities: any) => entities[g!.teamBId])))
+      filter((g) => !!g),
+      switchMap((g) =>
+        this.store
+          .select(selectTeamEntities)
+          .pipe(map((entities: any) => entities[g!.teamBId])),
+      ),
     );
 
     this.players$ = this.game$.pipe(
       filter((game): game is Game => Boolean(game)),
-      switchMap(game => combineLatest([
-        this.store.select(selectAllPlayers),
-        this.store.select(selectAllMemberships)
-      ]).pipe(
-        map(([players, memberships]) => players
-          .map(player => {
-            const membership = memberships.find(item =>
-              item.playerId === player._id &&
-              (item.teamId === game.teamAId || item.teamId === game.teamBId)
-            );
-            if (!membership) return undefined;
+      switchMap((game) =>
+        combineLatest([
+          this.store.select(selectAllPlayers),
+          this.store.select(selectAllMemberships),
+        ]).pipe(
+          map(([players, memberships]) =>
+            players
+              .map((player) => {
+                const membership = memberships.find(
+                  (item) =>
+                    item.playerId === player._id &&
+                    (item.teamId === game.teamAId ||
+                      item.teamId === game.teamBId),
+                );
+                if (!membership) return undefined;
 
-            return {
-              player,
-              membership,
-              teamLabel: membership.teamId === game.teamAId ? 'CASA' : 'VISITANTE'
-            };
-          })
-          .filter((item): item is PlayerReportEntry => Boolean(item)))
-      ))
+                return {
+                  player,
+                  membership,
+                  teamLabel:
+                    membership.teamId === game.teamAId ? 'CASA' : 'VISITANTE',
+                };
+              })
+              .filter((item): item is PlayerReportEntry => Boolean(item)),
+          ),
+        ),
+      ),
     );
   }
 
@@ -85,11 +108,12 @@ export class GameReportComponent implements OnInit {
 
   getStats(teamId: string, type: string, events: any[] | undefined): number {
     if (!events) return 0;
-    return events.filter(e => e.teamId === teamId && e.type === type).length;
+    return events.filter((e) => e.teamId === teamId && e.type === type).length;
   }
 
   getPlayerGoals(playerId: string, events: any[] | undefined): number {
     if (!events) return 0;
-    return events.filter(e => e.playerId === playerId && e.type === 'GOAL').length;
+    return events.filter((e) => e.playerId === playerId && e.type === 'GOAL')
+      .length;
   }
 }

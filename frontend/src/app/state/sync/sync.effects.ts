@@ -8,16 +8,18 @@ import * as SyncActions from './sync.actions';
 export class SyncEffects {
   constructor(
     private actions$: Actions,
-    private syncService: SyncService
+    private syncService: SyncService,
   ) {}
 
   syncAll$ = createEffect(() =>
     this.actions$.pipe(
       ofType(SyncActions.syncAll),
-      mergeMap(() => from(this.syncService.syncAll()).pipe(
-        map(() => SyncActions.syncAllSuccess()),
-        catchError(error => of(SyncActions.syncAllFailure({ error })))
-      ))
-    )
+      mergeMap(() =>
+        from(this.syncService.syncAll()).pipe(
+          map(() => SyncActions.syncAllSuccess()),
+          catchError((error) => of(SyncActions.syncAllFailure({ error }))),
+        ),
+      ),
+    ),
   );
 }

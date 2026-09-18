@@ -1,4 +1,7 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
@@ -25,11 +28,19 @@ describe('AuthService', () => {
 
     // Act
     service.login('athlete@example.com', 'secret').subscribe();
-    const request = httpController.expectOne(`${environment.apiUrl}/auth/login`);
-    request.flush({ access_token: token, user: { email: 'athlete@example.com' } });
+    const request = httpController.expectOne(
+      `${environment.apiUrl}/auth/login`,
+    );
+    request.flush({
+      access_token: token,
+      user: { email: 'athlete@example.com' },
+    });
 
     // Assert
-    expect(request.request.body).toEqual({ email: 'athlete@example.com', password: 'secret' });
+    expect(request.request.body).toEqual({
+      email: 'athlete@example.com',
+      password: 'secret',
+    });
     expect(service.getToken()).toBe(token);
   });
 

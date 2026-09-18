@@ -6,7 +6,7 @@ import { AuthService } from './core/auth/auth.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnDestroy {
   title = 'Scout Court';
@@ -14,14 +14,19 @@ export class AppComponent implements OnDestroy {
 
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private readonly router: Router, private readonly authService: AuthService) {
+  constructor(
+    private readonly router: Router,
+    private readonly authService: AuthService,
+  ) {
     this.updateShell(this.router.url);
     this.router.events
       .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-        takeUntil(this.destroy$)
+        filter(
+          (event): event is NavigationEnd => event instanceof NavigationEnd,
+        ),
+        takeUntil(this.destroy$),
       )
-      .subscribe(event => this.updateShell(event.urlAfterRedirects));
+      .subscribe((event) => this.updateShell(event.urlAfterRedirects));
   }
 
   ngOnDestroy(): void {
@@ -35,6 +40,7 @@ export class AppComponent implements OnDestroy {
   }
 
   private updateShell(url: string): void {
-    this.isPublicRoute = url === '/' || url.startsWith('/login') || url.startsWith('/register');
+    this.isPublicRoute =
+      url === '/' || url.startsWith('/login') || url.startsWith('/register');
   }
 }

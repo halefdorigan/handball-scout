@@ -10,19 +10,11 @@ const routes: Routes = [
   { path: '', component: GameListComponent },
   { path: 'new', component: GameDetailComponent },
   { path: ':id/scout', component: ScoutComponent },
-  { path: ':id', component: GameDetailComponent }
+  { path: ':id', component: GameDetailComponent },
 ];
 
 @NgModule({
-  declarations: [
-    GameListComponent,
-    GameDetailComponent,
-    ScoutComponent
-  ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule.forChild(routes)
-  ]
+  declarations: [GameListComponent, GameDetailComponent, ScoutComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule.forChild(routes)],
 })
-export class GamesModule { }
+export class GamesModule {}

@@ -17,12 +17,12 @@ import {
   playerMigrationStrategies,
   playerSchema,
   teamSchema,
-  scoutingSessionSchema
+  scoutingSessionSchema,
 } from './schemas';
 import { migrateLegacyData } from '../repositories/legacy-migration.repository';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DatabaseService {
   private dbPromise?: Promise<any>;
@@ -47,19 +47,19 @@ export class DatabaseService {
       const db = await createRxDatabase({
         name: 'handball_scout_db',
         storage,
-        ...(isDevMode() ? { ignoreDuplicate: true } : {})
+        ...(isDevMode() ? { ignoreDuplicate: true } : {}),
       });
 
       await db.addCollections({
         teams: { schema: teamSchema },
         players: {
           schema: playerSchema,
-          migrationStrategies: playerMigrationStrategies
+          migrationStrategies: playerMigrationStrategies,
         },
         playerMemberships: { schema: playerMembershipSchema },
         games: { schema: gameSchema },
         matches: { schema: matchSchema },
-        scoutingSessions: { schema: scoutingSessionSchema }
+        scoutingSessions: { schema: scoutingSessionSchema },
       });
 
       await migrateLegacyData(db);
@@ -69,5 +69,4 @@ export class DatabaseService {
 
     return this.dbPromise;
   }
-
 }

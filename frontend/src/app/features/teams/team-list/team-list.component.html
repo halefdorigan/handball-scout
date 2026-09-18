@@ -5,24 +5,47 @@
       <h1>Meus times</h1>
     </div>
     <div class="header-actions">
-      <button class="btn btn--secondary" (click)="sync()"><span aria-hidden="true">↻</span> Sincronizar</button>
-      <a class="btn btn--primary" routerLink="new">Novo time <span aria-hidden="true">＋</span></a>
+      <button class="btn btn--secondary" (click)="sync()">
+        <span aria-hidden="true">↻</span> Sincronizar
+      </button>
+      <a class="btn btn--primary" routerLink="new"
+        >Novo time <span aria-hidden="true">＋</span></a
+      >
     </div>
   </header>
 
   <section class="team-list__intro">
-    <p class="team-list__lead">Uma visão clara de cada elenco, pronta para a próxima partida.</p>
+    <p class="team-list__lead">
+      Uma visão clara de cada elenco, pronta para a próxima partida.
+    </p>
     <span class="team-list__rule" aria-hidden="true"></span>
   </section>
 
-  <section class="team-list__content" aria-label="Times cadastrados" *ngIf="teams$ | async as teams">
-    <div class="list-meta"><span>{{ teams.length.toString().padStart(2, '0') }} elencos</span><span>atualizado localmente</span></div>
+  <section
+    class="team-list__content"
+    aria-label="Times cadastrados"
+    *ngIf="teams$ | async as teams"
+  >
+    <div class="list-meta">
+      <span>{{ teams.length.toString().padStart(2, "0") }} elencos</span
+      ><span>atualizado localmente</span>
+    </div>
     <a *ngFor="let team of teams" class="team-card" [routerLink]="[team._id]">
-      <span class="team-card__color" [style.background-color]="team.color" aria-hidden="true"></span>
-      <span class="team-card__number">{{ (teams.indexOf(team) + 1).toString().padStart(2, '0') }}</span>
+      <span
+        class="team-card__color"
+        [style.background-color]="team.color"
+        aria-hidden="true"
+      ></span>
+      <span class="team-card__number">{{
+        (teams.indexOf(team) + 1).toString().padStart(2, "0")
+      }}</span>
       <span class="team-card__info">
         <strong class="team-card__name">{{ team.name }}</strong>
-        <span class="team-card__tags"><span *ngFor="let tag of team.tags" class="tag">{{ tag }}</span></span>
+        <span class="team-card__tags"
+          ><span *ngFor="let tag of team.tags" class="tag">{{
+            tag
+          }}</span></span
+        >
       </span>
       <span class="team-card__arrow" aria-hidden="true">↗</span>
     </a>

@@ -6,17 +6,11 @@ import { GameReportComponent } from './game-report/game-report.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
-  { path: 'report/:id', component: GameReportComponent }
+  { path: 'report/:id', component: GameReportComponent },
 ];
 
 @NgModule({
-  declarations: [
-    DashboardComponent,
-    GameReportComponent
-  ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes)
-  ]
+  declarations: [DashboardComponent, GameReportComponent],
+  imports: [CommonModule, RouterModule.forChild(routes)],
 })
-export class DashboardModule { }
+export class DashboardModule {}

@@ -2,64 +2,150 @@
   <header class="auth-nav">
     <a class="landing-brand" routerLink="/" aria-label="Scout Court, início">
       <span class="landing-brand__slash" aria-hidden="true">/</span>
-      <span class="landing-brand__name">SCOUT<br>COURT</span>
+      <span class="landing-brand__name">SCOUT<br />COURT</span>
     </a>
     <p>
-      <span>{{ isRegister ? 'Já tem uma conta?' : 'Ainda não tem uma conta?' }}</span>
-      <a [routerLink]="isRegister ? '/login' : '/register'" [queryParams]="returnUrl ? { returnUrl: returnUrl } : null">
-        {{ isRegister ? 'Entrar' : 'Criar conta' }} <span aria-hidden="true">↗</span>
+      <span>{{
+        isRegister ? "Já tem uma conta?" : "Ainda não tem uma conta?"
+      }}</span>
+      <a
+        [routerLink]="isRegister ? '/login' : '/register'"
+        [queryParams]="returnUrl ? { returnUrl: returnUrl } : null"
+      >
+        {{ isRegister ? "Entrar" : "Criar conta" }}
+        <span aria-hidden="true">↗</span>
       </a>
     </p>
   </header>
 
   <main class="auth-layout">
     <section class="auth-context" aria-labelledby="auth-context-title">
-      <p class="eyebrow"><span>{{ isRegister ? '01' : '04' }}</span> Scout Court / workspace</p>
-      <h1 id="auth-context-title">{{ isRegister ? 'Comece a ler o jogo.' : 'De volta à quadra.' }}</h1>
-      <p>{{ isRegister ? 'Crie seu espaço de scouting e transforme cada partida em uma próxima decisão.' : 'Entre para acompanhar seus times, registrar partidas e encontrar o que o jogo está dizendo.' }}</p>
-      <div class="auth-context__mark" aria-hidden="true">SC<br>—<br>HC</div>
+      <p class="eyebrow">
+        <span>{{ isRegister ? "01" : "04" }}</span> Scout Court / workspace
+      </p>
+      <h1 id="auth-context-title">
+        {{ isRegister ? "Comece a ler o jogo." : "De volta à quadra." }}
+      </h1>
+      <p>
+        {{
+          isRegister
+            ? "Crie seu espaço de scouting e transforme cada partida em uma próxima decisão."
+            : "Entre para acompanhar seus times, registrar partidas e encontrar o que o jogo está dizendo."
+        }}
+      </p>
+      <div class="auth-context__mark" aria-hidden="true">SC<br />—<br />HC</div>
     </section>
 
     <section class="auth-panel" aria-labelledby="auth-title">
       <div class="auth-panel__heading">
-        <p class="eyebrow">{{ isRegister ? 'Novo workspace' : 'Acesso ao workspace' }}</p>
-        <h2 id="auth-title">{{ isRegister ? 'Criar conta' : 'Login' }}</h2>
+        <p class="eyebrow">
+          {{ isRegister ? "Novo workspace" : "Acesso ao workspace" }}
+        </p>
+        <h2 id="auth-title">{{ isRegister ? "Criar conta" : "Login" }}</h2>
       </div>
 
-      <div class="auth-notice auth-notice--success" *ngIf="successMessage" role="status">{{ successMessage }}</div>
-      <div class="auth-notice auth-notice--error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</div>
+      <div
+        class="auth-notice auth-notice--success"
+        *ngIf="successMessage"
+        role="status"
+      >
+        {{ successMessage }}
+      </div>
+      <div
+        class="auth-notice auth-notice--error"
+        *ngIf="errorMessage"
+        role="alert"
+      >
+        {{ errorMessage }}
+      </div>
 
       <form [formGroup]="authForm" (ngSubmit)="submit()" novalidate>
         <div class="form-field" *ngIf="isRegister">
           <label for="auth-name">Nome</label>
-          <input id="auth-name" type="text" formControlName="name" autocomplete="name" placeholder="Como podemos chamar você?">
-          <span class="form-field__error" *ngIf="authForm.controls.name.invalid && authForm.controls.name.touched">Informe seu nome.</span>
+          <input
+            id="auth-name"
+            type="text"
+            formControlName="name"
+            autocomplete="name"
+            placeholder="Como podemos chamar você?"
+          />
+          <span
+            class="form-field__error"
+            *ngIf="
+              authForm.controls.name.invalid && authForm.controls.name.touched
+            "
+            >Informe seu nome.</span
+          >
         </div>
 
         <div class="form-field">
           <label for="auth-email">E-mail</label>
-          <input id="auth-email" type="email" formControlName="email" autocomplete="email" placeholder="voce@exemplo.com">
-          <span class="form-field__error" *ngIf="authForm.controls.email.invalid && authForm.controls.email.touched">Informe um e-mail válido.</span>
+          <input
+            id="auth-email"
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            placeholder="voce@exemplo.com"
+          />
+          <span
+            class="form-field__error"
+            *ngIf="
+              authForm.controls.email.invalid && authForm.controls.email.touched
+            "
+            >Informe um e-mail válido.</span
+          >
         </div>
 
         <div class="form-field">
           <label for="auth-password">Senha</label>
-          <input id="auth-password" type="password" formControlName="password" autocomplete="new-password" placeholder="Mínimo de 6 caracteres">
-          <span class="form-field__error" *ngIf="authForm.controls.password.invalid && authForm.controls.password.touched">A senha precisa ter pelo menos 6 caracteres.</span>
+          <input
+            id="auth-password"
+            type="password"
+            formControlName="password"
+            autocomplete="new-password"
+            placeholder="Mínimo de 6 caracteres"
+          />
+          <span
+            class="form-field__error"
+            *ngIf="
+              authForm.controls.password.invalid &&
+              authForm.controls.password.touched
+            "
+            >A senha precisa ter pelo menos 6 caracteres.</span
+          >
         </div>
 
         <div class="form-field" *ngIf="isRegister">
           <label for="auth-password-confirmation">Confirmar senha</label>
-          <input id="auth-password-confirmation" type="password" formControlName="passwordConfirmation" autocomplete="new-password" placeholder="Repita sua senha">
+          <input
+            id="auth-password-confirmation"
+            type="password"
+            formControlName="passwordConfirmation"
+            autocomplete="new-password"
+            placeholder="Repita sua senha"
+          />
         </div>
 
-        <button class="btn btn--primary auth-submit" type="submit" [disabled]="isSubmitting">
-          {{ isSubmitting ? 'Aguarde...' : (isRegister ? 'Criar minha conta' : 'Entrar') }}
+        <button
+          class="btn btn--primary auth-submit"
+          type="submit"
+          [disabled]="isSubmitting"
+        >
+          {{
+            isSubmitting
+              ? "Aguarde..."
+              : isRegister
+                ? "Criar minha conta"
+                : "Entrar"
+          }}
           <span aria-hidden="true">↗</span>
         </button>
       </form>
 
-      <p class="auth-panel__footnote">Ao continuar, você entra em um workspace local-first para organizar o scouting da sua equipe.</p>
+      <p class="auth-panel__footnote">
+        Ao continuar, você entra em um workspace local-first para organizar o
+        scouting da sua equipe.
+      </p>
     </section>
   </main>
 </div>

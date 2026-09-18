@@ -20,9 +20,7 @@ import { GamesEffects } from './state/games/games.effects';
 import { SyncEffects } from './state/sync/sync.effects';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
@@ -30,20 +28,26 @@ import { SyncEffects } from './state/sync/sync.effects';
     HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerWhenStable:30000',
     }),
-    StoreModule.forRoot({ 
-      teams: teamsReducer, 
+    StoreModule.forRoot({
+      teams: teamsReducer,
       players: playersReducer,
       memberships: membershipsReducer,
-      games: gamesReducer 
+      games: gamesReducer,
     }),
-    EffectsModule.forRoot([TeamsEffects, PlayersEffects, MembershipsEffects, GamesEffects, SyncEffects]),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
+    EffectsModule.forRoot([
+      TeamsEffects,
+      PlayersEffects,
+      MembershipsEffects,
+      GamesEffects,
+      SyncEffects,
+    ]),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

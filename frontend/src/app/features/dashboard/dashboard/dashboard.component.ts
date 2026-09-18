@@ -6,12 +6,13 @@ import * as GamesActions from '../../../state/games/games.actions';
 import { adapter as gamesAdapter } from '../../../state/games/games.reducer';
 
 const selectGamesState = createFeatureSelector<any>('games');
-const { selectAll: selectAllGames } = gamesAdapter.getSelectors(selectGamesState);
+const { selectAll: selectAllGames } =
+  gamesAdapter.getSelectors(selectGamesState);
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
   games$: Observable<Game[]>;
@@ -20,9 +21,15 @@ export class DashboardComponent implements OnInit {
 
   constructor(private store: Store) {
     this.games$ = this.store.select(selectAllGames);
-    this.totalGames$ = this.games$.pipe(map(games => games.length));
+    this.totalGames$ = this.games$.pipe(map((games) => games.length));
     this.totalGoals$ = this.games$.pipe(
-      map(games => games.reduce((acc, g) => acc + (g.events?.filter(e => e.type === 'GOAL').length || 0), 0))
+      map((games) =>
+        games.reduce(
+          (acc, g) =>
+            acc + (g.events?.filter((e) => e.type === 'GOAL').length || 0),
+          0,
+        ),
+      ),
     );
   }
 

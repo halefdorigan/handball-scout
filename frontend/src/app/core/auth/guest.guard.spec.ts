@@ -7,7 +7,9 @@ describe('GuestGuard', () => {
     // Arrange
     const authService = { isAuthenticated: () => true } as AuthService;
     const dashboardTree = {} as UrlTree;
-    const router = { createUrlTree: jasmine.createSpy().and.returnValue(dashboardTree) } as unknown as Router;
+    const router = {
+      createUrlTree: jasmine.createSpy().and.returnValue(dashboardTree),
+    } as unknown as Router;
     const guard = new GuestGuard(authService, router);
 
     // Act
