@@ -35,13 +35,8 @@ export class AuthComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
 
     if (this.isRegister) {
-      this.authForm.controls.name.setValidators([
-        Validators.required,
-        Validators.minLength(2),
-      ]);
-      this.authForm.controls.passwordConfirmation.setValidators([
-        Validators.required,
-      ]);
+      this.authForm.controls.name.setValidators([Validators.required, Validators.minLength(2)]);
+      this.authForm.controls.passwordConfirmation.setValidators([Validators.required]);
     }
 
     if (this.route.snapshot.queryParamMap.get('registered') === '1') {
@@ -57,8 +52,7 @@ export class AuthComponent implements OnInit {
       return;
     }
 
-    const { name, email, password, passwordConfirmation } =
-      this.authForm.getRawValue();
+    const { name, email, password, passwordConfirmation } = this.authForm.getRawValue();
 
     if (this.isRegister && password !== passwordConfirmation) {
       this.errorMessage = 'As senhas precisam ser iguais.';
@@ -76,17 +70,11 @@ export class AuthComponent implements OnInit {
           this.router.navigate(['/login'], {
             queryParams: {
               registered: 1,
-              ...(this.isSafeReturnUrl(this.returnUrl)
-                ? { returnUrl: this.returnUrl }
-                : {}),
+              ...(this.isSafeReturnUrl(this.returnUrl) ? { returnUrl: this.returnUrl } : {}),
             },
           });
         } else {
-          this.router.navigateByUrl(
-            this.isSafeReturnUrl(this.returnUrl)
-              ? this.returnUrl
-              : '/dashboard',
-          );
+          this.router.navigateByUrl(this.isSafeReturnUrl(this.returnUrl) ? this.returnUrl : '/dashboard');
         }
       },
       error: () => {
@@ -98,8 +86,6 @@ export class AuthComponent implements OnInit {
   }
 
   private isSafeReturnUrl(returnUrl: string | null): returnUrl is string {
-    return Boolean(
-      returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//'),
-    );
+    return Boolean(returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//'));
   }
 }

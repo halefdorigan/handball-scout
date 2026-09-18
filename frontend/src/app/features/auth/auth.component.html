@@ -5,14 +5,9 @@
       <span class="landing-brand__name">SCOUT<br />COURT</span>
     </a>
     <p>
-      <span>{{
-        isRegister ? "Já tem uma conta?" : "Ainda não tem uma conta?"
-      }}</span>
-      <a
-        [routerLink]="isRegister ? '/login' : '/register'"
-        [queryParams]="returnUrl ? { returnUrl: returnUrl } : null"
-      >
-        {{ isRegister ? "Entrar" : "Criar conta" }}
+      <span>{{ isRegister ? 'Já tem uma conta?' : 'Ainda não tem uma conta?' }}</span>
+      <a [routerLink]="isRegister ? '/login' : '/register'" [queryParams]="returnUrl ? { returnUrl: returnUrl } : null">
+        {{ isRegister ? 'Entrar' : 'Criar conta' }}
         <span aria-hidden="true">↗</span>
       </a>
     </p>
@@ -21,16 +16,16 @@
   <main class="auth-layout">
     <section class="auth-context" aria-labelledby="auth-context-title">
       <p class="eyebrow">
-        <span>{{ isRegister ? "01" : "04" }}</span> Scout Court / workspace
+        <span>{{ isRegister ? '01' : '04' }}</span> Scout Court / workspace
       </p>
       <h1 id="auth-context-title">
-        {{ isRegister ? "Comece a ler o jogo." : "De volta à quadra." }}
+        {{ isRegister ? 'Comece a ler o jogo.' : 'De volta à quadra.' }}
       </h1>
       <p>
         {{
           isRegister
-            ? "Crie seu espaço de scouting e transforme cada partida em uma próxima decisão."
-            : "Entre para acompanhar seus times, registrar partidas e encontrar o que o jogo está dizendo."
+            ? 'Crie seu espaço de scouting e transforme cada partida em uma próxima decisão.'
+            : 'Entre para acompanhar seus times, registrar partidas e encontrar o que o jogo está dizendo.'
         }}
       </p>
       <div class="auth-context__mark" aria-hidden="true">SC<br />—<br />HC</div>
@@ -39,23 +34,15 @@
     <section class="auth-panel" aria-labelledby="auth-title">
       <div class="auth-panel__heading">
         <p class="eyebrow">
-          {{ isRegister ? "Novo workspace" : "Acesso ao workspace" }}
+          {{ isRegister ? 'Novo workspace' : 'Acesso ao workspace' }}
         </p>
-        <h2 id="auth-title">{{ isRegister ? "Criar conta" : "Login" }}</h2>
+        <h2 id="auth-title">{{ isRegister ? 'Criar conta' : 'Login' }}</h2>
       </div>
 
-      <div
-        class="auth-notice auth-notice--success"
-        *ngIf="successMessage"
-        role="status"
-      >
+      <div class="auth-notice auth-notice--success" *ngIf="successMessage" role="status">
         {{ successMessage }}
       </div>
-      <div
-        class="auth-notice auth-notice--error"
-        *ngIf="errorMessage"
-        role="alert"
-      >
+      <div class="auth-notice auth-notice--error" *ngIf="errorMessage" role="alert">
         {{ errorMessage }}
       </div>
 
@@ -69,11 +56,7 @@
             autocomplete="name"
             placeholder="Como podemos chamar você?"
           />
-          <span
-            class="form-field__error"
-            *ngIf="
-              authForm.controls.name.invalid && authForm.controls.name.touched
-            "
+          <span class="form-field__error" *ngIf="authForm.controls.name.invalid && authForm.controls.name.touched"
             >Informe seu nome.</span
           >
         </div>
@@ -87,11 +70,7 @@
             autocomplete="email"
             placeholder="voce@exemplo.com"
           />
-          <span
-            class="form-field__error"
-            *ngIf="
-              authForm.controls.email.invalid && authForm.controls.email.touched
-            "
+          <span class="form-field__error" *ngIf="authForm.controls.email.invalid && authForm.controls.email.touched"
             >Informe um e-mail válido.</span
           >
         </div>
@@ -107,10 +86,7 @@
           />
           <span
             class="form-field__error"
-            *ngIf="
-              authForm.controls.password.invalid &&
-              authForm.controls.password.touched
-            "
+            *ngIf="authForm.controls.password.invalid && authForm.controls.password.touched"
             >A senha precisa ter pelo menos 6 caracteres.</span
           >
         </div>
@@ -126,25 +102,14 @@
           />
         </div>
 
-        <button
-          class="btn btn--primary auth-submit"
-          type="submit"
-          [disabled]="isSubmitting"
-        >
-          {{
-            isSubmitting
-              ? "Aguarde..."
-              : isRegister
-                ? "Criar minha conta"
-                : "Entrar"
-          }}
+        <button class="btn btn--primary auth-submit" type="submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Aguarde...' : isRegister ? 'Criar minha conta' : 'Entrar' }}
           <span aria-hidden="true">↗</span>
         </button>
       </form>
 
       <p class="auth-panel__footnote">
-        Ao continuar, você entra em um workspace local-first para organizar o
-        scouting da sua equipe.
+        Ao continuar, você entra em um workspace local-first para organizar o scouting da sua equipe.
       </p>
     </section>
   </main>

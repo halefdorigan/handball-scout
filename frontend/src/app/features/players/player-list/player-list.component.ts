@@ -39,12 +39,8 @@ export class PlayerListComponent implements OnInit {
     this.teams$ = this.store.select(selectAllTeams);
 
     const search$ = this.searchControl.valueChanges.pipe(startWith(''));
-    const teamFilter$ = this.teamFilterControl.valueChanges.pipe(
-      startWith('ALL'),
-    );
-    const statusFilter$ = this.statusFilterControl.valueChanges.pipe(
-      startWith('ACTIVE'),
-    );
+    const teamFilter$ = this.teamFilterControl.valueChanges.pipe(startWith('ALL'));
+    const statusFilter$ = this.statusFilterControl.valueChanges.pipe(startWith('ACTIVE'));
 
     this.players$ = combineLatest([
       this.store.select(selectAllPlayers),
@@ -59,21 +55,14 @@ export class PlayerListComponent implements OnInit {
 
         return players
           .filter(
-            (player) =>
-              statusFilter === 'ALL' ||
-              (statusFilter === 'ARCHIVED'
-                ? player.isDeleted
-                : !player.isDeleted),
+            (player) => statusFilter === 'ALL' || (statusFilter === 'ARCHIVED' ? player.isDeleted : !player.isDeleted),
           )
           .map((player) => {
             const playerMemberships = memberships.filter(
-              (membership) =>
-                membership.playerId === player._id && !membership.isDeleted,
+              (membership) => membership.playerId === player._id && !membership.isDeleted,
             );
             const playerTeams = playerMemberships
-              .map((membership) =>
-                teams.find((team) => team._id === membership.teamId),
-              )
+              .map((membership) => teams.find((team) => team._id === membership.teamId))
               .filter((team): team is Team => Boolean(team && !team.isDeleted));
 
             return {
@@ -89,17 +78,9 @@ export class PlayerListComponent implements OnInit {
               ],
             };
           })
+          .filter((item) => !normalizedSearch || item.player.name.toLocaleLowerCase().includes(normalizedSearch))
           .filter(
-            (item) =>
-              !normalizedSearch ||
-              item.player.name.toLocaleLowerCase().includes(normalizedSearch),
-          )
-          .filter(
-            (item) =>
-              teamFilter === 'ALL' ||
-              item.memberships.some(
-                (membership) => membership.teamId === teamFilter,
-              ),
+            (item) => teamFilter === 'ALL' || item.memberships.some((membership) => membership.teamId === teamFilter),
           );
       }),
     );

@@ -13,9 +13,7 @@ export class TeamRepository extends LocalRepository {
   observeActive(): Observable<any[]> {
     return from(this.collection('teams')).pipe(
       switchMap((c) => c.find().$ as Observable<any[]>),
-      map((items) =>
-        items.map((x: any) => x.toJSON()).filter((x: any) => !x.isDeleted),
-      ),
+      map((items) => items.map((x: any) => x.toJSON()).filter((x: any) => !x.isDeleted)),
     );
   }
   all(): Promise<any[]> {

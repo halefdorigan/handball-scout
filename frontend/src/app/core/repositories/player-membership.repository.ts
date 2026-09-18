@@ -31,21 +31,13 @@ export class PlayerMembershipRepository extends LocalRepository {
     );
   }
   update(membership: any): Promise<any> {
-    return this.collection('playerMemberships').then((c) =>
-      c.upsert({ ...membership, updatedAt: Date.now() }),
-    );
+    return this.collection('playerMemberships').then((c) => c.upsert({ ...membership, updatedAt: Date.now() }));
   }
   upsert(membership: any): Promise<any> {
-    return this.collection('playerMemberships').then((c) =>
-      c.upsert(membership),
-    );
+    return this.collection('playerMemberships').then((c) => c.upsert(membership));
   }
   async archive(id: string): Promise<any | null> {
-    const doc = await (
-      await this.collection('playerMemberships')
-    )
-      .findOne(id)
-      .exec();
+    const doc = await (await this.collection('playerMemberships')).findOne(id).exec();
     return doc
       ? doc.modify((x: any) => ({
           ...x,

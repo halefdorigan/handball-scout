@@ -26,12 +26,7 @@ export async function migrateLegacyData(db: any): Promise<void> {
         events: (game.events || []).map((event: any, index: number) => ({
           ...event,
           sequence: index + 1,
-          type:
-            event.type === 'MIN2'
-              ? 'TWO_MINUTES'
-              : event.type === 'YELLOW'
-                ? 'YELLOW_CARD'
-                : event.type,
+          type: event.type === 'MIN2' ? 'TWO_MINUTES' : event.type === 'YELLOW' ? 'YELLOW_CARD' : event.type,
         })),
         updatedAt: game.updatedAt || Date.now(),
         isDeleted: game.isDeleted ?? false,

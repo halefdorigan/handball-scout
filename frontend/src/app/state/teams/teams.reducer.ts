@@ -20,19 +20,14 @@ export const initialState: TeamsState = adapter.getInitialState({
 export const teamsReducer = createReducer(
   initialState,
   on(TeamsActions.loadTeams, (state) => ({ ...state, loading: true })),
-  on(TeamsActions.loadTeamsSuccess, (state, { teams }) =>
-    adapter.setAll(teams, { ...state, loading: false }),
-  ),
+  on(TeamsActions.loadTeamsSuccess, (state, { teams }) => adapter.setAll(teams, { ...state, loading: false })),
   on(TeamsActions.loadTeamsFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
   })),
   on(TeamsActions.deleteTeam, (state, { id }) => adapter.removeOne(id, state)),
-  on(TeamsActions.upsertTeamFromDb, (state, { team }) =>
-    adapter.upsertOne(team, state),
-  ),
+  on(TeamsActions.upsertTeamFromDb, (state, { team }) => adapter.upsertOne(team, state)),
 );
 
-export const { selectIds, selectEntities, selectAll, selectTotal } =
-  adapter.getSelectors();
+export const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();

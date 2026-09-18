@@ -30,9 +30,7 @@ export class GameRepository extends LocalRepository {
   }
   async appendEvent(id: string, event: any): Promise<any | null> {
     const doc = await (await this.collection('games')).findOne(id).exec();
-    return doc
-      ? doc.modify((x: any) => ({ ...x, events: [...(x.events || []), event] }))
-      : null;
+    return doc ? doc.modify((x: any) => ({ ...x, events: [...(x.events || []), event] })) : null;
   }
   async undoEvent(id: string): Promise<any | null> {
     const doc = await (await this.collection('games')).findOne(id).exec();

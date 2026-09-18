@@ -2,26 +2,13 @@
   <header class="page-header">
     <div>
       <a class="back-link" routerLink="/teams">← Times</a>
-      <p class="eyebrow">
-        {{ isNew ? "Novo registro" : "Editar registro" }} / 02
-      </p>
-      <h1>{{ isNew ? "Novo time" : "Editar time" }}</h1>
+      <p class="eyebrow">{{ isNew ? 'Novo registro' : 'Editar registro' }} / 02</p>
+      <h1>{{ isNew ? 'Novo time' : 'Editar time' }}</h1>
     </div>
     <div class="header-actions">
       <a class="btn btn--secondary" routerLink="/teams">Cancelar</a>
-      <button
-        *ngIf="!isNew"
-        type="button"
-        class="btn btn--danger"
-        (click)="openDeleteModal()"
-      >
-        Excluir time
-      </button>
-      <button
-        (click)="save()"
-        class="btn btn--primary"
-        [disabled]="teamForm.invalid"
-      >
+      <button *ngIf="!isNew" type="button" class="btn btn--danger" (click)="openDeleteModal()">Excluir time</button>
+      <button (click)="save()" class="btn btn--primary" [disabled]="teamForm.invalid">
         Salvar <span aria-hidden="true">↗</span>
       </button>
     </div>
@@ -34,54 +21,30 @@
     </div>
     <div class="form-group">
       <label for="team-name">Nome do time</label>
-      <input
-        id="team-name"
-        type="text"
-        formControlName="name"
-        placeholder="Ex: Handebol Clube"
-      />
+      <input id="team-name" type="text" formControlName="name" placeholder="Ex: Handebol Clube" />
     </div>
     <div class="form-group color-field">
-      <div>
-        <label for="team-color">Cor de identificação</label
-        ><span>Usada nos relatórios e na lista.</span>
-      </div>
+      <div><label for="team-color">Cor de identificação</label><span>Usada nos relatórios e na lista.</span></div>
       <input id="team-color" type="color" formControlName="color" />
     </div>
   </form>
 
-  <section
-    class="players-section"
-    *ngIf="!isNew"
-    aria-labelledby="players-title"
-  >
+  <section class="players-section" *ngIf="!isNew" aria-labelledby="players-title">
     <div class="section-heading">
       <div>
         <p class="eyebrow">Vínculos / 03</p>
         <h2 id="players-title">Jogadores do time</h2>
       </div>
-      <span class="section-heading__note"
-        >O número e a posição pertencem ao vínculo</span
-      >
+      <span class="section-heading__note">O número e a posição pertencem ao vínculo</span>
     </div>
     <form [formGroup]="playerForm" (ngSubmit)="addPlayer()" class="player-form">
       <select formControlName="playerId" aria-label="Jogador">
         <option value="">Selecione um jogador existente</option>
-        <option
-          *ngFor="let player of availablePlayers$ | async"
-          [value]="player._id"
-        >
+        <option *ngFor="let player of availablePlayers$ | async" [value]="player._id">
           {{ player.name }}
         </option>
       </select>
-      <input
-        type="number"
-        formControlName="number"
-        placeholder="Nº"
-        aria-label="Número da camisa"
-        min="0"
-        max="99"
-      />
+      <input type="number" formControlName="number" placeholder="Nº" aria-label="Número da camisa" min="0" max="99" />
       <select formControlName="position" aria-label="Posição">
         <option value="">Não informada</option>
         <option value="Goleiro">Goleiro</option>
@@ -89,11 +52,7 @@
         <option value="Armador">Armador</option>
         <option value="Pivô">Pivô</option>
       </select>
-      <button
-        type="submit"
-        class="btn btn--primary"
-        [disabled]="playerForm.invalid"
-      >
+      <button type="submit" class="btn btn--primary" [disabled]="playerForm.invalid">
         Vincular <span aria-hidden="true">＋</span>
       </button>
     </form>
@@ -105,30 +64,16 @@
       <div
         *ngFor="let item of players"
         class="player-item"
-        [class.player-item--inactive]="
-          item.membership.status !== 'ACTIVE' || item.player.isDeleted
-        "
+        [class.player-item--inactive]="item.membership.status !== 'ACTIVE' || item.player.isDeleted"
       >
-        <span class="player-item__number">{{
-          item.membership.number ?? "—"
-        }}</span>
+        <span class="player-item__number">{{ item.membership.number ?? '—' }}</span>
         <strong class="player-item__name">{{ item.player.name }}</strong>
-        <span class="player-item__pos">{{
-          item.membership.position || "Posição não informada"
-        }}</span>
+        <span class="player-item__pos">{{ item.membership.position || 'Posição não informada' }}</span>
         <span class="player-item__status">{{
-          item.player.isDeleted
-            ? "Arquivado"
-            : item.membership.status === "ACTIVE"
-              ? "Ativo"
-              : "Inativo"
+          item.player.isDeleted ? 'Arquivado' : item.membership.status === 'ACTIVE' ? 'Ativo' : 'Inativo'
         }}</span>
-        <button
-          type="button"
-          class="player-item__action"
-          (click)="toggleMembership(item.membership)"
-        >
-          {{ item.membership.status === "ACTIVE" ? "Inativar" : "Ativar" }}
+        <button type="button" class="player-item__action" (click)="toggleMembership(item.membership)">
+          {{ item.membership.status === 'ACTIVE' ? 'Inativar' : 'Ativar' }}
         </button>
         <button
           type="button"
@@ -138,18 +83,11 @@
           Remover
         </button>
       </div>
-      <p *ngIf="players.length === 0" class="players-empty">
-        Nenhum vínculo cadastrado para este time.
-      </p>
+      <p *ngIf="players.length === 0" class="players-empty">Nenhum vínculo cadastrado para este time.</p>
     </div>
   </section>
 
-  <div
-    *ngIf="showDeleteModal"
-    class="delete-overlay"
-    role="presentation"
-    (click)="closeDeleteModal()"
-  >
+  <div *ngIf="showDeleteModal" class="delete-overlay" role="presentation" (click)="closeDeleteModal()">
     <section
       class="delete-modal"
       role="dialog"
@@ -161,20 +99,11 @@
       <p class="eyebrow">Excluir registro</p>
       <h2 id="delete-team-title">Excluir este time?</h2>
       <p id="delete-team-description">
-        O time sairá da sua lista, mas os jogadores e os jogos relacionados
-        serão preservados.
+        O time sairá da sua lista, mas os jogadores e os jogos relacionados serão preservados.
       </p>
       <div class="delete-modal__actions">
-        <button
-          type="button"
-          class="btn btn--secondary"
-          (click)="closeDeleteModal()"
-        >
-          Cancelar
-        </button>
-        <button type="button" class="btn btn--danger" (click)="confirmDelete()">
-          Excluir time
-        </button>
+        <button type="button" class="btn btn--secondary" (click)="closeDeleteModal()">Cancelar</button>
+        <button type="button" class="btn btn--danger" (click)="confirmDelete()">Excluir time</button>
       </div>
     </section>
   </div>

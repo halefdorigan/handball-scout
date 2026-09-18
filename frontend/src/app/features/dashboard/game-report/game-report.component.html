@@ -13,22 +13,14 @@
   <section class="score-summary" aria-label="Placar final">
     <div class="team-score">
       <span class="team-score__label">Casa</span
-      ><strong class="team-name">{{
-        (teamA$ | async)?.name || "Time A"
-      }}</strong
-      ><span class="score-value">{{
-        getStats(game.teamAId, "GOAL", game.events)
-      }}</span>
+      ><strong class="team-name">{{ (teamA$ | async)?.name || 'Time A' }}</strong
+      ><span class="score-value">{{ getStats(game.teamAId, 'GOAL', game.events) }}</span>
     </div>
     <div class="score-divider">—</div>
     <div class="team-score team-score--away">
       <span class="team-score__label">Visitante</span
-      ><strong class="team-name">{{
-        (teamB$ | async)?.name || "Time B"
-      }}</strong
-      ><span class="score-value">{{
-        getStats(game.teamBId, "GOAL", game.events)
-      }}</span>
+      ><strong class="team-name">{{ (teamB$ | async)?.name || 'Time B' }}</strong
+      ><span class="score-value">{{ getStats(game.teamBId, 'GOAL', game.events) }}</span>
     </div>
   </section>
 
@@ -38,33 +30,29 @@
         <p class="eyebrow">Leitura da partida / 01</p>
         <h2 id="stats-title">Estatísticas gerais</h2>
       </div>
-      <span class="section-heading__note"
-        >{{ game.events.length || 0 }} eventos</span
-      >
+      <span class="section-heading__note">{{ game.events.length || 0 }} eventos</span>
     </div>
     <div class="stats-table">
-      <div class="stat-row stat-row--head">
-        <span>Indicador</span><span>Casa / Visitante</span>
-      </div>
+      <div class="stat-row stat-row--head"><span>Indicador</span><span>Casa / Visitante</span></div>
       <div class="stat-row">
         <span>Defesas</span
         ><strong
-          >{{ getStats(game.teamAId, "GK_SAVE", game.events) }} <i>vs</i>
-          {{ getStats(game.teamBId, "GK_SAVE", game.events) }}</strong
+          >{{ getStats(game.teamAId, 'GK_SAVE', game.events) }} <i>vs</i>
+          {{ getStats(game.teamBId, 'GK_SAVE', game.events) }}</strong
         >
       </div>
       <div class="stat-row">
         <span>Arremessos fora</span
         ><strong
-          >{{ getStats(game.teamAId, "MISS", game.events) }} <i>vs</i>
-          {{ getStats(game.teamBId, "MISS", game.events) }}</strong
+          >{{ getStats(game.teamAId, 'MISS', game.events) }} <i>vs</i>
+          {{ getStats(game.teamBId, 'MISS', game.events) }}</strong
         >
       </div>
       <div class="stat-row">
         <span>2 minutos</span
         ><strong
-          >{{ getStats(game.teamAId, "SUSPENSION", game.events) }} <i>vs</i>
-          {{ getStats(game.teamBId, "SUSPENSION", game.events) }}</strong
+          >{{ getStats(game.teamAId, 'SUSPENSION', game.events) }} <i>vs</i>
+          {{ getStats(game.teamBId, 'SUSPENSION', game.events) }}</strong
         >
       </div>
     </div>
@@ -80,12 +68,10 @@
     <div class="player-grid">
       <div class="player-stat-item" *ngFor="let item of players$ | async">
         <ng-container>
-          <span class="player-number">#{{ item.membership.number ?? "—" }}</span
+          <span class="player-number">#{{ item.membership.number ?? '—' }}</span
           ><strong class="player-name">{{ item.player.name }}</strong
           ><span class="player-team">{{ item.teamLabel }}</span
-          ><strong class="player-goals">{{
-            getPlayerGoals(item.player._id, game.events)
-          }}</strong>
+          ><strong class="player-goals">{{ getPlayerGoals(item.player._id, game.events) }}</strong>
         </ng-container>
       </div>
     </div>

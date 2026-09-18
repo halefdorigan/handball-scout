@@ -13,10 +13,7 @@ describe('AuthGuard', () => {
     const guard = new AuthGuard(authService, router);
 
     // Act
-    const result = guard.canActivate(
-      {} as never,
-      { url: '/teams/42?tab=players' } as never,
-    );
+    const result = guard.canActivate({} as never, { url: '/teams/42?tab=players' } as never);
 
     // Assert
     expect(router.createUrlTree).toHaveBeenCalledWith(['/login'], {

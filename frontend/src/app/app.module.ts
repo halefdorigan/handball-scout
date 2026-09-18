@@ -36,18 +36,10 @@ import { SyncEffects } from './state/sync/sync.effects';
       memberships: membershipsReducer,
       games: gamesReducer,
     }),
-    EffectsModule.forRoot([
-      TeamsEffects,
-      PlayersEffects,
-      MembershipsEffects,
-      GamesEffects,
-      SyncEffects,
-    ]),
+    EffectsModule.forRoot([TeamsEffects, PlayersEffects, MembershipsEffects, GamesEffects, SyncEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-  ],
+  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

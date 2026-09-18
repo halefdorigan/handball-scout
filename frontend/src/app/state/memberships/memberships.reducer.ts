@@ -8,10 +8,9 @@ export interface MembershipsState extends EntityState<PlayerMembership> {
   error: any;
 }
 
-export const adapter: EntityAdapter<PlayerMembership> =
-  createEntityAdapter<PlayerMembership>({
-    selectId: (membership) => membership._id,
-  });
+export const adapter: EntityAdapter<PlayerMembership> = createEntityAdapter<PlayerMembership>({
+  selectId: (membership) => membership._id,
+});
 
 export const initialState: MembershipsState = adapter.getInitialState({
   loading: false,
@@ -32,16 +31,9 @@ export const membershipsReducer = createReducer(
     loading: false,
     error,
   })),
-  on(MembershipsActions.addMembershipSuccess, (state, { membership }) =>
-    adapter.addOne(membership, state),
-  ),
-  on(MembershipsActions.updateMembershipSuccess, (state, { membership }) =>
-    adapter.upsertOne(membership, state),
-  ),
-  on(MembershipsActions.archiveMembershipSuccess, (state, { membership }) =>
-    adapter.upsertOne(membership, state),
-  ),
+  on(MembershipsActions.addMembershipSuccess, (state, { membership }) => adapter.addOne(membership, state)),
+  on(MembershipsActions.updateMembershipSuccess, (state, { membership }) => adapter.upsertOne(membership, state)),
+  on(MembershipsActions.archiveMembershipSuccess, (state, { membership }) => adapter.upsertOne(membership, state)),
 );
 
-export const { selectIds, selectEntities, selectAll, selectTotal } =
-  adapter.getSelectors();
+export const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();

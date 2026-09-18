@@ -28,11 +28,7 @@ export class GamesEffects {
     () =>
       this.actions$.pipe(
         ofType(GamesActions.addGame),
-        mergeMap((action) =>
-          from(this.games.create(action.game)).pipe(
-            map(() => ({ type: 'NO_ACTION' })),
-          ),
-        ),
+        mergeMap((action) => from(this.games.create(action.game)).pipe(map(() => ({ type: 'NO_ACTION' })))),
       ),
     { dispatch: false },
   );
@@ -44,9 +40,7 @@ export class GamesEffects {
         from(this.games.appendEvent(action.gameId, action.event)).pipe(
           mergeMap((doc) => (doc ? of(doc) : EMPTY)),
           map(() => GamesActions.logGameEventSuccess()),
-          catchError((error) =>
-            of(GamesActions.logGameEventFailure({ error })),
-          ),
+          catchError((error) => of(GamesActions.logGameEventFailure({ error }))),
         ),
       ),
     ),
@@ -59,9 +53,7 @@ export class GamesEffects {
         from(this.games.undoEvent(action.gameId)).pipe(
           mergeMap((doc) => (doc ? of(doc) : EMPTY)),
           map(() => GamesActions.undoGameEventSuccess()),
-          catchError((error) =>
-            of(GamesActions.undoGameEventFailure({ error })),
-          ),
+          catchError((error) => of(GamesActions.undoGameEventFailure({ error }))),
         ),
       ),
     ),

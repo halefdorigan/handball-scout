@@ -17,8 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const selectGamesState = createFeatureSelector<any>('games');
 
-const { selectEntities: selectGameEntities } =
-  gamesAdapter.getSelectors(selectGamesState);
+const { selectEntities: selectGameEntities } = gamesAdapter.getSelectors(selectGamesState);
 
 interface ScoutPlayer {
   player: Player;
@@ -55,9 +54,7 @@ export class ScoutComponent implements OnInit, OnDestroy {
     this.gameId = this.route.snapshot.paramMap.get('id');
     if (this.gameId) {
       this.store.dispatch(GamesActions.loadGames()); // Ensure games are loaded
-      this.game$ = this.store
-        .select(selectGameEntities)
-        .pipe(map((entities) => entities[this.gameId!]));
+      this.game$ = this.store.select(selectGameEntities).pipe(map((entities) => entities[this.gameId!]));
 
       this.game$.subscribe((game) => {
         if (game) {
@@ -65,12 +62,8 @@ export class ScoutComponent implements OnInit, OnDestroy {
           this.store.dispatch(PlayersActions.loadPlayers());
           this.store.dispatch(MembershipsActions.loadMemberships());
 
-          this.teamA$ = this.store
-            .select(selectTeamEntities)
-            .pipe(map((entities) => entities[game.teamAId]));
-          this.teamB$ = this.store
-            .select(selectTeamEntities)
-            .pipe(map((entities) => entities[game.teamBId]));
+          this.teamA$ = this.store.select(selectTeamEntities).pipe(map((entities) => entities[game.teamAId]));
+          this.teamB$ = this.store.select(selectTeamEntities).pipe(map((entities) => entities[game.teamBId]));
 
           this.playersA$ = this.getPlayersForTeam(game.teamAId);
           this.playersB$ = this.getPlayersForTeam(game.teamBId);
@@ -87,9 +80,7 @@ export class ScoutComponent implements OnInit, OnDestroy {
       map(([players, memberships]) =>
         memberships
           .map((membership) => {
-            const player = players.find(
-              (item) => item._id === membership.playerId,
-            );
+            const player = players.find((item) => item._id === membership.playerId);
             return player ? { player, membership } : undefined;
           })
           .filter((item): item is ScoutPlayer => Boolean(item)),
@@ -132,9 +123,7 @@ export class ScoutComponent implements OnInit, OnDestroy {
       realTime: new Date().toISOString(),
     };
 
-    this.store.dispatch(
-      GamesActions.logGameEvent({ gameId: this.gameId, event }),
-    );
+    this.store.dispatch(GamesActions.logGameEvent({ gameId: this.gameId, event }));
 
     this.showPlayerSelection = false;
     this.pendingAction = null;
@@ -148,8 +137,7 @@ export class ScoutComponent implements OnInit, OnDestroy {
 
   getScore(teamId: string, events: GameEvent[] | undefined): number {
     if (!events) return 0;
-    return events.filter((e) => e.teamId === teamId && e.type === 'GOAL')
-      .length;
+    return events.filter((e) => e.teamId === teamId && e.type === 'GOAL').length;
   }
 
   ngOnDestroy(): void {

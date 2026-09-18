@@ -16,12 +16,8 @@ export class MembershipsEffects {
       ofType(MembershipsActions.loadMemberships),
       switchMap(() =>
         this.memberships.observeAll().pipe(
-          map((memberships) =>
-            MembershipsActions.loadMembershipsSuccess({ memberships }),
-          ),
-          catchError((error) =>
-            of(MembershipsActions.loadMembershipsFailure({ error })),
-          ),
+          map((memberships) => MembershipsActions.loadMembershipsSuccess({ memberships })),
+          catchError((error) => of(MembershipsActions.loadMembershipsFailure({ error }))),
         ),
       ),
     ),
@@ -37,9 +33,7 @@ export class MembershipsEffects {
               membership: membership.toJSON(),
             }),
           ),
-          catchError((error) =>
-            of(MembershipsActions.addMembershipFailure({ error })),
-          ),
+          catchError((error) => of(MembershipsActions.addMembershipFailure({ error }))),
         ),
       ),
     ),
@@ -55,9 +49,7 @@ export class MembershipsEffects {
               membership: membership.toJSON(),
             }),
           ),
-          catchError((error) =>
-            of(MembershipsActions.updateMembershipFailure({ error })),
-          ),
+          catchError((error) => of(MembershipsActions.updateMembershipFailure({ error }))),
         ),
       ),
     ),
@@ -74,9 +66,7 @@ export class MembershipsEffects {
               membership: membership.toJSON(),
             }),
           ),
-          catchError((error) =>
-            of(MembershipsActions.archiveMembershipFailure({ error })),
-          ),
+          catchError((error) => of(MembershipsActions.archiveMembershipFailure({ error }))),
         ),
       ),
     ),

@@ -1,43 +1,27 @@
 <div class="scout-container" *ngIf="game$ | async as game">
   <header class="scout-header">
-    <a class="scout-back" [routerLink]="['/games', game._id]"
-      >← Sair do scout</a
-    >
+    <a class="scout-back" [routerLink]="['/games', game._id]">← Sair do scout</a>
     <div class="scout-header__meta">
       <span>AO VIVO / SCOUTING</span><span>{{ game.name }}</span>
     </div>
     <div class="scout-score">
       <div class="score-team">
         <span class="score-team__label">Casa</span
-        ><strong class="score-team__name">{{
-          (teamA$ | async)?.name || "Time A"
-        }}</strong
-        ><span class="score-value">{{
-          getScore(game.teamAId, game.events)
-        }}</span>
+        ><strong class="score-team__name">{{ (teamA$ | async)?.name || 'Time A' }}</strong
+        ><span class="score-value">{{ getScore(game.teamAId, game.events) }}</span>
       </div>
       <button
         class="score-timer"
         (click)="toggleTimer()"
-        [attr.aria-label]="
-          isTimerRunning ? 'Pausar cronômetro' : 'Iniciar cronômetro'
-        "
+        [attr.aria-label]="isTimerRunning ? 'Pausar cronômetro' : 'Iniciar cronômetro'"
       >
-        <span class="timer-value" [class.running]="isTimerRunning">{{
-          formatTime(timerSeconds)
-        }}</span
-        ><span class="timer-status">{{
-          isTimerRunning ? "PAUSAR" : "INICIAR"
-        }}</span>
+        <span class="timer-value" [class.running]="isTimerRunning">{{ formatTime(timerSeconds) }}</span
+        ><span class="timer-status">{{ isTimerRunning ? 'PAUSAR' : 'INICIAR' }}</span>
       </button>
       <div class="score-team score-team--away">
         <span class="score-team__label">Visitante</span
-        ><strong class="score-team__name">{{
-          (teamB$ | async)?.name || "Time B"
-        }}</strong
-        ><span class="score-value">{{
-          getScore(game.teamBId, game.events)
-        }}</span>
+        ><strong class="score-team__name">{{ (teamB$ | async)?.name || 'Time B' }}</strong
+        ><span class="score-value">{{ getScore(game.teamBId, game.events) }}</span>
       </div>
     </div>
   </header>
@@ -46,73 +30,31 @@
     <div class="scout-actions">
       <section class="team-actions team-a" aria-label="Ações do time da casa">
         <div class="team-actions__heading">
-          <span class="team-actions__index">A</span
-          ><span>{{ (teamA$ | async)?.name || "Time A" }}</span>
+          <span class="team-actions__index">A</span><span>{{ (teamA$ | async)?.name || 'Time A' }}</span>
         </div>
-        <button
-          class="action-btn goal"
-          (click)="onAction('GOAL', game.teamAId)"
-        >
+        <button class="action-btn goal" (click)="onAction('GOAL', game.teamAId)">
           <span>GOL</span><small>+ 1 no placar</small>
         </button>
         <div class="sub-actions">
-          <button
-            class="action-btn miss"
-            (click)="onAction('MISS', game.teamAId)"
-          >
-            FORA</button
-          ><button
-            class="action-btn save"
-            (click)="onAction('SAVE', game.teamBId)"
-          >
-            DEFESA B</button
-          ><button
-            class="action-btn card-y"
-            (click)="onAction('YELLOW', game.teamAId)"
-          >
-            AMARELO</button
-          ><button
-            class="action-btn min-2"
-            (click)="onAction('MIN2', game.teamAId)"
-          >
-            2 MIN
-          </button>
+          <button class="action-btn miss" (click)="onAction('MISS', game.teamAId)">FORA</button
+          ><button class="action-btn save" (click)="onAction('SAVE', game.teamBId)">DEFESA B</button
+          ><button class="action-btn card-y" (click)="onAction('YELLOW', game.teamAId)">AMARELO</button
+          ><button class="action-btn min-2" (click)="onAction('MIN2', game.teamAId)">2 MIN</button>
         </div>
       </section>
       <div class="scout-divider" aria-hidden="true">VS</div>
       <section class="team-actions team-b" aria-label="Ações do time visitante">
         <div class="team-actions__heading">
-          <span class="team-actions__index">B</span
-          ><span>{{ (teamB$ | async)?.name || "Time B" }}</span>
+          <span class="team-actions__index">B</span><span>{{ (teamB$ | async)?.name || 'Time B' }}</span>
         </div>
-        <button
-          class="action-btn goal"
-          (click)="onAction('GOAL', game.teamBId)"
-        >
+        <button class="action-btn goal" (click)="onAction('GOAL', game.teamBId)">
           <span>GOL</span><small>+ 1 no placar</small>
         </button>
         <div class="sub-actions">
-          <button
-            class="action-btn miss"
-            (click)="onAction('MISS', game.teamBId)"
-          >
-            FORA</button
-          ><button
-            class="action-btn save"
-            (click)="onAction('SAVE', game.teamAId)"
-          >
-            DEFESA A</button
-          ><button
-            class="action-btn card-y"
-            (click)="onAction('YELLOW', game.teamBId)"
-          >
-            AMARELO</button
-          ><button
-            class="action-btn min-2"
-            (click)="onAction('MIN2', game.teamBId)"
-          >
-            2 MIN
-          </button>
+          <button class="action-btn miss" (click)="onAction('MISS', game.teamBId)">FORA</button
+          ><button class="action-btn save" (click)="onAction('SAVE', game.teamAId)">DEFESA A</button
+          ><button class="action-btn card-y" (click)="onAction('YELLOW', game.teamBId)">AMARELO</button
+          ><button class="action-btn min-2" (click)="onAction('MIN2', game.teamBId)">2 MIN</button>
         </div>
       </section>
     </div>
@@ -123,27 +65,14 @@
           <p class="eyebrow">Linha do tempo</p>
           <h2 id="events-title">Últimos eventos</h2>
         </div>
-        <button
-          class="btn-undo"
-          (click)="undo()"
-          [disabled]="!game.events.length"
-        >
-          Desfazer último
-        </button>
+        <button class="btn-undo" (click)="undo()" [disabled]="!game.events.length">Desfazer último</button>
       </div>
-      <div
-        class="event-item"
-        *ngFor="let event of game.events?.slice()?.reverse()?.slice(0, 5)"
-      >
+      <div class="event-item" *ngFor="let event of game.events?.slice()?.reverse()?.slice(0, 5)">
         <span class="event-time">{{ formatTime(event.gameTime) }}</span
         ><strong class="event-type">{{ event.type }}</strong
-        ><span class="event-player" *ngIf="event.playerId"
-          >Jogador {{ event.playerId }}</span
-        >
+        ><span class="event-player" *ngIf="event.playerId">Jogador {{ event.playerId }}</span>
       </div>
-      <p *ngIf="!game.events.length" class="events-empty">
-        Os eventos registrados aparecerão aqui.
-      </p>
+      <p *ngIf="!game.events.length" class="events-empty">Os eventos registrados aparecerão aqui.</p>
     </section>
   </main>
 
@@ -161,28 +90,17 @@
         >?
       </h2>
       <div class="players-grid">
-        <button class="player-btn player-btn--collective" (click)="logEvent()">
-          COLETIVO</button
+        <button class="player-btn player-btn--collective" (click)="logEvent()">COLETIVO</button
         ><button
-          *ngFor="
-            let item of (selectedTeamId === game.teamAId
-              ? playersA$
-              : playersB$
-            ) | async
-          "
+          *ngFor="let item of (selectedTeamId === game.teamAId ? playersA$ : playersB$) | async"
           class="player-btn"
           (click)="logEvent(item.player._id)"
         >
-          <span class="player-number">{{ item.membership.number ?? "—" }}</span
+          <span class="player-number">{{ item.membership.number ?? '—' }}</span
           ><span class="player-name">{{ item.player.name }}</span>
         </button>
       </div>
-      <button
-        class="btn btn--secondary btn--full"
-        (click)="showPlayerSelection = false"
-      >
-        Cancelar
-      </button>
+      <button class="btn btn--secondary btn--full" (click)="showPlayerSelection = false">Cancelar</button>
     </div>
   </div>
 </div>

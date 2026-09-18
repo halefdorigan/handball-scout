@@ -20,17 +20,13 @@ export const initialState: GamesState = adapter.getInitialState({
 export const gamesReducer = createReducer(
   initialState,
   on(GamesActions.loadGames, (state) => ({ ...state, loading: true })),
-  on(GamesActions.loadGamesSuccess, (state, { games }) =>
-    adapter.setAll(games, { ...state, loading: false }),
-  ),
+  on(GamesActions.loadGamesSuccess, (state, { games }) => adapter.setAll(games, { ...state, loading: false })),
   on(GamesActions.loadGamesFailure, (state, { error }) => ({
     ...state,
     loading: false,
     error,
   })),
-  on(GamesActions.upsertGameFromDb, (state, { game }) =>
-    adapter.upsertOne(game, state),
-  ),
+  on(GamesActions.upsertGameFromDb, (state, { game }) => adapter.upsertOne(game, state)),
   on(GamesActions.logGameEvent, (state, { gameId, event }) => {
     const game = state.entities[gameId];
     if (!game) return state;
@@ -59,5 +55,4 @@ export const gamesReducer = createReducer(
   }),
 );
 
-export const { selectIds, selectEntities, selectAll, selectTotal } =
-  adapter.getSelectors();
+export const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();

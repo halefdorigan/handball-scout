@@ -49,9 +49,7 @@
       <span class="nav-item__label">Sair</span>
     </button>
 
-    <div class="rail-footnote">
-      HANDBALL<br />SCOUTING<br /><span>v.0.1 / LOCAL</span>
-    </div>
+    <div class="rail-footnote">HANDBALL<br />SCOUTING<br /><span>v.0.1 / LOCAL</span></div>
   </aside>
 
   <main class="app-main" [class.app-main--public]="isPublicRoute">
@@ -65,28 +63,19 @@
       [routerLinkActiveOptions]="{ exact: true }"
       class="nav-item"
     >
-      <span class="nav-item__index">01</span
-      ><span class="nav-item__label">Início</span>
+      <span class="nav-item__index">01</span><span class="nav-item__label">Início</span>
     </a>
     <a routerLink="/teams" routerLinkActive="nav-item--active" class="nav-item">
-      <span class="nav-item__index">02</span
-      ><span class="nav-item__label">Times</span>
+      <span class="nav-item__index">02</span><span class="nav-item__label">Times</span>
     </a>
-    <a
-      routerLink="/players"
-      routerLinkActive="nav-item--active"
-      class="nav-item"
-    >
-      <span class="nav-item__index">03</span
-      ><span class="nav-item__label">Jogadores</span>
+    <a routerLink="/players" routerLinkActive="nav-item--active" class="nav-item">
+      <span class="nav-item__index">03</span><span class="nav-item__label">Jogadores</span>
     </a>
     <a routerLink="/games" routerLinkActive="nav-item--active" class="nav-item">
-      <span class="nav-item__index">04</span
-      ><span class="nav-item__label">Jogos</span>
+      <span class="nav-item__index">04</span><span class="nav-item__label">Jogos</span>
     </a>
     <button class="nav-item nav-item--logout" type="button" (click)="logout()">
-      <span class="nav-item__index">05</span
-      ><span class="nav-item__label">Sair</span>
+      <span class="nav-item__index">05</span><span class="nav-item__label">Sair</span>
     </button>
   </nav>
 </div>

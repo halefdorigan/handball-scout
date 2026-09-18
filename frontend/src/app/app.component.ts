@@ -21,9 +21,7 @@ export class AppComponent implements OnDestroy {
     this.updateShell(this.router.url);
     this.router.events
       .pipe(
-        filter(
-          (event): event is NavigationEnd => event instanceof NavigationEnd,
-        ),
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
         takeUntil(this.destroy$),
       )
       .subscribe((event) => this.updateShell(event.urlAfterRedirects));
@@ -40,7 +38,6 @@ export class AppComponent implements OnDestroy {
   }
 
   private updateShell(url: string): void {
-    this.isPublicRoute =
-      url === '/' || url.startsWith('/login') || url.startsWith('/register');
+    this.isPublicRoute = url === '/' || url.startsWith('/login') || url.startsWith('/register');
   }
 }

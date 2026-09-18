@@ -10,11 +10,9 @@ import { adapter as teamsAdapter } from '../../../state/teams/teams.reducer';
 import { adapter as gamesAdapter } from '../../../state/games/games.reducer';
 
 const selectTeamsState = createFeatureSelector<any>('teams');
-const { selectAll: selectAllTeams } =
-  teamsAdapter.getSelectors(selectTeamsState);
+const { selectAll: selectAllTeams } = teamsAdapter.getSelectors(selectTeamsState);
 const selectGamesState = createFeatureSelector<any>('games');
-const { selectEntities: selectGameEntities } =
-  gamesAdapter.getSelectors(selectGamesState);
+const { selectEntities: selectGameEntities } = gamesAdapter.getSelectors(selectGamesState);
 
 @Component({
   selector: 'app-game-detail',
@@ -36,10 +34,7 @@ export class GameDetailComponent implements OnInit {
   ) {
     this.gameForm = this.fb.group({
       name: ['', Validators.required],
-      dateTime: [
-        new Date().toISOString().substring(0, 16),
-        Validators.required,
-      ],
+      dateTime: [new Date().toISOString().substring(0, 16), Validators.required],
       teamAId: ['', Validators.required],
       teamBId: ['', Validators.required],
       tags: [[]],

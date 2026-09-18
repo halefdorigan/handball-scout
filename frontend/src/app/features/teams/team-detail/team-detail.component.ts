@@ -12,8 +12,7 @@ import { selectAllPlayers } from '../../../state/players/players.selectors';
 import { selectAllMemberships } from '../../../state/memberships/memberships.selectors';
 
 const selectTeamsState = createFeatureSelector<any>('teams');
-const { selectEntities: selectTeamEntities } =
-  teamsAdapter.getSelectors(selectTeamsState);
+const { selectEntities: selectTeamEntities } = teamsAdapter.getSelectors(selectTeamsState);
 
 interface TeamPlayer {
   player: Player;
@@ -72,14 +71,9 @@ export class TeamDetailComponent implements OnInit {
       ]).pipe(
         map(([players, memberships]) =>
           memberships
-            .filter(
-              (membership) =>
-                membership.teamId === this.teamId && !membership.isDeleted,
-            )
+            .filter((membership) => membership.teamId === this.teamId && !membership.isDeleted)
             .map((membership) => {
-              const player = players.find(
-                (item) => item._id === membership.playerId,
-              );
+              const player = players.find((item) => item._id === membership.playerId);
               return player ? { player, membership } : undefined;
             })
             .filter((item): item is TeamPlayer => Boolean(item)),
@@ -95,9 +89,7 @@ export class TeamDetailComponent implements OnInit {
               !player.isDeleted &&
               !memberships.some(
                 (membership) =>
-                  membership.playerId === player._id &&
-                  membership.teamId === this.teamId &&
-                  !membership.isDeleted,
+                  membership.playerId === player._id && membership.teamId === this.teamId && !membership.isDeleted,
               ),
           ),
         ),
@@ -110,9 +102,7 @@ export class TeamDetailComponent implements OnInit {
   save() {
     if (this.teamForm.valid) {
       if (this.isNew) {
-        this.store.dispatch(
-          TeamsActions.addTeam({ team: this.teamForm.value }),
-        );
+        this.store.dispatch(TeamsActions.addTeam({ team: this.teamForm.value }));
       } else if (this.teamId) {
         this.store.dispatch(
           TeamsActions.updateTeam({
@@ -136,13 +126,10 @@ export class TeamDetailComponent implements OnInit {
           membership: {
             playerId: this.playerForm.value.playerId,
             teamId: this.teamId,
-            ...(this.playerForm.value.number !== '' &&
-            this.playerForm.value.number !== null
+            ...(this.playerForm.value.number !== '' && this.playerForm.value.number !== null
               ? { number: Number(this.playerForm.value.number) }
               : {}),
-            ...(this.playerForm.value.position
-              ? { position: this.playerForm.value.position }
-              : {}),
+            ...(this.playerForm.value.position ? { position: this.playerForm.value.position } : {}),
             status: 'ACTIVE',
             isDeleted: false,
           },
@@ -165,9 +152,7 @@ export class TeamDetailComponent implements OnInit {
   }
 
   removeMembership(membership: PlayerMembership) {
-    this.store.dispatch(
-      MembershipsActions.archiveMembership({ id: membership._id }),
-    );
+    this.store.dispatch(MembershipsActions.archiveMembership({ id: membership._id }));
   }
 
   openDeleteModal() {

@@ -4,48 +4,28 @@
       <p class="eyebrow">Arquivo de partidas / 03</p>
       <h1>Meus jogos</h1>
     </div>
-    <a class="btn btn--primary" routerLink="new"
-      >Novo jogo <span aria-hidden="true">＋</span></a
-    >
+    <a class="btn btn--primary" routerLink="new">Novo jogo <span aria-hidden="true">＋</span></a>
   </header>
 
   <section class="games-intro">
-    <p>
-      Do apito inicial ao último relatório. Registre o ritmo da quadra enquanto
-      ele acontece.
-    </p>
+    <p>Do apito inicial ao último relatório. Registre o ritmo da quadra enquanto ele acontece.</p>
   </section>
 
-  <section
-    class="games-grid"
-    aria-label="Jogos cadastrados"
-    *ngIf="games$ | async as games"
-  >
+  <section class="games-grid" aria-label="Jogos cadastrados" *ngIf="games$ | async as games">
     <div class="games-grid__meta">
-      <span>{{ games.length.toString().padStart(2, "0") }} partidas</span
-      ><span>mais recentes primeiro</span>
+      <span>{{ games.length.toString().padStart(2, '0') }} partidas</span><span>mais recentes primeiro</span>
     </div>
     <a *ngFor="let game of games" class="game-card" [routerLink]="[game._id]">
-      <span class="game-card__index">{{
-        (games.indexOf(game) + 1).toString().padStart(2, "0")
-      }}</span>
+      <span class="game-card__index">{{ (games.indexOf(game) + 1).toString().padStart(2, '0') }}</span>
       <span class="game-card__header">
-        <span
-          class="game-card__status"
-          [ngClass]="getStatusClass(game.status)"
-          >{{ game.status }}</span
-        >
-        <span class="game-card__date">{{
-          game.dateTime | date: "dd MMM yyyy · HH:mm"
-        }}</span>
+        <span class="game-card__status" [ngClass]="getStatusClass(game.status)">{{ game.status }}</span>
+        <span class="game-card__date">{{ game.dateTime | date: 'dd MMM yyyy · HH:mm' }}</span>
       </span>
       <strong class="game-card__title">{{ game.name }}</strong>
       <span class="game-card__tags"
         ><span *ngFor="let tag of game.tags" class="tag">{{ tag }}</span></span
       >
-      <span class="game-card__footer"
-        ><span>Abrir partida</span><span aria-hidden="true">↗</span></span
-      >
+      <span class="game-card__footer"><span>Abrir partida</span><span aria-hidden="true">↗</span></span>
     </a>
     <div *ngIf="games.length === 0" class="empty-state">
       <p>Nenhuma partida encontrada.</p>

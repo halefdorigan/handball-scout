@@ -46,20 +46,13 @@ export const playerMigrationStrategies = {
     _id: oldDoc._id,
     name: oldDoc.name,
     ...(oldDoc.birthDate ? { birthDate: oldDoc.birthDate } : {}),
-    ...(typeof oldDoc.heightCm === 'number'
-      ? { heightCm: oldDoc.heightCm }
-      : {}),
-    ...(typeof oldDoc.weightKg === 'number'
-      ? { weightKg: oldDoc.weightKg }
-      : {}),
+    ...(typeof oldDoc.heightCm === 'number' ? { heightCm: oldDoc.heightCm } : {}),
+    ...(typeof oldDoc.weightKg === 'number' ? { weightKg: oldDoc.weightKg } : {}),
     ...(oldDoc.dominantHand ? { dominantHand: oldDoc.dominantHand } : {}),
     ...(oldDoc.teamId ? { legacyTeamId: oldDoc.teamId } : {}),
-    ...(typeof oldDoc.number === 'number'
-      ? { legacyNumber: oldDoc.number }
-      : {}),
+    ...(typeof oldDoc.number === 'number' ? { legacyNumber: oldDoc.number } : {}),
     ...(oldDoc.position ? { legacyPosition: oldDoc.position } : {}),
-    updatedAt:
-      typeof oldDoc.updatedAt === 'number' ? oldDoc.updatedAt : Date.now(),
+    updatedAt: typeof oldDoc.updatedAt === 'number' ? oldDoc.updatedAt : Date.now(),
     isDeleted: oldDoc.isDeleted ?? false,
   }),
 };

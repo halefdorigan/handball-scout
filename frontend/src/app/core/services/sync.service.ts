@@ -39,9 +39,7 @@ export class SyncService {
     });
 
     // Push
-    const remoteTeams = await lastValueFrom(
-      this.http.post<any[]>(`${this.apiUrl}/teams/sync`, teamsData),
-    );
+    const remoteTeams = await lastValueFrom(this.http.post<any[]>(`${this.apiUrl}/teams/sync`, teamsData));
 
     // Pull (upsert back to local)
     for (const team of remoteTeams) {
@@ -53,9 +51,7 @@ export class SyncService {
     const localPlayers = await this.players.all();
     const playersData = localPlayers.map((p: any) => p.toJSON());
 
-    const remotePlayers = await lastValueFrom(
-      this.http.post<any[]>(`${this.apiUrl}/players/sync`, playersData),
-    );
+    const remotePlayers = await lastValueFrom(this.http.post<any[]>(`${this.apiUrl}/players/sync`, playersData));
 
     for (const player of remotePlayers) {
       await this.players.upsert(this.normalizePlayer(player));
@@ -64,15 +60,10 @@ export class SyncService {
 
   private async syncMemberships() {
     const localMemberships = await this.memberships.all();
-    const membershipsData = localMemberships.map((membership: any) =>
-      membership.toJSON(),
-    );
+    const membershipsData = localMemberships.map((membership: any) => membership.toJSON());
 
     const remoteMemberships = await lastValueFrom(
-      this.http.post<any[]>(
-        `${this.apiUrl}/player-memberships/sync`,
-        membershipsData,
-      ),
+      this.http.post<any[]>(`${this.apiUrl}/player-memberships/sync`, membershipsData),
     );
 
     for (const membership of remoteMemberships) {
@@ -85,12 +76,8 @@ export class SyncService {
       _id: player._id,
       name: player.name,
       ...(player.birthDate ? { birthDate: player.birthDate } : {}),
-      ...(typeof player.heightCm === 'number'
-        ? { heightCm: player.heightCm }
-        : {}),
-      ...(typeof player.weightKg === 'number'
-        ? { weightKg: player.weightKg }
-        : {}),
+      ...(typeof player.heightCm === 'number' ? { heightCm: player.heightCm } : {}),
+      ...(typeof player.weightKg === 'number' ? { weightKg: player.weightKg } : {}),
       ...(player.dominantHand ? { dominantHand: player.dominantHand } : {}),
       updatedAt: this.normalizeUpdatedAt(player.updatedAt),
       isDeleted: player.isDeleted ?? player.deleted ?? false,
@@ -102,9 +89,7 @@ export class SyncService {
       _id: membership._id,
       playerId: membership.playerId,
       teamId: membership.teamId,
-      ...(typeof membership.number === 'number'
-        ? { number: membership.number }
-        : {}),
+      ...(typeof membership.number === 'number' ? { number: membership.number } : {}),
       ...(membership.position ? { position: membership.position } : {}),
       status: membership.status || 'ACTIVE',
       updatedAt: this.normalizeUpdatedAt(membership.updatedAt),
@@ -112,9 +97,7 @@ export class SyncService {
     };
   }
 
-  private normalizeUpdatedAt(
-    updatedAt: number | string | Date | undefined,
-  ): number {
+  private normalizeUpdatedAt(updatedAt: number | string | Date | undefined): number {
     if (typeof updatedAt === 'number') return updatedAt;
     if (updatedAt instanceof Date) return updatedAt.getTime();
 
@@ -129,9 +112,7 @@ export class SyncService {
       return { ...data, deleted: data.isDeleted ?? false };
     });
 
-    const remoteMatches = await lastValueFrom(
-      this.http.post<any[]>(`${this.apiUrl}/matches/sync`, matchesData),
-    );
+    const remoteMatches = await lastValueFrom(this.http.post<any[]>(`${this.apiUrl}/matches/sync`, matchesData));
 
     for (const match of remoteMatches) {
       await this.matches.upsert(this.normalizeMatch(match));
@@ -144,9 +125,7 @@ export class SyncService {
       const data = session.toJSON();
       return { ...data, deleted: data.isDeleted ?? false };
     });
-    const remote = await lastValueFrom(
-      this.http.post<any[]>(`${this.apiUrl}/scouting-sessions/sync`, payload),
-    );
+    const remote = await lastValueFrom(this.http.post<any[]>(`${this.apiUrl}/scouting-sessions/sync`, payload));
     for (const session of remote) {
       await this.sessions.upsert({
         _id: session._id,

@@ -8,10 +8,7 @@ import { Team } from '../../../core/models/team.model';
 import * as MembershipsActions from '../../../state/memberships/memberships.actions';
 import { selectAllMemberships } from '../../../state/memberships/memberships.selectors';
 import * as PlayersActions from '../../../state/players/players.actions';
-import {
-  selectAllPlayers,
-  selectPlayerById,
-} from '../../../state/players/players.selectors';
+import { selectAllPlayers, selectPlayerById } from '../../../state/players/players.selectors';
 import * as TeamsActions from '../../../state/teams/teams.actions';
 import { selectAllTeams } from '../../../state/teams/teams.selectors';
 
@@ -55,25 +52,17 @@ export class PlayerDetailComponent implements OnInit {
       .select(selectAllMemberships)
       .pipe(
         map((memberships) =>
-          memberships.filter(
-            (membership) =>
-              membership.playerId === this.playerId && !membership.isDeleted,
-          ),
+          memberships.filter((membership) => membership.playerId === this.playerId && !membership.isDeleted),
         ),
       );
-    this.availableTeams$ = combineLatest([
-      this.teams$,
-      this.store.select(selectAllMemberships),
-    ]).pipe(
+    this.availableTeams$ = combineLatest([this.teams$, this.store.select(selectAllMemberships)]).pipe(
       map(([teams, memberships]) =>
         teams.filter(
           (team) =>
             !team.isDeleted &&
             !memberships.some(
               (membership) =>
-                membership.playerId === this.playerId &&
-                membership.teamId === team._id &&
-                !membership.isDeleted,
+                membership.playerId === this.playerId && membership.teamId === team._id && !membership.isDeleted,
             ),
         ),
       ),
@@ -111,12 +100,8 @@ export class PlayerDetailComponent implements OnInit {
     const player = {
       name: value.name.trim(),
       ...(value.birthDate ? { birthDate: value.birthDate } : {}),
-      ...(value.heightCm !== '' && value.heightCm !== null
-        ? { heightCm: Number(value.heightCm) }
-        : {}),
-      ...(value.weightKg !== '' && value.weightKg !== null
-        ? { weightKg: Number(value.weightKg) }
-        : {}),
+      ...(value.heightCm !== '' && value.heightCm !== null ? { heightCm: Number(value.heightCm) } : {}),
+      ...(value.weightKg !== '' && value.weightKg !== null ? { weightKg: Number(value.weightKg) } : {}),
       ...(value.dominantHand ? { dominantHand: value.dominantHand } : {}),
       isDeleted: this.currentPlayer?.isDeleted ?? false,
     };
@@ -140,11 +125,7 @@ export class PlayerDetailComponent implements OnInit {
 
   addMembership(): void {
     this.membershipError = null;
-    if (
-      this.membershipForm.invalid ||
-      !this.playerId ||
-      this.playerId === 'new'
-    ) {
+    if (this.membershipForm.invalid || !this.playerId || this.playerId === 'new') {
       this.membershipForm.markAllAsTouched();
       return;
     }
@@ -155,14 +136,10 @@ export class PlayerDetailComponent implements OnInit {
       .pipe(take(1))
       .subscribe((memberships) => {
         const duplicate = memberships.some(
-          (item) =>
-            item.playerId === this.playerId &&
-            item.teamId === membership.teamId &&
-            !item.isDeleted,
+          (item) => item.playerId === this.playerId && item.teamId === membership.teamId && !item.isDeleted,
         );
         if (duplicate) {
-          this.membershipError =
-            'Este jogador já possui um vínculo ativo com esse time.';
+          this.membershipError = 'Este jogador já possui um vínculo ativo com esse time.';
           return;
         }
 
@@ -171,9 +148,7 @@ export class PlayerDetailComponent implements OnInit {
             membership: {
               playerId: this.playerId!,
               teamId: membership.teamId,
-              ...(membership.number !== '' && membership.number !== null
-                ? { number: Number(membership.number) }
-                : {}),
+              ...(membership.number !== '' && membership.number !== null ? { number: Number(membership.number) } : {}),
               ...(membership.position ? { position: membership.position } : {}),
               status: 'ACTIVE',
               isDeleted: false,
@@ -201,9 +176,7 @@ export class PlayerDetailComponent implements OnInit {
   }
 
   removeMembership(membership: PlayerMembership): void {
-    this.store.dispatch(
-      MembershipsActions.archiveMembership({ id: membership._id }),
-    );
+    this.store.dispatch(MembershipsActions.archiveMembership({ id: membership._id }));
   }
 
   openArchiveModal(): void {

@@ -1,9 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { PlayerMembership } from '../../core/models/player.model';
 
-export const loadMemberships = createAction(
-  '[Player Memberships] Load Memberships',
-);
+export const loadMemberships = createAction('[Player Memberships] Load Memberships');
 export const loadMembershipsSuccess = createAction(
   '[Player Memberships] Load Memberships Success',
   props<{ memberships: PlayerMembership[] }>(),
@@ -37,10 +35,7 @@ export const updateMembershipFailure = createAction(
   '[Player Memberships] Update Membership Failure',
   props<{ error: any }>(),
 );
-export const archiveMembership = createAction(
-  '[Player Memberships] Archive Membership',
-  props<{ id: string }>(),
-);
+export const archiveMembership = createAction('[Player Memberships] Archive Membership', props<{ id: string }>());
 export const archiveMembershipSuccess = createAction(
   '[Player Memberships] Archive Membership Success',
   props<{ membership: PlayerMembership }>(),

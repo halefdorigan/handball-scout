@@ -40,9 +40,7 @@ export class DatabaseService {
     if (this.dbPromise) return this.dbPromise;
 
     this.dbPromise = (async () => {
-      const storage = isDevMode()
-        ? wrappedValidateAjvStorage({ storage: getRxStorageDexie() })
-        : getRxStorageDexie();
+      const storage = isDevMode() ? wrappedValidateAjvStorage({ storage: getRxStorageDexie() }) : getRxStorageDexie();
 
       const db = await createRxDatabase({
         name: 'handball_scout_db',

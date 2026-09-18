@@ -22,10 +22,7 @@
   border-top: 2px solid var(--hb-ink);
   display: grid;
   gap: 16px;
-  grid-template-columns: minmax(220px, 1.5fr) minmax(170px, 1fr) minmax(
-      140px,
-      0.8fr
-    );
+  grid-template-columns: minmax(220px, 1.5fr) minmax(170px, 1fr) minmax(140px, 0.8fr);
   margin-bottom: 44px;
   padding: 24px 8px 0;
 }
@@ -108,7 +105,7 @@
 }
 .player-card__meta span + span::before {
   color: var(--hb-border);
-  content: " / ";
+  content: ' / ';
   margin-right: 20px;
 }
 .player-card__status {

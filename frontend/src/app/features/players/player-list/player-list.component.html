@@ -5,29 +5,19 @@
       <h1>Jogadores</h1>
     </div>
     <div class="header-actions">
-      <a class="btn btn--primary" routerLink="new"
-        >Novo jogador <span aria-hidden="true">＋</span></a
-      >
+      <a class="btn btn--primary" routerLink="new">Novo jogador <span aria-hidden="true">＋</span></a>
     </div>
   </header>
 
   <section class="player-list__intro">
-    <p class="player-list__lead">
-      Uma identidade, vários elencos. Organize quem está pronto para entrar em
-      quadra.
-    </p>
+    <p class="player-list__lead">Uma identidade, vários elencos. Organize quem está pronto para entrar em quadra.</p>
     <span class="player-list__rule" aria-hidden="true"></span>
   </section>
 
   <form class="player-filters" aria-label="Filtros de jogadores">
     <div class="filter-field filter-field--search">
       <label for="player-search">Buscar jogador</label>
-      <input
-        id="player-search"
-        type="search"
-        [formControl]="searchControl"
-        placeholder="Nome do jogador"
-      />
+      <input id="player-search" type="search" [formControl]="searchControl" placeholder="Nome do jogador" />
     </div>
     <div class="filter-field">
       <label for="player-team-filter">Time</label>
@@ -48,41 +38,21 @@
     </div>
   </form>
 
-  <section
-    class="player-list__content"
-    aria-label="Jogadores cadastrados"
-    *ngIf="players$ | async as players"
-  >
+  <section class="player-list__content" aria-label="Jogadores cadastrados" *ngIf="players$ | async as players">
     <div class="list-meta">
-      <span>{{ players.length.toString().padStart(2, "0") }} jogadores</span
-      ><span>identidades globais</span>
+      <span>{{ players.length.toString().padStart(2, '0') }} jogadores</span><span>identidades globais</span>
     </div>
-    <a
-      *ngFor="let item of players; trackBy: trackByPlayer"
-      class="player-card"
-      [routerLink]="[item.player._id]"
-    >
+    <a *ngFor="let item of players; trackBy: trackByPlayer" class="player-card" [routerLink]="[item.player._id]">
       <span class="player-card__number" aria-hidden="true">#</span>
       <span class="player-card__info">
         <strong class="player-card__name">{{ item.player.name }}</strong>
         <span class="player-card__meta">
-          <span>{{
-            item.positions.length
-              ? item.positions.join(" · ")
-              : "Sem posição ativa"
-          }}</span>
-          <span>{{
-            item.teamNames.length
-              ? item.teamNames.join(" · ")
-              : "Sem time vinculado"
-          }}</span>
+          <span>{{ item.positions.length ? item.positions.join(' · ') : 'Sem posição ativa' }}</span>
+          <span>{{ item.teamNames.length ? item.teamNames.join(' · ') : 'Sem time vinculado' }}</span>
         </span>
       </span>
-      <span
-        class="player-card__status"
-        [class.player-card__status--archived]="item.player.isDeleted"
-      >
-        {{ item.player.isDeleted ? "Arquivado" : "Ativo" }}
+      <span class="player-card__status" [class.player-card__status--archived]="item.player.isDeleted">
+        {{ item.player.isDeleted ? 'Arquivado' : 'Ativo' }}
       </span>
       <span class="player-card__arrow" aria-hidden="true">↗</span>
     </a>

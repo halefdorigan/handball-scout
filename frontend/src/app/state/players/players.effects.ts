@@ -17,9 +17,7 @@ export class PlayersEffects {
       switchMap(() =>
         this.players.observeAll().pipe(
           map((players) => PlayersActions.loadPlayersSuccess({ players })),
-          catchError((error) =>
-            of(PlayersActions.loadPlayersFailure({ error })),
-          ),
+          catchError((error) => of(PlayersActions.loadPlayersFailure({ error }))),
         ),
       ),
     ),
@@ -30,9 +28,7 @@ export class PlayersEffects {
       ofType(PlayersActions.addPlayer),
       mergeMap((action) =>
         from(this.players.create(action.player)).pipe(
-          map((player: any) =>
-            PlayersActions.addPlayerSuccess({ player: player.toJSON() }),
-          ),
+          map((player: any) => PlayersActions.addPlayerSuccess({ player: player.toJSON() })),
           catchError((error) => of(PlayersActions.addPlayerFailure({ error }))),
         ),
       ),
@@ -44,12 +40,8 @@ export class PlayersEffects {
       ofType(PlayersActions.updatePlayer),
       mergeMap((action) =>
         from(this.players.update(action.player)).pipe(
-          map((player: any) =>
-            PlayersActions.updatePlayerSuccess({ player: player.toJSON() }),
-          ),
-          catchError((error) =>
-            of(PlayersActions.updatePlayerFailure({ error })),
-          ),
+          map((player: any) => PlayersActions.updatePlayerSuccess({ player: player.toJSON() })),
+          catchError((error) => of(PlayersActions.updatePlayerFailure({ error }))),
         ),
       ),
     ),
@@ -68,12 +60,8 @@ export class PlayersEffects {
       mergeMap((action) =>
         from(this.players.archive(action.id)).pipe(
           mergeMap((doc) => (doc ? of(doc) : EMPTY)),
-          map((player: any) =>
-            PlayersActions.archivePlayerSuccess({ player: player.toJSON() }),
-          ),
-          catchError((error) =>
-            of(PlayersActions.archivePlayerFailure({ error })),
-          ),
+          map((player: any) => PlayersActions.archivePlayerSuccess({ player: player.toJSON() })),
+          catchError((error) => of(PlayersActions.archivePlayerFailure({ error }))),
         ),
       ),
     ),

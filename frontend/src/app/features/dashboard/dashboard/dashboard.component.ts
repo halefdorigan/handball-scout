@@ -6,8 +6,7 @@ import * as GamesActions from '../../../state/games/games.actions';
 import { adapter as gamesAdapter } from '../../../state/games/games.reducer';
 
 const selectGamesState = createFeatureSelector<any>('games');
-const { selectAll: selectAllGames } =
-  gamesAdapter.getSelectors(selectGamesState);
+const { selectAll: selectAllGames } = gamesAdapter.getSelectors(selectGamesState);
 
 @Component({
   selector: 'app-dashboard',
@@ -23,13 +22,7 @@ export class DashboardComponent implements OnInit {
     this.games$ = this.store.select(selectAllGames);
     this.totalGames$ = this.games$.pipe(map((games) => games.length));
     this.totalGoals$ = this.games$.pipe(
-      map((games) =>
-        games.reduce(
-          (acc, g) =>
-            acc + (g.events?.filter((e) => e.type === 'GOAL').length || 0),
-          0,
-        ),
-      ),
+      map((games) => games.reduce((acc, g) => acc + (g.events?.filter((e) => e.type === 'GOAL').length || 0), 0)),
     );
   }
 

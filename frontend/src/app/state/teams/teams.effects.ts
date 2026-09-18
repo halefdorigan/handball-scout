@@ -28,11 +28,7 @@ export class TeamsEffects {
     () =>
       this.actions$.pipe(
         ofType(TeamsActions.addTeam),
-        mergeMap((action) =>
-          from(this.teams.create(action.team)).pipe(
-            map(() => ({ type: 'NO_ACTION' })),
-          ),
-        ),
+        mergeMap((action) => from(this.teams.create(action.team)).pipe(map(() => ({ type: 'NO_ACTION' })))),
       ),
     { dispatch: false },
   );
@@ -41,11 +37,7 @@ export class TeamsEffects {
     () =>
       this.actions$.pipe(
         ofType(TeamsActions.updateTeam),
-        mergeMap((action) =>
-          from(this.teams.update(action.team)).pipe(
-            map(() => ({ type: 'NO_ACTION' })),
-          ),
-        ),
+        mergeMap((action) => from(this.teams.update(action.team)).pipe(map(() => ({ type: 'NO_ACTION' })))),
       ),
     { dispatch: false },
   );

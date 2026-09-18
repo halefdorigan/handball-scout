@@ -28,16 +28,9 @@ export const playersReducer = createReducer(
     loading: false,
     error,
   })),
-  on(PlayersActions.addPlayerSuccess, (state, { player }) =>
-    adapter.addOne(player, state),
-  ),
-  on(PlayersActions.updatePlayerSuccess, (state, { player }) =>
-    adapter.upsertOne(player, state),
-  ),
-  on(PlayersActions.archivePlayerSuccess, (state, { player }) =>
-    adapter.upsertOne(player, state),
-  ),
+  on(PlayersActions.addPlayerSuccess, (state, { player }) => adapter.addOne(player, state)),
+  on(PlayersActions.updatePlayerSuccess, (state, { player }) => adapter.upsertOne(player, state)),
+  on(PlayersActions.archivePlayerSuccess, (state, { player }) => adapter.upsertOne(player, state)),
 );
 
-export const { selectIds, selectEntities, selectAll, selectTotal } =
-  adapter.getSelectors();
+export const { selectIds, selectEntities, selectAll, selectTotal } = adapter.getSelectors();

@@ -25,12 +25,8 @@ export class PlayerRepository extends LocalRepository {
         _id: uuidv4(),
         name: player.name || '',
         ...(player.birthDate ? { birthDate: player.birthDate } : {}),
-        ...(typeof player.heightCm === 'number'
-          ? { heightCm: player.heightCm }
-          : {}),
-        ...(typeof player.weightKg === 'number'
-          ? { weightKg: player.weightKg }
-          : {}),
+        ...(typeof player.heightCm === 'number' ? { heightCm: player.heightCm } : {}),
+        ...(typeof player.weightKg === 'number' ? { weightKg: player.weightKg } : {}),
         ...(player.dominantHand ? { dominantHand: player.dominantHand } : {}),
         updatedAt: Date.now(),
         isDeleted: false,
@@ -38,9 +34,7 @@ export class PlayerRepository extends LocalRepository {
     );
   }
   update(player: any): Promise<any> {
-    return this.collection('players').then((c) =>
-      c.upsert({ ...player, updatedAt: Date.now() }),
-    );
+    return this.collection('players').then((c) => c.upsert({ ...player, updatedAt: Date.now() }));
   }
   upsert(player: any): Promise<any> {
     return this.collection('players').then((c) => c.upsert(player));
