@@ -34,7 +34,7 @@ export class GameDetailComponent implements OnInit {
   ) {
     this.gameForm = this.fb.group({
       name: ['', Validators.required],
-      dateTime: [new Date().toISOString().substring(0, 16), Validators.required],
+      dateTime: [this.localDatetimeValue(new Date()), Validators.required],
       teamAId: ['', Validators.required],
       teamBId: ['', Validators.required],
       tags: [[]]
@@ -82,5 +82,11 @@ export class GameDetailComponent implements OnInit {
       this.store.dispatch(GamesActions.addGame({ game: this.gameForm.value }));
       this.router.navigate(['/games']);
     }
+  }
+
+  private localDatetimeValue(date: Date): string {
+    return new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+      .toISOString()
+      .substring(0, 16);
   }
 }

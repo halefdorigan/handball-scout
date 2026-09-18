@@ -32,6 +32,11 @@ Feature: Match management
     When I remove the tag
     Then the tag is no longer associated with the match
 
+  Scenario: Display the match date and time in the Brazilian format
+    Given matches exist
+    When I open the match list
+    Then I see each match date and time in the Brazilian format
+
   Scenario: Open the scout for a registered match
     Given a match exists
     When I open its details

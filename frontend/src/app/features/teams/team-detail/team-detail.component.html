@@ -37,7 +37,9 @@
         <option value="">Selecione um jogador existente</option>
         <option *ngFor="let player of availablePlayers$ | async" [value]="player._id">{{ player.name }}</option>
       </select>
-      <input type="number" formControlName="number" placeholder="Nº" aria-label="Número da camisa" min="0" max="99">
+      <input type="text" inputmode="numeric" autocomplete="off" formControlName="number" placeholder="Nº" aria-label="Número da camisa" aria-describedby="player-number-error">
+      <small id="player-number-error" class="field-error" *ngIf="playerForm.get('number')?.touched && playerForm.get('number')?.hasError('invalidNumber')">Informe um número inteiro entre 0 e 99.</small>
+      <small class="field-error" *ngIf="playerForm.get('number')?.touched && playerForm.get('number')?.hasError('max')">O número máximo é 99.</small>
       <select formControlName="position" aria-label="Posição">
         <option value="">Não informada</option><option value="Goleiro">Goleiro</option><option value="Ponta">Ponta</option><option value="Armador">Armador</option><option value="Pivô">Pivô</option>
       </select>

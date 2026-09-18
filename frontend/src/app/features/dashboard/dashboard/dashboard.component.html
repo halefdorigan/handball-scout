@@ -26,12 +26,12 @@
   <section class="stats-strip" aria-label="Resumo da temporada">
     <div class="stat-block">
       <span class="stat-block__label">Jogos catalogados</span>
-      <strong class="stat-block__value">{{ totalGames$ | async }}</strong>
+      <strong class="stat-block__value">{{ totalGames$ | async | number }}</strong>
       <span class="stat-block__note">temporada atual</span>
     </div>
     <div class="stat-block stat-block--accent">
       <span class="stat-block__label">Gols registrados</span>
-      <strong class="stat-block__value">{{ totalGoals$ | async }}</strong>
+      <strong class="stat-block__value">{{ totalGoals$ | async | number }}</strong>
       <span class="stat-block__note">em todos os jogos</span>
     </div>
     <div class="stats-strip__caption">DADOS QUE<br>VIRAM JOGO.</div>
