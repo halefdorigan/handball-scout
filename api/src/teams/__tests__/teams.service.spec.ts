@@ -60,7 +60,10 @@ describe('TeamsService', () => {
       const result = await teamsService.upsert(team);
 
       // Assert
-      expect(teams.upsert).toHaveBeenCalledWith(team._id, { name: team.name, color: team.color });
+      expect(teams.upsert).toHaveBeenCalledWith(team._id, {
+        name: team.name,
+        color: team.color,
+      });
       expect(result).toEqual(savedTeam);
     });
 
@@ -74,7 +77,10 @@ describe('TeamsService', () => {
       const result = await teamsService.upsert(team);
 
       // Assert
-      expect(teams.upsert).toHaveBeenCalledWith(team._id, { name: team.name, deleted: true });
+      expect(teams.upsert).toHaveBeenCalledWith(team._id, {
+        name: team.name,
+        deleted: true,
+      });
       expect(result).toEqual(savedTeam);
     });
   });

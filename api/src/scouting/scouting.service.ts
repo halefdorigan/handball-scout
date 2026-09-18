@@ -22,7 +22,10 @@ export class ScoutingService {
   async sync(data: ScoutingSessionSyncData[]): Promise<ScoutingSessionDocument[]> {
     return Promise.all(
       data.map(({ _id, isDeleted, deleted, ...session }) =>
-        this.sessions.upsert(_id, { ...session, deleted: isDeleted ?? deleted ?? false }),
+        this.sessions.upsert(_id, {
+          ...session,
+          deleted: isDeleted ?? deleted ?? false,
+        }),
       ),
     );
   }

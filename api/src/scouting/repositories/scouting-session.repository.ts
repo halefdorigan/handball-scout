@@ -5,7 +5,10 @@ import { ScoutingSession, ScoutingSessionDocument } from '../schemas/scouting-se
 
 @Injectable()
 export class ScoutingSessionRepository {
-  constructor(@InjectModel(ScoutingSession.name) private readonly model: Model<ScoutingSessionDocument>) {}
+  constructor(
+    @InjectModel(ScoutingSession.name)
+    private readonly model: Model<ScoutingSessionDocument>,
+  ) {}
 
   findActive(): Promise<ScoutingSessionDocument[]> {
     return this.model.find({ deleted: false }).exec();

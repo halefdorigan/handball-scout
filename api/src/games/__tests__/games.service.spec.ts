@@ -53,7 +53,10 @@ describe('GamesService', () => {
       const result = await gamesService.upsert(game);
 
       // Assert
-      expect(games.upsert).toHaveBeenCalledWith(game._id, { name: game.name, status: game.status });
+      expect(games.upsert).toHaveBeenCalledWith(game._id, {
+        name: game.name,
+        status: game.status,
+      });
       expect(result).toEqual(savedGame);
     });
   });

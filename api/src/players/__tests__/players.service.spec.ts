@@ -76,7 +76,10 @@ describe('PlayersService', () => {
       await playersService.upsert(player);
 
       // Assert
-      expect(players.upsert).toHaveBeenCalledWith(player._id, { name: player.name, deleted: true });
+      expect(players.upsert).toHaveBeenCalledWith(player._id, {
+        name: player.name,
+        deleted: true,
+      });
     });
 
     it('should preserve the API deletion flag when syncing remote data', async () => {
@@ -92,7 +95,10 @@ describe('PlayersService', () => {
       await playersService.upsert(player);
 
       // Assert
-      expect(players.upsert).toHaveBeenCalledWith(player._id, { name: player.name, deleted: true });
+      expect(players.upsert).toHaveBeenCalledWith(player._id, {
+        name: player.name,
+        deleted: true,
+      });
     });
   });
 

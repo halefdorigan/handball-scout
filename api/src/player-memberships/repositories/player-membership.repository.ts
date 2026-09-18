@@ -5,7 +5,10 @@ import { PlayerMembership, PlayerMembershipDocument } from '../schemas/player-me
 
 @Injectable()
 export class PlayerMembershipRepository {
-  constructor(@InjectModel(PlayerMembership.name) private readonly model: Model<PlayerMembershipDocument>) {}
+  constructor(
+    @InjectModel(PlayerMembership.name)
+    private readonly model: Model<PlayerMembershipDocument>,
+  ) {}
 
   findActive(): Promise<PlayerMembershipDocument[]> {
     return this.model.find({ deleted: false }).exec();

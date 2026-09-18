@@ -93,8 +93,14 @@ describe('PlayerMembershipsService', () => {
   describe('sync', () => {
     it('should upsert every membership in input order', async () => {
       // Arrange
-      const firstMembership = { _id: 'membership-a', playerId: 'player-a' } as any;
-      const secondMembership = { _id: 'membership-b', playerId: 'player-b' } as any;
+      const firstMembership = {
+        _id: 'membership-a',
+        playerId: 'player-a',
+      } as any;
+      const secondMembership = {
+        _id: 'membership-b',
+        playerId: 'player-b',
+      } as any;
       const firstResult = { ...firstMembership } as PlayerMembershipDocument;
       const secondResult = { ...secondMembership } as PlayerMembershipDocument;
       const upsert = jest

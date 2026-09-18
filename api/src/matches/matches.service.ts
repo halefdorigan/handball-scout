@@ -27,7 +27,10 @@ export class MatchesService {
       throw new BadRequestException('Uma partida exige dois times distintos');
     }
     const { _id, isDeleted, deleted, ...match } = data;
-    return this.matches.upsert(_id, { ...match, deleted: isDeleted ?? deleted ?? false });
+    return this.matches.upsert(_id, {
+      ...match,
+      deleted: isDeleted ?? deleted ?? false,
+    });
   }
 
   async sync(matches: MatchSyncData[]): Promise<MatchDocument[]> {
