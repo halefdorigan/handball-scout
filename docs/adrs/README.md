@@ -20,4 +20,7 @@ its historical record.
 - [ADR-007 — Repository persistence boundary](007-fronteira-de-persistencia-por-repositorios.md)
 - [ADR-008 — Frontend session flow](008-fluxo-de-sessao-no-frontend.md)
 - [ADR-009 — Environment configuration](009-configuracao-por-ambiente.md)
-- [ADR-010 — Railway deployment](010-deploy-na-railway.md)
+- [ADR-011 — Deployment configuration boundary](011-deployment-configuration-boundary.md)
+
+ADR-010 was withdrawn and removed from this public repository because it
+contained provider-specific deployment details. ADR-011 supersedes it.

@@ -7,7 +7,7 @@ RUN apk add --no-cache python3 make g++
 RUN npm ci
 
 COPY . .
-# Railway builds this image from /api, so the repository-level
+# The build context is the package directory, so the repository-level
 # persistence-boundary script is outside the Docker build context.
 RUN npx nest build
 

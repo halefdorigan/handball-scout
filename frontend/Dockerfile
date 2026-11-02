@@ -6,7 +6,7 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-# Railway builds this image from /frontend, so the repository-level
+# The build context is the package directory, so the repository-level
 # persistence-boundary script is outside the Docker build context.
 RUN npx ng build
 

@@ -20,7 +20,6 @@ navigation.
 - `docs/adrs/` — Architecture Decision Records for architectural changes.
 - `specs/` — BDD specifications for user flows, organized by domain.
 - `docs/known-limitations.md` — known implementation gaps and divergences.
-- `docs/deployment/railway.md` — Railway services and production deployment.
 - `DESIGN.md` — product design tokens and visual direction.
 
 ## Requirements
@@ -83,11 +82,17 @@ build output is written to `api/dist`.
 5. Open the game report from the dashboard to compare team and player output.
 6. Use **Sync** on the teams screen to exchange local data with the API.
 
-## Deploy to Railway
+## Run the container stack
 
-The frontend and API are deployable as separate Railway services from this
-isolated monorepo. Follow [`docs/deployment/railway.md`](docs/deployment/railway.md)
-for the service, variable, networking, and domain configuration.
+Provide a local JWT secret and start the Compose stack:
+
+```bash
+JWT_SECRET=local-development-secret docker compose up --build
+```
+
+Open <http://localhost:8080>. The frontend container proxies `/api` to the
+`backend` service. Deployment configuration and real secrets are intentionally
+kept outside this repository.
 
 ## Design notes
 
@@ -99,4 +104,10 @@ white, and soft cloud gray.
 
 ## License
 
-This project does not currently declare a public license.
+Copyright (c) 2026 halefdorigan.
+
+Scout Court is released under the MIT License (`MIT`). You may use, copy,
+modify, merge, publish, distribute, sublicense, and sell copies of the
+software, provided the copyright and permission notices are retained. The
+software is provided without warranty. See [`LICENSE`](./LICENSE) for the full
+text.

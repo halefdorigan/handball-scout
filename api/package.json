@@ -2,9 +2,9 @@
   "name": "backend",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "halefdorigan",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "check:persistence-boundary": "node ../scripts/check-persistence-boundary.mjs",
     "build": "npm run check:persistence-boundary && nest build",
